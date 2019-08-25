@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Friday.Models {
-    public class Order {
-        public int UserId { get; set; }
-        public ShopUser User { get; set; }
-        public IList<OrderItem> Items { get; set; }
+namespace Friday.Models.Out.Order {
+    public class HistoryOrder {
+        public double TotalPrice { get; set; }
         public DateTime OrderTime { get; set; }
         public DateTime CompletionTime { get; set; }
-        public bool Accepted { get; set; }
         public bool Completed { get; set; }
     }
 }
