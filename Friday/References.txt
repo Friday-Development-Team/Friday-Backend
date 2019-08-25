@@ -1,0 +1,6 @@
+﻿Reference codes:
+Used to refer to specific parts of the code
+
+#TODO
+Items that need change or completion
+
