@@ -6,9 +6,10 @@ using Friday.Data.IRepositories;
 using Friday.Models;
 
 namespace Friday.Data.RepositoryInstances {
-    public class ItemRepository : IItemRepository {
+    public class ItemRepository : IItemRepository
+    {
 
-        private IList<Item> list
+        private IList<Item> list;
         //#TODO Inject context
 
         public ItemRepository(/*Inject*/) {
