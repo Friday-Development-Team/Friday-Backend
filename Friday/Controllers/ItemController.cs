@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Friday.Data.IRepositories;
 using Friday.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +11,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace Friday.Controllers {
     [Route("api/[controller]")]
     public class ItemController : Controller {
+
+        private readonly IItemRepository itemRepo;
+        public ItemController(IItemRepository itemRepo) {
+            this.itemRepo = itemRepo;
+        }
         // GET: api/<controller>
         [HttpGet]
         public ActionResult<IList<Item>> Get() {
-            return new OkObjectResult(new List<Item>());//#TODO
+            return new OkObjectResult(itemRepo.GetAll());
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id) {
-            return "value";
+        public ActionResult<ItemDetails> Get(int id) {
+            return itemRepo.GetDetails(id);
         }
 
         // POST api/<controller>
