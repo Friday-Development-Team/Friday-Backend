@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Friday.Models {
     public class Order {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public ShopUser User { get; set; }
         public IList<OrderItem> Items { get; set; }
