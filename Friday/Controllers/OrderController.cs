@@ -25,7 +25,8 @@ namespace Friday.Controllers {
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value) {
+        public void Accept(int id, [FromBody]bool value) {
+
         }
 
         // DELETE api/<controller>/5

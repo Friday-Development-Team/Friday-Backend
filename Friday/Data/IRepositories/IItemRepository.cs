@@ -9,6 +9,7 @@ namespace Friday.Data.IRepositories {
 
         IList<Item> GetAll();
         ItemDetails GetDetails(int id);
+        
 
     }
 }
