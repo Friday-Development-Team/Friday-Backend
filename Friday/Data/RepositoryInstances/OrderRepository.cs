@@ -35,9 +35,19 @@ namespace Friday.Data.RepositoryInstances {
             };
 
         }
-
-        public Task<bool> SetAccept(int id, bool value) {
-            throw new NotImplementedException();
+        /// <summary>
+        /// Updates  the Accepted flag for the given Order. Changes should be saved in order to be applied.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns>True if the order could be found and the old value was not equal to the given value</returns>
+        public bool SetAccept(int id, bool value) {
+            var item = orders.SingleOrDefault(s => s.Id == id);
+            if (item == null || item.Accepted == value)//If item is not found or is already set to the supplied value
+                return false;
+            item.Accepted = value;
+            orders.Update(item);
+            return item.Accepted == value;//Ensures the value was correctly set.
         }
     }
 }

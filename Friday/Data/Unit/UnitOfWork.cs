@@ -8,6 +8,7 @@ namespace Friday.Data.Unit {
     public class UnitOfWork : IUnitOfWork {
         private readonly Context context;
         public IItemRepository items { get; private set; }
+        public IOrderRepository orders { get; private set; }
 
         public UnitOfWork(Context context, IItemRepository items) {
             this.context = context;
