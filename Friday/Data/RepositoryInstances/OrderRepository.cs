@@ -28,8 +28,7 @@ namespace Friday.Data.RepositoryInstances {
                     new HistoryOrder {
                         OrderTime = s.OrderTime,
                         CompletionTime = s.CompletionTime,
-                        TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum(),
-                        Completed = true //Should be removed, all shown orders are completed, //#remove
+                        TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum()
 
                     })
                 .ToList()
