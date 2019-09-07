@@ -18,9 +18,9 @@ namespace Friday.Models.Services {
             this.itemRepo = uow.items;
         }
         /// <summary>
-        /// Returns a list of all the orders placed by a user
+        /// Returns a list of all the orders previously placed by the user
         /// </summary>
-        /// <param name="username"></param>
+        /// <param name="username">User</param>
         /// <returns></returns>
         public OrderHistory GetHistory(string username) {
             //Check if user exists
@@ -29,8 +29,14 @@ namespace Friday.Models.Services {
             return orderRepo.GetHistory(username);
         }
 
-        public async Task<bool> SetAccept(int id, bool value) {
-            return await orderRepo.SetAccept(id, value);
+        /// <summary>
+        /// Updates  the Accepted flag for the given Order. Changes should be saved in order to be applied.
+        /// </summary>
+        /// <param name="id">Id of the Order</param>
+        /// <param name="value">New value</param>
+        /// <returns>True if the order could be found and the old value was not equal to the given value</returns>
+        public bool SetAccept(int id, bool value) {
+            return orderRepo.SetAccept(id, value);
         }
 
 
