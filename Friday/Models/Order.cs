@@ -17,6 +17,7 @@ namespace Friday.Models {
     public enum OrderStatus {
         Pending,
         Accepted,
-        Completed
+        Completed,
+        Cancelled
     }
 }

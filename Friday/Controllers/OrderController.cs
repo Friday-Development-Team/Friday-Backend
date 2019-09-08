@@ -44,7 +44,7 @@ namespace Friday.Controllers {
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut("accept/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<bool> Accept(int id, [FromBody]bool value) {
@@ -52,6 +52,14 @@ namespace Friday.Controllers {
             if (result)
                 return new OkResult();
             return new BadRequestResult();
+        }
+
+        [HttpPut("cancel/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<bool> Cancel(int id) {
+            //#TODO
+            return new OkResult();
         }
 
         //// DELETE api/<controller>/5
