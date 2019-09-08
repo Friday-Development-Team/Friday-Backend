@@ -13,10 +13,12 @@ namespace Friday.Data.ServiceInstances {
         //#TODO Inject context
         private readonly Context context;
         private readonly DbSet<Item> items;
+        private readonly DbSet<ItemDetails> details;
 
         public ItemService(Context context) {
             this.context = context;
             this.items = this.context.items;
+            details = this.context.itemDetails;
             //Inject
             //list = new List<Item>();
             //list.Add(new Item { Id = 1, Count = 50, Name = "Water", Price = 1.5, Type = "Beverage" });
@@ -29,14 +31,33 @@ namespace Friday.Data.ServiceInstances {
             //list.Add(new Item { Id = 8, Count = 50, Name = "Pizza Bolognese", Price = 1.5, Type = "Food" });
         }
         public IList<Item> GetAll() {
-            return items.ToList();
+            return items.AsNoTracking().ToList();
         }
-
+        /// <summary>
+        /// Returns the details of a specified Item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>ItemDetails, null if not found</returns>
         public ItemDetails GetDetails(int id) {
-            Item item = items.SingleOrDefault(s => s.Id == id);
-            if (item == null)
-                return null;
-            return new ItemDetails { Item = item, ItemId = item.Id, Allergens = "None", Calories = 200F, SaltContent = 0F, Size = "300ml", SugarContent = 0F };
+            return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
+        }
+        /// <summary>
+        /// Changes the Count of an Item. Will Add the specified amount to the Count. Will subtract if amount if negative. Addition/subtraction is needed to avoid concurrency issues.
+        /// </summary>
+        /// <param name="id">Id of the item</param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public bool ChangeCount(int id, int amount) {
+            var item = items.SingleOrDefault(s => s.Id == id);
+            if (item == null || (amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
+                return false;
+            item.Count += amount;
+
+            items.Update(item);
+
+            context.SaveChanges();
+
+            return true;
         }
     }
 }

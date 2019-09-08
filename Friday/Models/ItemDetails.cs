@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Friday.Models {
     public class ItemDetails {
-        public Item Item { get; set; }
+        public int Id { get; set; }
         public int ItemId { get; set; }
         /// <summary>
         /// How much one item is. Item is responsible for both amount and unit (33cl, 200g, 1 hot dog).

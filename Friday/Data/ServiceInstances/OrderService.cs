@@ -125,7 +125,7 @@ namespace Friday.Data.ServiceInstances {
         /// <param name="id"></param>
         /// <returns></returns>
         public bool SetCompleted(int id) {
-            throw new NotImplementedException();
+            throw new NotImplementedException();//#TODO
         }
     }
 }

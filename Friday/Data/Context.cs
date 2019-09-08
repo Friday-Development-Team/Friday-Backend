@@ -11,6 +11,7 @@ namespace Friday.Data {
         public DbSet<Item> items;
         public DbSet<ShopUser> users;
         public DbSet<Order> orders;
+        public DbSet<ItemDetails> itemDetails;
 
         public Context(DbContextOptions options) : base(options) {
         }
@@ -19,6 +20,8 @@ namespace Friday.Data {
             base.OnModelCreating(builder);
 
             builder.Entity<Item>();
+
+            builder.Entity<ItemDetails>();
 
             builder.Entity<ShopUser>();
 
@@ -38,6 +41,19 @@ namespace Friday.Data {
             new Item { Id = 9, Count = 50, Name = "Pizza Four Cheese", Price = 3F, Type = "Food" },
             new Item { Id = 10, Count = 50, Name = "Pizza Bolognese", Price = 3F, Type = "Food" }
            );
+
+            builder.Entity<ItemDetails>().HasData(
+                    new ItemDetails { Id = 1, ItemId = 1, Allergens = "None", Calories = 0D, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 2, ItemId = 2, Allergens = "None", Calories = 90D, SaltContent = 0D, Size = "200ml", SugarContent = 21.4 },
+                    new ItemDetails { Id = 3, ItemId = 3, Allergens = "None", Calories = 0.8, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 4, ItemId = 4, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 5, ItemId = 5, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 6, ItemId = 6, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 7, ItemId = 7, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 8, ItemId = 8, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 9, ItemId = 9, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D },
+                    new ItemDetails { Id = 10, ItemId = 10, Allergens = "None", Calories = 0.6, SaltContent = 0D, Size = "200ml", SugarContent = 0D }
+            );
         }
     }
 }

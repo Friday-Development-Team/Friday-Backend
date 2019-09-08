@@ -10,9 +10,9 @@ namespace Friday.Controllers {
     [Route("api/[controller]")]
     public class ItemController : Controller {
 
-        private readonly IItemService itemRepo;
-        public ItemController(IItemService itemRepo) {
-            this.itemRepo = itemRepo;
+        private readonly IItemService service;
+        public ItemController(IItemService service) {
+            this.service = service;
         }
         // GET: api/<controller>
         /// <summary>
@@ -22,7 +22,7 @@ namespace Friday.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IList<Item>> Get() {
-            return new OkObjectResult(itemRepo.GetAll());
+            return new OkObjectResult(service.GetAll());
         }
 
         // GET api/<controller>/5
@@ -35,7 +35,7 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<ItemDetails> Get(int id) {
-            var details = itemRepo.GetDetails(id);
+            var details = service.GetDetails(id);
             if (details == null)
                 return new NotFoundResult();
             return new OkObjectResult(details);
@@ -46,10 +46,16 @@ namespace Friday.Controllers {
         //public void Post([FromBody]string value) {
         //}
 
-        //// PUT api/<controller>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value) {
-        //}
+        // PUT api/<controller>/5
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<bool> Put(int id, [FromBody]int amount) {
+            var result = service.ChangeCount(id, amount);
+            if (result)
+                return new OkResult();
+            return new BadRequestResult();
+        }
 
         //// DELETE api/<controller>/5
         //[HttpDelete("{id}")]
