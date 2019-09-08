@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Friday.Data.IRepositories;
+using Friday.Data.IServices;
 using Friday.Models;
 using Microsoft.EntityFrameworkCore;
 

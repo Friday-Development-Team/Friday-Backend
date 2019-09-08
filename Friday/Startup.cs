@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Data;
-using Friday.Data.IRepositories;
+﻿using Friday.Data;
 using Friday.Data.IServices;
 using Friday.Data.ServiceInstances;
-using Friday.Data.Unit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Friday {
     public class Startup {
@@ -31,8 +22,8 @@ namespace Friday {
 
 
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<DataInitializer>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddDbContext<Context>(Options =>
                 Options.UseSqlServer(Configuration.GetConnectionString("Context")));

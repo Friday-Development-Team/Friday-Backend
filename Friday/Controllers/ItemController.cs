@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Data.IRepositories;
+﻿using System.Collections.Generic;
 using Friday.Data.IServices;
-using Friday.Data.Unit;
 using Friday.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +11,7 @@ namespace Friday.Controllers {
     public class ItemController : Controller {
 
         private readonly IItemService itemRepo;
-        private readonly IUnitOfWork unit;
-        public ItemController(IItemService itemRepo, IUnitOfWork unit) {
+        public ItemController(IItemService itemRepo) {
             this.itemRepo = itemRepo;
         }
         // GET: api/<controller>
