@@ -11,7 +11,12 @@ namespace Friday.Models {
         public IList<OrderItem> Items { get; set; }
         public DateTime OrderTime { get; set; }
         public DateTime CompletionTime { get; set; }
-        public bool Accepted { get; set; }
-        public bool Completed { get; set; }
+        public OrderStatus Status { get; set; }
+    }
+
+    public enum OrderStatus {
+        Pending,
+        Accepted,
+        Completed
     }
 }

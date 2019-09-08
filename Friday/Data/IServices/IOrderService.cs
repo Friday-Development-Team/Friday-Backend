@@ -7,6 +7,7 @@ namespace Friday.Data.IServices {
         OrderHistory GetHistory(string username);
         bool SetAccepted(int id, bool value);
         bool PlaceOrder(OrderDTO orderdto);
+        bool SetCompleted(int id);
 
     }
 }

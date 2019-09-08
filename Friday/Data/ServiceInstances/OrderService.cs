@@ -34,7 +34,7 @@ namespace Friday.Data.ServiceInstances {
 
             return new OrderHistory {
                 UserName = username,
-                orders = orders.Where(s => s.User.Name == username).Where(s => s.Completed).OrderBy(s => s.OrderTime)
+                orders = orders.Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed).OrderBy(s => s.OrderTime)
                 .Select(s =>
                     new HistoryOrder {
                         OrderTime = s.OrderTime,
@@ -53,17 +53,22 @@ namespace Friday.Data.ServiceInstances {
         /// <param name="value">New value</param>
         /// <returns>True if the value was correctly changed, false if the Order wasn't found or the old value was equal to the new value</returns>
         public bool SetAccepted(int id, bool value) {
+            var changed = value ? OrderStatus.Accepted : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
-            if (item == null)//If item is not found or is already set to the supplied value
+            if (item == null || item.Status == OrderStatus.Completed)
                 return false;
 
-            var old = item.Accepted;
-            item.Accepted = value;
+            var old = item.Status;
+            item.Status = changed;
             orders.Update(item);
-            return item.Accepted == value && item.Accepted != old;//Ensures the value was correctly set. Returns false if it was already the given value.
+            return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
-
+        /// <summary>
+        /// Places an Order. Checks if the Order is valid and can be placed.
+        /// </summary>
+        /// <param name="orderdto">DTO</param>
+        /// <returns>True if the Order is valid and could be placed</returns>
         public bool PlaceOrder(OrderDTO orderdto) {
             if (orderdto == null || !orderdto.IsValid())
                 return false;
@@ -72,14 +77,11 @@ namespace Friday.Data.ServiceInstances {
             if (user == null)
                 return false;
 
-
-
             Order order = new Order {
                 User = user,
                 UserId = user.Id,
                 OrderTime = DateTime.Now,
-                Accepted = false,
-                Completed = false
+                Status = OrderStatus.Pending
             };
 
             var orderitems = orderdto.Items.Select(s =>
@@ -116,6 +118,14 @@ namespace Friday.Data.ServiceInstances {
             context.SaveChanges();
 
             return true;
+        }
+        /// <summary>
+        /// Sets the Order status to completed.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool SetCompleted(int id) {
+            throw new NotImplementedException();
         }
     }
 }
