@@ -8,13 +8,13 @@ using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.RepositoryInstances {
-    public class OrderRepository : IOrderRepository {
+namespace Friday.Data.ServiceInstances {
+    public class OrderService : IOrderService {
 
         private readonly Context context;
         private readonly DbSet<Order> orders;
 
-        public OrderRepository(Context context) {
+        public OrderService(Context context) {
             this.context = context;
             this.orders = context.orders;
         }

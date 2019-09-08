@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data;
 using Friday.Data.IRepositories;
-using Friday.Data.RepositoryInstances;
+using Friday.Data.IServices;
+using Friday.Data.ServiceInstances;
 using Friday.Data.Unit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,7 @@ namespace Friday {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
-            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemService, ItemService>();
             services.AddScoped<DataInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

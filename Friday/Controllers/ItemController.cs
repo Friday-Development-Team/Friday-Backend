@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IRepositories;
+using Friday.Data.IServices;
 using Friday.Data.Unit;
 using Friday.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +15,9 @@ namespace Friday.Controllers {
     [Route("api/[controller]")]
     public class ItemController : Controller {
 
-        private readonly IItemRepository itemRepo;
+        private readonly IItemService itemRepo;
         private readonly IUnitOfWork unit;
-        public ItemController(IItemRepository itemRepo, IUnitOfWork unit) {
+        public ItemController(IItemService itemRepo, IUnitOfWork unit) {
             this.itemRepo = itemRepo;
         }
         // GET: api/<controller>

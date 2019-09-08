@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Friday.Models.Out;
 
 namespace Friday.Data.IRepositories {
-    public interface IOrderRepository {
+    public interface IOrderService {
         OrderHistory GetHistory(string username);
         bool SetAccept(int id, bool value);
 

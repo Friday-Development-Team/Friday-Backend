@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IRepositories;
+using Friday.Data.IServices;
 using Friday.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.RepositoryInstances {
-    public class ItemRepository : IItemRepository {
+namespace Friday.Data.ServiceInstances {
+    public class ItemService : IItemService {
 
         //private IList<Item> list;
         //#TODO Inject context
         private readonly Context context;
         private readonly DbSet<Item> items;
 
-        public ItemRepository(Context context) {
+        public ItemService(Context context) {
             this.context = context;
             this.items = this.context.items;
             //Inject

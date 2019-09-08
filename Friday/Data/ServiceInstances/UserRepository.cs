@@ -6,13 +6,13 @@ using Friday.Data.IRepositories;
 using Friday.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.RepositoryInstances {
-    public class UserRepository : IUserRepository {
+namespace Friday.Data.ServiceInstances {
+    public class UserService : IUserService {
 
         private readonly Context context;
         private readonly DbSet<ShopUser> users;
 
-        public UserRepository(Context context) {
+        public UserService(Context context) {
             this.context = context;
             users = this.context.users;
         }
