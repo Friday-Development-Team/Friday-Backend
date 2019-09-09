@@ -47,6 +47,12 @@ namespace Friday.Controllers {
         //}
 
         // PUT api/<controller>/5
+        /// <summary>
+        /// Changes the Count of an Item, or how many items of a certain Item are still in stock. Use a negative number to subtract. 
+        /// </summary>
+        /// <param name="id">Id of the Item</param>
+        /// <param name="amount">Amount to be added. Negative to subtract</param>
+        /// <returns>True if it was successful. You can't get a negative amount, at best the count can be reduced to 0</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

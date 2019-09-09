@@ -22,17 +22,27 @@ namespace Friday.Controllers {
 
 
         // GET api/<controller>/5
+        /// <summary>
+        /// Returns the history of all the completed Orders placed by a user.
+        /// </summary>
+        /// <param name="name">Name of the user</param>
+        /// <returns>Order history. Check schema for format</returns>
         [HttpGet("{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get(string name) {
             var result = service.GetHistory(name);
             if (result == null)
-                return new BadRequestObjectResult(null);
+                return new NotFoundObjectResult(null);
             return new OkObjectResult(result);
         }
 
         // POST api/<controller>
+        /// <summary>
+        /// Places an Order.
+        /// </summary>
+        /// <param name="order">JSON containing the needed information. Requires a username and a List of objects containing ItemId and Amount./param>
+        /// <returns>True if the Order was successfully placed.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,22 +54,35 @@ namespace Friday.Controllers {
         }
 
         // PUT api/<controller>/5
+        /// <summary>
+        /// Sets the Accepted flag of an Order.
+        /// </summary>
+        /// <param name="id">Id of the Order</param>
+        /// <param name="value">True if the Order needs to be Accepted. False if it should return to Pending</param>
+        /// <returns>True if the change was successful and was not already set to that value</returns>
         [HttpPut("accept/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<bool> Accept(int id, [FromBody]bool value) {
             var result = service.SetAccepted(id, value);
             if (result)
                 return new OkResult();
-            return new BadRequestResult();
+            return new NotFoundResult();
         }
-
+        /// <summary>
+        /// Cancels an Order. Sets the Status flag to Cancelled. This cannot be undone. A new Order needs to be placed instead.
+        /// An Order can only be cancelled if its Status is Pending.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True if the change was successful.</returns>
         [HttpPut("cancel/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<bool> Cancel(int id) {
-            //#TODO
-            return new OkResult();
+            var result = service.Cancel(id);
+            if (result)
+                return new OkResult();
+            return new NotFoundResult();
         }
 
         //// DELETE api/<controller>/5
