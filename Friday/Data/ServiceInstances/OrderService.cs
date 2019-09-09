@@ -86,8 +86,6 @@ namespace Friday.Data.ServiceInstances {
 
             order.Items = orderitems;
 
-            orders.Add(order);//Order added
-
 
             foreach (var item in order.Items) {
                 var temp = items.SingleOrDefault(s => s.Id == item.Item.Id);
@@ -99,6 +97,7 @@ namespace Friday.Data.ServiceInstances {
                 items.Update(temp);//Updated Item
             }
 
+            orders.Add(order);//Order added
             user.UpdateBalance(-totalPrice);
 
             users.Update(user);//Updated user

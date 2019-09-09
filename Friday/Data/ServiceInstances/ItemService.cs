@@ -19,16 +19,7 @@ namespace Friday.Data.ServiceInstances {
             this.context = context;
             this.items = this.context.items;
             details = this.context.itemDetails;
-            //Inject
-            //list = new List<Item>();
-            //list.Add(new Item { Id = 1, Count = 50, Name = "Water", Price = 1.5, Type = "Beverage" });
-            //list.Add(new Item { Id = 2, Count = 50, Name = "Cola", Price = 1.5, Type = "Beverage" });
-            //list.Add(new Item { Id = 3, Count = 50, Name = "Cola Light", Price = 1.5, Type = "Beverage" });
-            //list.Add(new Item { Id = 4, Count = 50, Name = "Cola Zero", Price = 1.5, Type = "Beverage" });
-            //list.Add(new Item { Id = 5, Count = 50, Name = "Ice Tea", Price = 1.5, Type = "Beverage" });
-            //list.Add(new Item { Id = 6, Count = 50, Name = "Hot Dog", Price = 1.5, Type = "Food" });
-            //list.Add(new Item { Id = 7, Count = 50, Name = "Pizza", Price = 1.5, Type = "Food" });
-            //list.Add(new Item { Id = 8, Count = 50, Name = "Pizza Bolognese", Price = 1.5, Type = "Food" });
+            
         }
         public IList<Item> GetAll() {
             return items.AsNoTracking().ToList();
