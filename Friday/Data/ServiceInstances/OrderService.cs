@@ -119,8 +119,14 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders
-            throw new NotImplementedException();
+        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
+            var order = orders.SingleOrDefault(s => s.Id == id);
+            if (order == null || order.Status != OrderStatus.Pending)
+                return false;
+            order.Status = OrderStatus.Cancelled;
+            orders.Update(order);
+            context.SaveChanges();
+            return true;
         }
     }
 }
