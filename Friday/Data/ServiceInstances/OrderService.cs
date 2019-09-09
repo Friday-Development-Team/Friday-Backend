@@ -36,8 +36,8 @@ namespace Friday.Data.ServiceInstances {
                         new HistoryOrder {
                             OrderTime = s.OrderTime,
                             CompletionTime = s.CompletionTime,
-                            TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum()
-
+                            TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum(),
+                            Items = s.Items.Select(t => new HistoryOrderItem { ItemName = t.Item.Name, Amount = t.Amount }).ToList()
                         })
                     .ToList()
             };

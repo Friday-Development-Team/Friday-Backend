@@ -8,5 +8,6 @@ namespace Friday.Models.Out.Order {
         public double TotalPrice { get; set; }
         public DateTime OrderTime { get; set; }
         public DateTime CompletionTime { get; set; }
+        public IList<HistoryOrderItem> Items { get; set; }
     }
 }
