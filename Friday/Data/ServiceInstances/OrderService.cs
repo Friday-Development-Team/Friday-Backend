@@ -23,35 +23,27 @@ namespace Friday.Data.ServiceInstances {
             users = context.users;
             items = context.items;
         }
-        /// <summary>
-        /// Returns all the completed Orders of a specified user.
-        /// </summary>
-        /// <param name="username">Username of the user</param>
-        /// <returns>Object containing all the Orders</returns>
+        /// <inheritdoc />
         public OrderHistory GetHistory(string username) {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
             return new OrderHistory {
                 UserName = username,
-                orders = orders.Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed).OrderBy(s => s.OrderTime)
-                .Select(s =>
-                    new HistoryOrder {
-                        OrderTime = s.OrderTime,
-                        CompletionTime = s.CompletionTime,
-                        TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum()
+                orders = orders.Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
+                    .OrderBy(s => s.OrderTime)
+                    .Select(s =>
+                        new HistoryOrder {
+                            OrderTime = s.OrderTime,
+                            CompletionTime = s.CompletionTime,
+                            TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum()
 
-                    })
-                .ToList()
+                        })
+                    .ToList()
             };
 
         }
-        /// <summary>
-        /// Sets the Accepted flag to the specified value.
-        /// </summary>
-        /// <param name="id">Id of the Order</param>
-        /// <param name="value">New value</param>
-        /// <returns>True if the value was correctly changed, false if the Order wasn't found or the old value was equal to the new value</returns>
+        /// <inheritdoc />
         public bool SetAccepted(int id, bool value) {
             var changed = value ? OrderStatus.Accepted : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
@@ -64,11 +56,7 @@ namespace Friday.Data.ServiceInstances {
             orders.Update(item);
             return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
-        /// <summary>
-        /// Places an Order. Checks if the Order is valid and can be placed.
-        /// </summary>
-        /// <param name="orderdto">DTO</param>
-        /// <returns>True if the Order is valid and could be placed</returns>
+        /// <inheritdoc />
         public bool PlaceOrder(OrderDTO orderdto) {
             if (orderdto == null || !orderdto.IsValid())
                 return false;
@@ -119,13 +107,20 @@ namespace Friday.Data.ServiceInstances {
 
             return true;
         }
-        /// <summary>
-        /// Sets the Order status to completed.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         public bool SetCompleted(int id) {
-            throw new NotImplementedException();//#TODO
+            var order = orders.SingleOrDefault(s => s.Id == id);
+            if (order == null || order.Status != OrderStatus.Accepted)//Only accepted orders can be completed
+                return false;
+            order.Status = OrderStatus.Completed;
+            orders.Update(order);
+            context.SaveChanges();
+            return true;
+        }
+        /// <inheritdoc />
+        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders
+            throw new NotImplementedException();
         }
     }
 }
