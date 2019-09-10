@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Friday.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data {
-    public class Context : DbContext {
+    public class Context : IdentityDbContext {
 
         public DbSet<Item> items;
         public DbSet<ShopUser> users;
