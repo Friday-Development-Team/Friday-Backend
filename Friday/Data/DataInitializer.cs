@@ -18,20 +18,19 @@ namespace Friday.Data {
         public async void InitializeData() {
             context.Database.EnsureDeleted();
             if (context.Database.EnsureCreated()) {
-                //seeding the database with recipes, see DBContext         
                 ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
                 context.users.Add(user);
-                await CreateUser(user.Name, "Testen");
+                await CreateUser(user.Name, "Test@Test.test", "Testen");
                 ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
                 context.users.Add(user2);
-                await CreateUser(user2.Name, "Testen");
+                await CreateUser(user2.Name, "Test2@Test.test", "Testen");
                 context.SaveChanges();
             }
 
         }
 
-        private async Task CreateUser(string name, string password) {
-            var user = new IdentityUser { UserName = name };
+        private async Task CreateUser(string name, string email, string password) {
+            var user = new IdentityUser { UserName = name, Email = email };
             await userManager.CreateAsync(user, password);
         }
     }

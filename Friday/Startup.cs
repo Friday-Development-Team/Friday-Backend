@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using Friday.Data;
 using Friday.Data.IServices;
 using Friday.Data.ServiceInstances;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.SwaggerGeneration.Processors.Security;
 
 namespace Friday {
     public class Startup {
@@ -25,6 +30,7 @@ namespace Friday {
 
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<DataInitializer>();
 
             services.AddDbContext<Context>(Options =>
@@ -37,9 +43,32 @@ namespace Friday {
                 c.Title = "Friday API";
                 c.Version = "v1";
                 c.Description = "The Friday API documentation description.";
+                c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme {
+                    Type = SwaggerSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = SwaggerSecurityApiKeyLocation.Header,
+                    Description = "Copy 'Bearer' + valid JWT token into field"
+                }));
+                c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
             }); //for OpenAPI 3.0 else AddSwaggerDocument();
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
+
+            services.AddAuthentication(x => {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(x => {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
             services.Configure<IdentityOptions>(options => {
                 // Password settings.
                 options.Password.RequireDigit = false;
@@ -57,6 +86,8 @@ namespace Friday {
                 // User settings.
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+                options.User.RequireUniqueEmail = true;
 
             });
         }
