@@ -15,14 +15,14 @@ namespace Friday.Data {
             this.userManager = userManager;
         }
 
-        public async void InitializeData() {
+        public async Task InitializeData() {
             context.Database.EnsureDeleted();
             if (context.Database.EnsureCreated()) {
                 ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
-                context.users.Add(user);
+                context.Users.Add(user);
                 await CreateUser(user.Name, "Test@Test.test", "Testen");
                 ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
-                context.users.Add(user2);
+                context.Users.Add(user2);
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen");
                 context.SaveChanges();
             }

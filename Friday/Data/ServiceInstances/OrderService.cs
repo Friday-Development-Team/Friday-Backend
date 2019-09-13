@@ -19,9 +19,9 @@ namespace Friday.Data.ServiceInstances {
 
         public OrderService(Context context) {
             this.context = context;
-            orders = context.orders;
-            users = context.users;
-            items = context.items;
+            orders = context.Orders;
+            users = context.Users;
+            items = context.Items;
         }
         /// <inheritdoc />
         public OrderHistory GetHistory(string username) {

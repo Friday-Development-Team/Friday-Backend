@@ -14,5 +14,6 @@ namespace Friday.Models {
         public double Price { get; set; }
         public string Type { get; set; }
         public int Count { get; set; }
+        public ItemDetails ItemDetails { get; set; }
     }
 }

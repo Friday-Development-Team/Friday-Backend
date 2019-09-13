@@ -17,8 +17,8 @@ namespace Friday.Data.ServiceInstances {
 
         public ItemService(Context context) {
             this.context = context;
-            this.items = this.context.items;
-            details = this.context.itemDetails;
+            this.items = this.context.Items;
+            details = this.context.ItemDetails;
             
         }
         public IList<Item> GetAll() {

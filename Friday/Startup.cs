@@ -110,7 +110,7 @@ namespace Friday {
             app.UseSwaggerUi3();
             app.UseSwagger();
 
-            initializer.InitializeData();
+            initializer.InitializeData().Wait();
         }
     }
 }

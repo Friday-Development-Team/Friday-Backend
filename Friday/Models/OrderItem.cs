@@ -12,5 +12,6 @@ namespace Friday.Models {
         public Item Item { get; set; }
 
         public int Amount { get; set; }
+        public DateTime TimeOfOrder { get; set; }
     }
 }

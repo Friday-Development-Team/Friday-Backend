@@ -63,6 +63,13 @@ namespace Friday.Controllers {
         public void Delete(int id) {
         }
 
+        [HttpPut("{id}")]
+        public async void UpdateBalance(int id, [FromBody]double amount)
+        {
+            service.ChangeBalance(id, amount);
+            
+        }
+
         private String GetToken(IdentityUser user) {
             // Create the token
             var claims = new[]

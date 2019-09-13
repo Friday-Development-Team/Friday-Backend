@@ -14,7 +14,7 @@ namespace Friday.Data.ServiceInstances {
 
         public UserService(Context context) {
             this.context = context;
-            users = this.context.users;
+            users = this.context.Users;
         }
 
         public bool ChangeBalance(int id, double amount) {
