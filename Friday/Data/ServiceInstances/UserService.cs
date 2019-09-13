@@ -17,12 +17,28 @@ namespace Friday.Data.ServiceInstances {
             users = this.context.Users;
         }
 
+        public void AddUser(ShopUser user)
+        {
+            users.Add(user);
+        }
+
         public bool ChangeBalance(int id, double amount) {
             var user = users.SingleOrDefault(s => s.Id == id);
             if (user.UpdateBalance(amount))
                 return false;
             users.Update(user);
             return true;
+        }
+
+        public ICollection<Order> GetOrderHistory(int id, DateTime orderTime)
+        {
+            var user = users.SingleOrDefault(s => s.Id == id);
+            return user.Order.Where(t => t.OrderTime == orderTime).ToList();
+        }
+
+        public ShopUser GetUser(string username)
+        {
+            return users.FirstOrDefault(t => t.Name == username);
         }
     }
 }

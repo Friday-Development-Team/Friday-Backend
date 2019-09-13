@@ -8,6 +8,8 @@ namespace Friday.Models {
         public int Id { get; set; }
         public string Name { get; set; }
         public double Balance { get; set; }
+        public ICollection<Order> Order { get; set; }
+
 
         /// <summary>
         /// Adds the specified amount to the User's Balance. Adding a negative amount is the same as a subtraction.
@@ -30,5 +32,6 @@ namespace Friday.Models {
         public bool HasBalance(double amount) {
             return Balance >= amount;
         }
+
     }
 }

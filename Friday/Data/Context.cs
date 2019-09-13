@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Friday.Data {
 
             builder.Entity<ShopUser>();
 
-            builder.Entity<Order>().HasOne(t => t.User).WithMany();
+            builder.Entity<Order>().HasOne(t => t.User).WithMany(t => t.Order);
 
             builder.Entity<OrderItem>().HasKey(s => new { s.OrderId, s.ItemId });
 
