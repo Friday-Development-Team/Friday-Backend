@@ -37,6 +37,8 @@ namespace Friday.Controllers {
             return new OkObjectResult(result);
         }
 
+
+
         // POST api/<controller>
         /// <summary>
         /// Places an Order.
@@ -85,9 +87,11 @@ namespace Friday.Controllers {
             return new NotFoundResult();
         }
 
-        //// DELETE api/<controller>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id) {
-        //}
+
+        [HttpGet("{id}")]
+        public ActionResult GetStatus(int id) {
+            var result=service.
+            return null;
+        }
     }
 }

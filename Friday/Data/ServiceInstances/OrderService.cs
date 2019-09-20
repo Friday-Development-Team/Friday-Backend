@@ -127,5 +127,9 @@ namespace Friday.Data.ServiceInstances {
             context.SaveChanges();
             return true;
         }
+
+        public string GetStatus(int id) {
+            throw new NotImplementedException();
+        }
     }
 }

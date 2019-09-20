@@ -36,6 +36,12 @@ namespace Friday.Data.IServices {
         /// <param name="id">Id of the Order</param>
         /// <returns>True if successful</returns>
         bool Cancel(int id);
+        /// <summary>
+        /// Returns the status of the specified Order
+        /// </summary>
+        /// <param name="id">Id of the Order</param>
+        /// <returns>String representation of the Status of the Order</returns>
+        string GetStatus(int id);
 
     }
 }
