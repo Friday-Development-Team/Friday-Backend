@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+
 using System.Text;
 using Friday.Data;
 using Friday.Data.IServices;
@@ -15,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
 
+
 namespace Friday {
     public class Startup {
         public Startup(IConfiguration configuration) {
@@ -23,7 +25,6 @@ namespace Friday {
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -36,9 +37,7 @@ namespace Friday {
             services.AddDbContext<Context>(Options =>
                 Options.UseSqlServer(Configuration.GetConnectionString("Context")));
 
-            services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
-
-            services.AddOpenApiDocument(c => {
+            services.AddSwaggerDocument(c => {
                 c.DocumentName = "apidocs";
                 c.Title = "Friday API";
                 c.Version = "v1";
@@ -50,7 +49,8 @@ namespace Friday {
                     Description = "Copy 'Bearer' + valid JWT token into field"
                 }));
                 c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
-            }); //for OpenAPI 3.0 else AddSwaggerDocument();
+            }); 
+            //for OpenAPI 3.0 else AddSwaggerDocument();
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
 
@@ -90,25 +90,28 @@ namespace Friday {
                 options.User.RequireUniqueEmail = true;
 
             });
+
+            services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
             else {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
 
-            app.UseCors("AllowAllOrigins");
+            app.UseAuthentication();
+
+            app.UseMvc();
 
             app.UseSwaggerUi3();
             app.UseSwagger();
+
 
             initializer.InitializeData().Wait();
         }
