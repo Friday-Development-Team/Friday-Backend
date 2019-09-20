@@ -32,6 +32,7 @@ namespace Friday {
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddScoped<DataInitializer>();
 
             services.AddDbContext<Context>(Options =>
@@ -49,7 +50,7 @@ namespace Friday {
                     Description = "Copy 'Bearer' + valid JWT token into field"
                 }));
                 c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
-            }); 
+            });
             //for OpenAPI 3.0 else AddSwaggerDocument();
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
@@ -94,7 +95,7 @@ namespace Friday {
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
         }
 
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
