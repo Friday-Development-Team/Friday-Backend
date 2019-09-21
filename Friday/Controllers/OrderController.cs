@@ -87,11 +87,17 @@ namespace Friday.Controllers {
             return new NotFoundResult();
         }
 
-
+        /// <summary>
+        /// Returns the Status of the specified Order as a string
+        /// </summary>
+        /// <param name="id">Id of the Order</param>
+        /// <returns>String form of the Status</returns>
         [HttpGet("{id}")]
-        public ActionResult GetStatus(int id) {
-            var result=service.
-            return null;
+        public ActionResult<string> GetStatus(int id) {
+            var result = service.GetStatus(id);
+            if (result == null)
+                return new NotFoundResult();
+            return new OkObjectResult(result);
         }
     }
 }

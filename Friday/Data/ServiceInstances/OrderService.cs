@@ -129,7 +129,7 @@ namespace Friday.Data.ServiceInstances {
         }
 
         public string GetStatus(int id) {
-            throw new NotImplementedException();
+            return orders.SingleOrDefault(s => s.Id == id)?.ToString();
         }
     }
 }
