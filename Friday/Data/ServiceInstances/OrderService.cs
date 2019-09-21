@@ -127,9 +127,13 @@ namespace Friday.Data.ServiceInstances {
             context.SaveChanges();
             return true;
         }
-
+        /// <inheritdoc />
         public string GetStatus(int id) {
             return orders.SingleOrDefault(s => s.Id == id)?.ToString();
+        }
+        /// <inheritdoc />
+        public IList<Order> GetAll() {
+            return orders.Where(s => s.IsOngoing()).OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking().ToList();
         }
     }
 }

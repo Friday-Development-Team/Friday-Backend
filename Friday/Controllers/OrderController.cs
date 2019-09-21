@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.DTOs;
+using Friday.Models;
 using Friday.Models.Out;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace Friday.Controllers {
         /// </summary>
         /// <param name="name">Name of the user</param>
         /// <returns>Order history. Check schema for format</returns>
-        [HttpGet("{name}")]
+        [HttpGet("history/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get(string name) {
@@ -92,12 +93,26 @@ namespace Friday.Controllers {
         /// </summary>
         /// <param name="id">Id of the Order</param>
         /// <returns>String form of the Status</returns>
-        [HttpGet("{id}")]
+        [HttpGet("status/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<string> GetStatus(int id) {
             var result = service.GetStatus(id);
             if (result == null)
                 return new NotFoundResult();
             return new OkObjectResult(result);
         }
+        /// <summary>
+        /// Returns a List of all the ongoing Orders
+        /// </summary>
+        /// <returns>List of all ongoing Orders</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IList<Order>> GetAll() {
+            return new OkObjectResult(service.GetAll() ?? new List<Order>());
+        }
+
+
+
     }
 }

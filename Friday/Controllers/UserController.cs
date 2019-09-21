@@ -38,6 +38,11 @@ namespace Friday.Controllers {
             return "value";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<String>> CreateToken(LoginDTO model) {
@@ -53,24 +58,26 @@ namespace Friday.Controllers {
         }
 
 
-        //// PUT api/<controller>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value) {
+        ////// PUT api/<controller>/5
+        ////[HttpPut("{id}")]
+        ////public void Put(int id, [FromBody]string value) {
+        ////}
+
+        //// DELETE api/<controller>/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id) {
         //}
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id) {
-        }
-
+        /// <summary>
+        /// Adds Balance to the specified user's account
+        /// </summary>
+        /// <param name="id">Id of the User</param>
+        /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
-        public async void UpdateBalance(int id, [FromBody]double amount)
-        {
+        public void UpdateBalance(int id, [FromBody]double amount) {
             service.ChangeBalance(id, amount);
-            
         }
 
-        private String GetToken(IdentityUser user) {
+        private string GetToken(IdentityUser user) {
             // Create the token
             var claims = new[]
             {

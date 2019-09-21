@@ -1,4 +1,5 @@
-﻿using Friday.DTOs;
+﻿using System.Collections.Generic;
+using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
 
@@ -42,6 +43,11 @@ namespace Friday.Data.IServices {
         /// <param name="id">Id of the Order</param>
         /// <returns>String representation of the Status of the Order</returns>
         string GetStatus(int id);
+        /// <summary>
+        /// Returns a List containing all the non-Completed and non-Cancelled Ordered. Accepted first, then ordered by date asc.
+        /// </summary>
+        /// <returns>List of all current orders</returns>
+        IList<Order> GetAll();
 
     }
 }
