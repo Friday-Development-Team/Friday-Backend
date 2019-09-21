@@ -44,8 +44,9 @@ namespace Friday.Data.ServiceInstances {
 
         }
         /// <inheritdoc />
-        public bool SetAccepted(int id, bool value) {
-            var changed = value ? OrderStatus.Accepted : OrderStatus.Pending;
+        public bool SetAccepted(int id, bool value, bool toKitchen) {
+
+            var changed = value ? (toKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
             if (item == null || item.Status == OrderStatus.Completed)

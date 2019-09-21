@@ -18,7 +18,7 @@ namespace Friday.Data.IServices {
         /// <param name="id">Id of the Order</param>
         /// <param name="value">New value</param>
         /// <returns>True if the value was correctly changed, false if the Order wasn't found or the old value was equal to the new value</returns>
-        bool SetAccepted(int id, bool value);
+        bool SetAccepted(int id, bool value, bool toKitchen);
         /// <summary>
         /// Places an Order. Checks if the Order is valid and can be placed.
         /// </summary>

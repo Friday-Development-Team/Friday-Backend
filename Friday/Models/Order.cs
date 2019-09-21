@@ -14,7 +14,8 @@ namespace Friday.Models {
         public OrderStatus Status { get; set; }
 
         public bool IsOngoing() {
-            return Status == OrderStatus.Pending || Status == OrderStatus.Accepted;
+            return Status == OrderStatus.Pending || Status == OrderStatus.Accepted ||
+                   Status == OrderStatus.SentToKitchen;
         }
     }
     /// <summary>
@@ -29,6 +30,10 @@ namespace Friday.Models {
         /// Order is placed but hasn't been accepted yet
         /// </summary>
         Pending,
+        /// <summary>
+        /// 
+        /// </summary>
+        SentToKitchen,
         /// <summary>
         /// Order has been completed 
         /// </summary>

@@ -64,11 +64,11 @@ namespace Friday.Controllers {
         /// <param name="id">Id of the Order</param>
         /// <param name="value">True if the Order needs to be Accepted. False if it should return to Pending</param>
         /// <returns>True if the change was successful and was not already set to that value</returns>
-        [HttpPut("accept/{id}")]
+        [HttpPut("accept/{id}/{isKitchen}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Catering")]
-        public ActionResult<bool> Accept(int id, [FromBody]bool value) {
+        [Authorize(Roles = "Catering, Kitchen")]
+        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
             var result = service.SetAccepted(id, value);
             if (result)
                 return new OkResult();
@@ -115,6 +115,8 @@ namespace Friday.Controllers {
         public ActionResult<IList<Order>> GetAll() {
             return new OkObjectResult(service.GetAll() ?? new List<Order>());
         }
+
+
 
 
 

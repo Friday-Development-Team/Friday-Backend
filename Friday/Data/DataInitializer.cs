@@ -26,6 +26,7 @@ namespace Friday.Data {
 
                 await CreateUser("Admin", null, "T3stP4ssw0rd4dm1n", "Admin");
                 await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", "Catering");
+                await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", "Kitchen");
                 context.Users.Add(new ShopUser { Balance = 200D, Name = "Admin" });//#TODO Base balance
                 context.Users.Add(new ShopUser { Balance = 200D, Name = "Catering" });//#TODO Base balance
 
@@ -51,7 +52,7 @@ namespace Friday.Data {
 
         private async Task CreateRoles(IServiceProvider provider) {
             var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Admin", "Catering" };
+            string[] roles = { "Admin", "Catering", "Kitchen"};
 
             foreach (var role in roles) {
                 if (await roleManager.RoleExistsAsync(role))
