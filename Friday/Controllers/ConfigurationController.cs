@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace Friday.Controllers {
         /// Sets the configuration options
         /// </summary>
         /// <param name="config">Configuration option Object</param>
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public void Put([FromBody]Configuration config) {
             service.SetConfig(config);

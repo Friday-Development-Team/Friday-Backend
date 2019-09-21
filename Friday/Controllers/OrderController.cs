@@ -6,6 +6,7 @@ using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,6 +67,7 @@ namespace Friday.Controllers {
         [HttpPut("accept/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Catering")]
         public ActionResult<bool> Accept(int id, [FromBody]bool value) {
             var result = service.SetAccepted(id, value);
             if (result)
@@ -81,6 +83,7 @@ namespace Friday.Controllers {
         [HttpPut("cancel/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Catering")]
         public ActionResult<bool> Cancel(int id) {
             var result = service.Cancel(id);
             if (result)
@@ -108,6 +111,7 @@ namespace Friday.Controllers {
         /// <returns>List of all ongoing Orders</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = "Catering")]
         public ActionResult<IList<Order>> GetAll() {
             return new OkObjectResult(service.GetAll() ?? new List<Order>());
         }

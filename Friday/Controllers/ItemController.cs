@@ -34,7 +34,7 @@ namespace Friday.Controllers {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ItemDetails> Get(int id) {
+        public ActionResult<ItemDetails> Get(int id) {//#TODO Add to GetAll
             var details = service.GetDetails(id);
             if (details == null)
                 return new NotFoundResult();
