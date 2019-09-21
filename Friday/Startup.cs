@@ -54,6 +54,7 @@ namespace Friday {
             //for OpenAPI 3.0 else AddSwaggerDocument();
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
+            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>();
 
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
