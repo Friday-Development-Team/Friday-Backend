@@ -11,7 +11,7 @@ namespace Friday.Data {
     public class Context : IdentityDbContext {
 
         public DbSet<Item> Items { get; set; }
-        public DbSet<ShopUser> Users { get; set; }
+        public DbSet<ShopUser> ShopUsers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ItemDetails> ItemDetails { get; set; }
         public DbSet<Configuration> Configuration { get; set; }

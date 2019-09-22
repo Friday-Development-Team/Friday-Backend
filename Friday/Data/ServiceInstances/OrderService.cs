@@ -20,7 +20,7 @@ namespace Friday.Data.ServiceInstances {
         public OrderService(Context context) {
             this.context = context;
             orders = context.Orders;
-            users = context.Users;
+            users = context.ShopUsers;
             items = context.Items;
         }
         /// <inheritdoc />

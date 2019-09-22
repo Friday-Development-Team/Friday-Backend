@@ -14,7 +14,7 @@ namespace Friday.Data.ServiceInstances {
 
         public UserService(Context context) {
             this.context = context;
-            users = this.context.Users;
+            users = this.context.ShopUsers;
         }
 
         public void AddUser(ShopUser user)

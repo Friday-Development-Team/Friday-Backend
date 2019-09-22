@@ -73,7 +73,7 @@ namespace Friday.Controllers {
         /// <param name="id">Id of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public void UpdateBalance(int id, [FromBody]double amount) {
             service.ChangeBalance(id, amount);
         }

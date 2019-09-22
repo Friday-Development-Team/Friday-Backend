@@ -31,7 +31,7 @@ namespace Friday.Controllers {
         /// Sets the configuration options
         /// </summary>
         /// <param name="config">Configuration option Object</param>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut]
         public void Put([FromBody]Configuration config) {
             service.SetConfig(config);
