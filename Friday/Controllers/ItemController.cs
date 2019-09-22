@@ -25,21 +25,21 @@ namespace Friday.Controllers {
             return new OkObjectResult(service.GetAll());
         }
 
-        // GET api/<controller>/5
-        /// <summary>
-        /// Returns the details of a single Item, referenced via its provided ID.
-        /// </summary>
-        /// <param name="id">ID of the Item</param>
-        /// <returns>Details of said Item</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ItemDetails> Get(int id) {//#TODO Add to GetAll
-            var details = service.GetDetails(id);
-            if (details == null)
-                return new NotFoundResult();
-            return new OkObjectResult(details);
-        }
+        //// GET api/<controller>/5
+        ///// <summary>
+        ///// Returns the details of a single Item, referenced via its provided ID.
+        ///// </summary>
+        ///// <param name="id">ID of the Item</param>
+        ///// <returns>Details of said Item</returns>
+        //[HttpGet("{id}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public ActionResult<ItemDetails> Get(int id) {//#TODO Add to GetAll
+        //    var details = service.GetDetails(id);
+        //    if (details == null)
+        //        return new NotFoundResult();
+        //    return new OkObjectResult(details);
+        //}
 
         //// POST api/<controller>
         //[HttpPost]

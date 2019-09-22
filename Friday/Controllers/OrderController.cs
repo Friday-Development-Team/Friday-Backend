@@ -69,7 +69,7 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering, Kitchen")]
         public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
-            var result = service.SetAccepted(id, value);
+            var result = service.SetAccepted(id, value, isKitchen);
             if (result)
                 return new OkResult();
             return new NotFoundResult();

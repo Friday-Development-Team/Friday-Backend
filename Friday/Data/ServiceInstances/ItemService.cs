@@ -19,19 +19,19 @@ namespace Friday.Data.ServiceInstances {
             this.context = context;
             this.items = this.context.Items;
             details = this.context.ItemDetails;
-            
+
         }
         public IList<Item> GetAll() {
-            return items.AsNoTracking().ToList();
+            return items.Include(s => s.ItemDetails).AsNoTracking().ToList();
         }
-        /// <summary>
-        /// Returns the details of a specified Item
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>ItemDetails, null if not found</returns>
-        public ItemDetails GetDetails(int id) {
-            return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
-        }
+        ///// <summary>
+        ///// Returns the details of a specified Item
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns>ItemDetails, null if not found</returns>
+        //public ItemDetails GetDetails(int id) {
+        //    return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
+        //}
         /// <summary>
         /// Changes the Count of an Item. Will Add the specified amount to the Count. Will subtract if amount if negative. Addition/subtraction is needed to avoid concurrency issues.
         /// </summary>

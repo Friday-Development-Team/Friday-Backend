@@ -10,30 +10,33 @@ namespace Friday.Data {
     public class DataInitializer {
         private readonly Context context;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public DataInitializer(Context context, UserManager<IdentityUser> userManager) {
+        public DataInitializer(Context context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager) {
             this.context = context;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
-        public async Task InitializeData(IServiceProvider provider) {
+        public async Task InitializeData() {
 
 
             context.Database.EnsureDeleted();
             if (context.Database.EnsureCreated()) {
 
-                await CreateRoles(provider);
+                await CreateRoles();
 
                 await CreateUser("Admin", null, "T3stP4ssw0rd4dm1n", "Admin");
                 await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", "Catering");
                 await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", "Kitchen");
-                context.Users.Add(new ShopUser { Balance = 200D, Name = "Admin" });//#TODO Base balance
-                context.Users.Add(new ShopUser { Balance = 200D, Name = "Catering" });//#TODO Base balance
+                context.Users.Add(new ShopUser { Balance = 200D, Name = "Admin", Id = 1 });//#TODO Base balance
+                context.Users.Add(new ShopUser { Balance = 200D, Name = "Catering", Id = 2 });//#TODO Base balance
+                context.Users.Add(new ShopUser { Balance = 200D, Name = "Kitchen", Id = 3 });
 
-                ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
+                ShopUser user = new ShopUser { Name = "Test", Balance = 200D, Id = 4};
                 context.Users.Add(user);
                 await CreateUser(user.Name, "Test@Test.test", "Testen", null);
-                ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
+                ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D, Id = 5};
                 context.Users.Add(user2);
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen", null);
                 context.SaveChanges();
@@ -50,12 +53,11 @@ namespace Friday.Data {
                 await userManager.AddToRoleAsync(user, role);
         }
 
-        private async Task CreateRoles(IServiceProvider provider) {
-            var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Admin", "Catering", "Kitchen"};
+        private async Task CreateRoles() {
+            string[] roles = { "Admin", "Catering", "Kitchen" };
 
             foreach (var role in roles) {
-                if (await roleManager.RoleExistsAsync(role))
+                if (!await roleManager.RoleExistsAsync(role))
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
         }

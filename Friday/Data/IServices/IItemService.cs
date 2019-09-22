@@ -5,7 +5,7 @@ namespace Friday.Data.IServices {
     public interface IItemService {
 
         IList<Item> GetAll();
-        ItemDetails GetDetails(int id);
+        // ItemDetails GetDetails(int id);
         bool ChangeCount(int id, int amount);
     }
 }
