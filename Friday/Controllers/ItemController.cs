@@ -35,7 +35,7 @@ namespace Friday.Controllers {
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<bool> Put(int id, [FromBody]int amount) {
+        public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)
                 return new OkResult();

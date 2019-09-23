@@ -28,9 +28,10 @@ namespace Friday.Data.ServiceInstances {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
-            return new OrderHistory {
+            var his = orders.ToList();
+            var result = new OrderHistory {
                 UserName = username,
-                orders = orders.Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
+                orders = orders.Include(s => s.Items).Include(s=> s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
                         new HistoryOrder {
@@ -42,11 +43,15 @@ namespace Friday.Data.ServiceInstances {
                     .ToList()
             };
 
+            return result;
+
         }
         /// <inheritdoc />
         public bool SetAccepted(int id, bool value, bool toKitchen) {
 
-            var changed = value ? (toKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
+            var needsKitchen = context.Configuration.Single();
+
+            var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
             if (item == null || item.Status == OrderStatus.Completed)

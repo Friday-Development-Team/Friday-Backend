@@ -8,7 +8,7 @@ using Friday.Models;
 namespace Friday.Data.ServiceInstances {
     public class ConfigurationService : IConfigurationService {
         private readonly Context context;
-        private Configuration Config { get; set; }
+        private Configuration Config { get; }
 
         public ConfigurationService(Context context) {
             this.context = context;
@@ -25,7 +25,7 @@ namespace Friday.Data.ServiceInstances {
         }
 
         public void SetConfig(Configuration con) {
-            Config = con;
+            Config.Copy(con);
             context.Configuration.Update(con);
             context.SaveChanges();
         }

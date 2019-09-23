@@ -10,5 +10,11 @@ namespace Friday.Models {
         public bool UsersSetSpot { get; set; }
         public bool CancelOnAccepted { get; set; }
 
+        public void Copy(Configuration con) {
+            CancelOnAccepted = con.CancelOnAccepted;
+            CombinedCateringKitchen = con.CombinedCateringKitchen;
+            UsersSetSpot = con.UsersSetSpot;
+        }
+
     }
 }

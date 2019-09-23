@@ -41,8 +41,46 @@ namespace Friday.Data {
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen", "User");
                 context.SaveChanges();
 
+                SeedItems();
+
 
             }
+
+        }
+
+        private void SeedItems() {
+            Item item = new Item {
+                Name = "Water",
+                Price = 1D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails {
+                    Allergens = "",
+                    Calories = 0D,
+                    SaltContent = 0D,
+                    Size = "200ml",
+                    SugarContent = 0D
+                }
+            };
+            context.Items.Add(item);
+
+            item = new Item {
+                Name = "Cola",
+                Price = 2D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails {
+                    Allergens = "",
+                    Calories = 50D,
+                    SaltContent = 0D,
+                    Size = "200ml",
+                    SugarContent = 50D
+                }
+            };
+            context.Items.Add(item);
+
+            context.SaveChanges();
+
 
         }
 

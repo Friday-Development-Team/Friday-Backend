@@ -56,6 +56,7 @@ namespace Friday {
 
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
 
+
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,6 +92,11 @@ namespace Friday {
 
                 options.User.RequireUniqueEmail = true;
 
+            });
+
+            services.AddAuthorization(c => {
+                c.AddPolicy("AdminOnly", pol => pol.RequireRole("Admin"));
+                c.AddPolicy("Personnel", pol => pol.RequireRole(new[] { "Admin", "Catering", "Kitchen" }));
             });
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
