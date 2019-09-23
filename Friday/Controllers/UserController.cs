@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.DTOs;
+using Friday.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +34,14 @@ namespace Friday.Controllers {
         }
 
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id) {
-            return "value";
+        /// <summary>
+        /// Returns the currently logged in user based on the provided token
+        /// </summary>
+        /// <returns>Information of the User</returns>
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ShopUser Get() {
+            return service.GetUser(User.Identity.Name);
         }
 
         /// <summary>
@@ -46,7 +52,8 @@ namespace Friday.Controllers {
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<String>> CreateToken(LoginDTO model) {
-            var user = await userManager.FindByNameAsync(model.Username);
+            var name = model.Username;
+            var user = await userManager.FindByNameAsync(name);
             if (user != null) {
                 var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (result.Succeeded) {
@@ -57,16 +64,26 @@ namespace Friday.Controllers {
             return BadRequest();
         }
 
+        /// <summary>
+        /// Registers a new User.
+        /// </summary>
+        /// <param name="model">Object containing information needed to register</param>
+        /// <returns>JWT</returns>
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<ActionResult<String>> Register(RegisterDTO model) {
+            IdentityUser user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded) {
+                if (service.AddUser(customer)) {
+                    string token = GetToken(user);
+                    return Created("", token);
+                }
+            }
+            return BadRequest();
+        }
 
-        ////// PUT api/<controller>/5
-        ////[HttpPut("{id}")]
-        ////public void Put(int id, [FromBody]string value) {
-        ////}
-
-        //// DELETE api/<controller>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id) {
-        //}
         /// <summary>
         /// Adds Balance to the specified user's account
         /// </summary>
@@ -74,7 +91,7 @@ namespace Friday.Controllers {
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin")]
-        public void UpdateBalance(int id, [FromBody]double amount) {
+        public void UpdateBalance(int id, double amount) {
             service.ChangeBalance(id, amount);
         }
 
@@ -82,7 +99,7 @@ namespace Friday.Controllers {
             // Create the token
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                //new Claim(JwtRegisteredClaimNames.Sub, user.Email),//No Email used, not needed
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
             };
 

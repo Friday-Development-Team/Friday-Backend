@@ -35,10 +35,11 @@ namespace Friday.Data.IServices {
 
         /// <summary>
         /// 
-        /// Used for registering a new user
+        /// Adds a User
         /// 
         /// </summary>
-        /// <param name="user"></param>
-        void AddUser(ShopUser user);
+        /// <param name="user">User to be added</param>
+        bool AddUser(ShopUser user);
+
     }
 }

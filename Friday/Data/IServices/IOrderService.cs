@@ -24,7 +24,7 @@ namespace Friday.Data.IServices {
         /// </summary>
         /// <param name="orderdto">DTO</param>
         /// <returns>True if the Order is valid and could be placed</returns>
-        bool PlaceOrder(OrderDTO orderdto);
+        int PlaceOrder(OrderDTO orderdto);
         /// <summary>
         /// Sets the Order status to completed.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Friday.Data.IServices {
         /// Returns a List containing all the non-Completed and non-Cancelled Ordered. Accepted first, then ordered by date asc.
         /// </summary>
         /// <returns>List of all current orders</returns>
-        IList<Order> GetAll();
+        IList<Order> GetAll(bool isKitchen);
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Friday.Data.IServices;
 using Friday.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace Friday.Controllers {
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
         }
@@ -35,6 +37,7 @@ namespace Friday.Controllers {
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Policy = "AdminOnly")]
         public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)

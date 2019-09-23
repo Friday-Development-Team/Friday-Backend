@@ -17,9 +17,12 @@ namespace Friday.Data.ServiceInstances {
             users = this.context.ShopUsers;
         }
 
-        public void AddUser(ShopUser user)
-        {
+        public bool AddUser(ShopUser user) {
+            if (user == null)
+                return false;
             users.Add(user);
+            context.SaveChanges();
+            return true;
         }
 
         public bool ChangeBalance(int id, double amount) {
@@ -30,14 +33,12 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
 
-        public ICollection<Order> GetOrderHistory(int id, DateTime orderTime)
-        {
+        public ICollection<Order> GetOrderHistory(int id, DateTime orderTime) {
             var user = users.SingleOrDefault(s => s.Id == id);
             return user.Order.Where(t => t.OrderTime == orderTime).ToList();
         }
 
-        public ShopUser GetUser(string username)
-        {
+        public ShopUser GetUser(string username) {
             return users.FirstOrDefault(t => t.Name == username);
         }
     }

@@ -6,9 +6,11 @@ using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,6 +32,7 @@ namespace Friday.Controllers {
         /// <param name="name">Name of the user</param>
         /// <returns>Order history. Check schema for format</returns>
         [HttpGet("history/{name}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get(string name) {
@@ -45,15 +48,16 @@ namespace Friday.Controllers {
         /// <summary>
         /// Places an Order.
         /// </summary>
-        /// <param name="order">JSON containing the needed information. Requires a username and a List of objects containing ItemId and Amount./param>
-        /// <returns>True if the Order was successfully placed.</returns>
+        /// <param name="order">JSON containing the needed information. Requires a username and a List of objects containing ItemId and Amount.</param>
+        /// <returns>ID of the order with a 200 if successfully placed. 400 otherwise.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<bool> Post([FromBody]OrderDTO order) {
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<int> Post([FromBody]OrderDTO order) {
             var result = service.PlaceOrder(order);
-            if (result)
-                return new OkResult();
+            if (result != 0)
+                return new OkObjectResult(result);
             return new BadRequestResult();
         }
 
@@ -62,12 +66,13 @@ namespace Friday.Controllers {
         /// Sets the Accepted flag of an Order.
         /// </summary>
         /// <param name="id">Id of the Order</param>
+        /// <param name="isKitchen">If it should be sent to the kitchen instead of accepted (if catering and kitchen are not combined, see config options)</param>
         /// <param name="value">True if the Order needs to be Accepted. False if it should return to Pending</param>
         /// <returns>True if the change was successful and was not already set to that value</returns>
         [HttpPut("accept/{id}/{isKitchen}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize(Roles = "Catering, Kitchen")]
+        [Authorize(Policy = "Personnel")]
         public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
             var result = service.SetAccepted(id, value, isKitchen);
             if (result)
@@ -83,7 +88,7 @@ namespace Friday.Controllers {
         [HttpPut("cancel/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize(Roles = "Catering")]
+        [Authorize(Roles = "Catering")]
         public ActionResult<bool> Cancel(int id) {
             var result = service.Cancel(id);
             if (result)
@@ -99,6 +104,7 @@ namespace Friday.Controllers {
         [HttpGet("status/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<string> GetStatus(int id) {
             var result = service.GetStatus(id);
             if (result == null)
@@ -109,16 +115,12 @@ namespace Friday.Controllers {
         /// Returns a List of all the ongoing Orders
         /// </summary>
         /// <returns>List of all ongoing Orders</returns>
-        [HttpGet]
+        [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        //[Authorize(Roles = "Catering")]
-        public ActionResult<IList<Order>> GetAll() {
-            return new OkObjectResult(service.GetAll() ?? new List<Order>());
+        [Authorize(Roles = "Catering")]
+        public ActionResult<IList<Order>> GetAll(bool isKitchen) {
+            return new OkObjectResult(service.GetAll(isKitchen) ?? new List<Order>());
         }
-
-
-
-
 
     }
 }

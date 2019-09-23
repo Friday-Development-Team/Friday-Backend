@@ -60,13 +60,13 @@ namespace Friday.Data.ServiceInstances {
             return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
         /// <inheritdoc />
-        public bool PlaceOrder(OrderDTO orderdto) {
+        public int PlaceOrder(OrderDTO orderdto) {
             if (orderdto == null || !orderdto.IsValid())
-                return false;
+                return 0;
 
             var user = users.SingleOrDefault(s => s.Name == orderdto.Username);
             if (user == null)
-                return false;
+                return 0;
 
             Order order = new Order {
                 User = user,
@@ -85,7 +85,7 @@ namespace Friday.Data.ServiceInstances {
             var totalPrice = orderitems.Select(s => (s.Amount * s.Item.Price)).Sum();
 
             if (!user.HasBalance(totalPrice))
-                return false;
+                return 0;
 
             order.Items = orderitems;
 
@@ -93,21 +93,21 @@ namespace Friday.Data.ServiceInstances {
             foreach (var item in order.Items) {
                 var temp = items.SingleOrDefault(s => s.Id == item.Item.Id);
                 if (temp == null)
-                    return false;
+                    return 0;
 
                 temp.Count -= item.Amount;
 
                 items.Update(temp);//Updated Item
             }
 
-            orders.Add(order);//Order added
+            var result = orders.Add(order);//Order added
             user.UpdateBalance(-totalPrice);
 
             users.Update(user);//Updated user
 
             context.SaveChanges();
 
-            return true;
+            return result.Entity.Id;
         }
 
         /// <inheritdoc />
@@ -135,8 +135,8 @@ namespace Friday.Data.ServiceInstances {
             return orders.SingleOrDefault(s => s.Id == id)?.ToString();
         }
         /// <inheritdoc />
-        public IList<Order> GetAll() {
-            return orders.Where(s => s.IsOngoing()).OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking().ToList();
+        public IList<Order> GetAll(bool isKitchen) {
+            return orders.Where(s => (isKitchen ? s.Status == OrderStatus.SentToKitchen : s.IsOngoing())).OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking().ToList();
         }
     }
 }

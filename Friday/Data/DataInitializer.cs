@@ -39,7 +39,7 @@ namespace Friday.Data {
                 ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
                 context.ShopUsers.Add(user2);
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen", "User");
-                context.SaveChanges();
+                //context.SaveChanges();
 
                 SeedItems();
 
