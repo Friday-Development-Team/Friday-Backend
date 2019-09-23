@@ -72,7 +72,7 @@ namespace Friday.Controllers {
         [HttpPut("accept/{id}/{isKitchen}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Policy = "Personnel")]
+        [Authorize(Roles = "Catering,Kitchen")]
         public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
             var result = service.SetAccepted(id, value, isKitchen);
             if (result)
@@ -117,7 +117,7 @@ namespace Friday.Controllers {
         /// <returns>List of all ongoing Orders</returns>
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = "Catering")]
+        [Authorize(Roles = "Admin,Catering,Kitchen")]
         public ActionResult<IList<Order>> GetAll(bool isKitchen) {
             return new OkObjectResult(service.GetAll(isKitchen) ?? new List<Order>());
         }

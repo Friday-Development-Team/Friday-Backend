@@ -45,12 +45,12 @@ namespace Friday.Controllers {
         }
 
         /// <summary>
-        /// 
+        /// Login
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">Model containing login information</param>
+        /// <returns>JWT</returns>
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<ActionResult<String>> CreateToken(LoginDTO model) {
             var name = model.Username;
             var user = await userManager.FindByNameAsync(name);
@@ -90,7 +90,7 @@ namespace Friday.Controllers {
         /// <param name="id">Id of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public void UpdateBalance(int id, double amount) {
             service.ChangeBalance(id, amount);
         }

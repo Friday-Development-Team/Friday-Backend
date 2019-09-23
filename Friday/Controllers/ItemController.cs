@@ -22,7 +22,7 @@ namespace Friday.Controllers {
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
+        [Authorize(Roles = "Admin,Catering,Kitchen")]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
         }
@@ -37,7 +37,7 @@ namespace Friday.Controllers {
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "Admin,Catering")]
         public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)

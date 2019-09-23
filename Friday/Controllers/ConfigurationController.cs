@@ -24,6 +24,7 @@ namespace Friday.Controllers {
         /// <returns>Config</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+
         public Configuration Get() {
             return service.GetConfig();
         }
@@ -31,7 +32,7 @@ namespace Friday.Controllers {
         /// Sets the configuration options
         /// </summary>
         /// <param name="config">Configuration option Object</param>
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public void Put([FromBody]Configuration config) {
             service.SetConfig(config);
