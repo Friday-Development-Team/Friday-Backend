@@ -28,22 +28,19 @@ namespace Friday.Data.ServiceInstances {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
-            var his = orders.ToList();
-            var result = new OrderHistory {
+            return new OrderHistory {
                 UserName = username,
-                orders = orders.Include(s => s.Items).Include(s=> s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
+                orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
                         new HistoryOrder {
                             OrderTime = s.OrderTime,
                             CompletionTime = s.CompletionTime,
-                            TotalPrice = s.Items.Select(t => t.Item.Count * t.Item.Price).Sum(),
+                            TotalPrice = s.Items.Select(t => t.Amount * t.Item.Price).Sum(),
                             Items = s.Items.Select(t => new HistoryOrderItem { ItemName = t.Item.Name, Amount = t.Amount }).ToList()
                         })
                     .ToList()
             };
-
-            return result;
 
         }
         /// <inheritdoc />
