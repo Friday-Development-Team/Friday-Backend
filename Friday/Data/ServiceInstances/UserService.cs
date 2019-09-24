@@ -27,9 +27,10 @@ namespace Friday.Data.ServiceInstances {
 
         public bool ChangeBalance(int id, double amount) {
             var user = users.SingleOrDefault(s => s.Id == id);
-            if (user.UpdateBalance(amount))
+            if (!user.UpdateBalance(amount))
                 return false;
             users.Update(user);
+            context.SaveChanges();
             return true;
         }
 

@@ -7,8 +7,8 @@ using Friday.Models;
 
 namespace Friday.DTOs {
     public class OrderDTO {
-        [Required]
-        public string Username { get; set; }
+        //[Required]
+        //public string Username { get; set; }
         [Required]
         public IList<OrderItemDTO> Items { get; set; }
         /// <summary>
@@ -16,7 +16,7 @@ namespace Friday.DTOs {
         /// </summary>
         /// <returns>True if valid, else false</returns>
         public bool IsValid() {
-            return Username != null && Items != null && Items.Count != 0 &&
+            return /*Username != null &&*/ Items != null && Items.Count != 0 &&
                    Items.Select(s => s.Amount).All(s => s >= 0);
         }
     }

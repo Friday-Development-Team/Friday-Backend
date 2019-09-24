@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Friday.Controllers {
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : Controller {
 
         private readonly IUserService service;
@@ -57,7 +58,7 @@ namespace Friday.Controllers {
             if (user != null) {
                 var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (result.Succeeded) {
-                    string token = GetToken(user); return Created("", token); //returns only the token
+                    string token = await GetToken(user); return Created("", token); //returns only the token
 
                 }
             }
@@ -72,12 +73,12 @@ namespace Friday.Controllers {
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<String>> Register(RegisterDTO model) {
-            IdentityUser user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded) {
                 if (service.AddUser(customer)) {
-                    string token = GetToken(user);
+                    string token = await GetToken(user);
                     return Created("", token);
                 }
             }
@@ -90,18 +91,16 @@ namespace Friday.Controllers {
         /// <param name="id">Id of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public void UpdateBalance(int id, double amount) {
             service.ChangeBalance(id, amount);
         }
 
-        private string GetToken(IdentityUser user) {
+        private async Task<string> GetToken(IdentityUser user) {
             // Create the token
-            var claims = new[]
-            {
-                //new Claim(JwtRegisteredClaimNames.Sub, user.Email),//No Email used, not needed
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
-            };
+            var claims = new List<Claim>();
+            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName));
+            claims.AddRange((await userManager.GetRolesAsync(user)).Select(s => new Claim(ClaimTypes.Role, s)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"]));
 
@@ -112,6 +111,7 @@ namespace Friday.Controllers {
                 claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
+
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

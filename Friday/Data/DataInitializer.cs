@@ -26,23 +26,25 @@ namespace Friday.Data {
 
                 await CreateRoles();
 
-                await CreateUser("Admin", null, "T3stP4ssw0rd4dm1n", "Admin");
-                await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", "Catering");
-                await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", "Kitchen");
+                await CreateUser("Admin", null, "T3stP4ssw0rd4dm1n", Role.Admin);
+                await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", Role.Catering);
+                await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", Role.Kitchen);
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin" });//#TODO Base balance
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering" });//#TODO Base balance
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen" });
 
                 ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
                 context.ShopUsers.Add(user);
-                await CreateUser(user.Name, "Test@Test.test", "Testen", "User");
+                await CreateUser(user.Name, "Test@Test.test", "Testen", Role.User);
                 ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
                 context.ShopUsers.Add(user2);
-                await CreateUser(user2.Name, "Test2@Test.test", "Testen", "User");
-                //context.SaveChanges();
+                await CreateUser(user2.Name, "Test2@Test.test", "Testen", Role.User);
 
                 SeedItems();
 
+                context.Configuration.Add(new Configuration());
+
+                context.SaveChanges();
 
             }
 
@@ -79,7 +81,7 @@ namespace Friday.Data {
             };
             context.Items.Add(item);
 
-            context.SaveChanges();
+
 
 
         }
@@ -89,13 +91,16 @@ namespace Friday.Data {
             var result = await userManager.CreateAsync(user, password);
             if (result.Succeeded) {
                 var createdUser = await userManager.FindByNameAsync(user.UserName);
-                await userManager.AddToRoleAsync(createdUser, role);
+                if (name != "Admin")
+                    await userManager.AddToRoleAsync(createdUser, role);
+                else
+                    await userManager.AddToRolesAsync(createdUser, roleManager.Roles.Select(s => s.Name));
             }
 
         }
 
         private async Task CreateRoles() {
-            string[] roles = { "Admin", "Catering", "Kitchen", "User" };
+            string[] roles = { Role.Admin, Role.Catering, Role.Kitchen, Role.User };
 
             foreach (var role in roles) {
                 if (!await roleManager.RoleExistsAsync(role))

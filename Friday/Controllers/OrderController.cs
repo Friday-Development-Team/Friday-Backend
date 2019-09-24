@@ -55,7 +55,7 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<int> Post([FromBody]OrderDTO order) {
-            var result = service.PlaceOrder(order);
+            var result = service.PlaceOrder(User.Identity.Name, order);
             if (result != 0)
                 return new OkObjectResult(result);
             return new BadRequestResult();
@@ -97,6 +97,23 @@ namespace Friday.Controllers {
         }
 
         /// <summary>
+        /// Completed an Order. Sets the Status flag to Completed. This cannot be undone.
+        /// An Order can only be Completed if its Status is Accepted.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True if the change was successful.</returns>
+        [HttpPut("complete/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Catering")]
+        public ActionResult<bool> Complete(int id) {
+            var result = service.SetCompleted(id);
+            if (result)
+                return new OkResult();
+            return new NotFoundResult();
+        }
+
+        /// <summary>
         /// Returns the Status of the specified Order as a string
         /// </summary>
         /// <param name="id">Id of the Order</param>
@@ -117,7 +134,7 @@ namespace Friday.Controllers {
         /// <returns>List of all ongoing Orders</returns>
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin,Catering,Kitchen")]
+        [Authorize(Roles = Role.Admin + Role.Catering + Role.Kitchen)]
         public ActionResult<IList<Order>> GetAll(bool isKitchen) {
             return new OkObjectResult(service.GetAll(isKitchen) ?? new List<Order>());
         }

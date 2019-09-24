@@ -20,7 +20,7 @@ namespace Friday.Models {
             if (amount < 0 && Math.Abs(amount) > Balance)//If negative and would reduce balance below zero. 
                 return false;
             var original = Balance;
-            Balance += amount;
+            this.Balance += amount;
             return Balance != original;
         }
 

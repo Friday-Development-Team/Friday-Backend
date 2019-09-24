@@ -17,6 +17,10 @@ namespace Friday.Models {
             return Status == OrderStatus.Pending || Status == OrderStatus.Accepted ||
                    Status == OrderStatus.SentToKitchen;
         }
+
+        public bool CanBeCancelled(bool OnAccept) {
+            return Status == OrderStatus.Pending || (OnAccept && Status == OrderStatus.Accepted);
+        }
     }
     /// <summary>
     /// Represents the Status of an Order

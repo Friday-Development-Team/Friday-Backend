@@ -24,7 +24,7 @@ namespace Friday.Data.IServices {
         /// </summary>
         /// <param name="orderdto">DTO</param>
         /// <returns>True if the Order is valid and could be placed</returns>
-        int PlaceOrder(OrderDTO orderdto);
+        int PlaceOrder(string user, OrderDTO orderdto);
         /// <summary>
         /// Sets the Order status to completed.
         /// </summary>

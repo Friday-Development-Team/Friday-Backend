@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Friday.Data.IServices;
 using Friday.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friday.Controllers {
     [Route("api/[controller]")]
+    [Authorize]
     public class ItemController : Controller {
 
         private readonly IItemService service;
@@ -22,7 +24,7 @@ namespace Friday.Controllers {
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin,Catering,Kitchen")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
         }
@@ -34,10 +36,10 @@ namespace Friday.Controllers {
         /// <param name="id">Id of the Item</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         /// <returns>True if it was successful. You can't get a negative amount, at best the count can be reduced to 0</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = "Admin,Catering")]
+        [Authorize(Roles = Role.Admin)]
         public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)

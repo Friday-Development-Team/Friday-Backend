@@ -51,20 +51,21 @@ namespace Friday.Data.ServiceInstances {
             var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
-            if (item == null || item.Status == OrderStatus.Completed)
+            if (item == null || item.Status == OrderStatus.Completed || !item.IsOngoing())
                 return false;
 
             var old = item.Status;
             item.Status = changed;
             orders.Update(item);
+            context.SaveChanges();
             return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
         /// <inheritdoc />
-        public int PlaceOrder(OrderDTO orderdto) {
+        public int PlaceOrder(string username, OrderDTO orderdto) {
             if (orderdto == null || !orderdto.IsValid())
                 return 0;
 
-            var user = users.SingleOrDefault(s => s.Name == orderdto.Username);
+            var user = users.SingleOrDefault(s => s.Name == username);
             if (user == null)
                 return 0;
 
@@ -123,7 +124,7 @@ namespace Friday.Data.ServiceInstances {
         /// <inheritdoc />
         public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
             var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || order.Status != OrderStatus.Pending)
+            if (order == null || order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;
             order.Status = OrderStatus.Cancelled;
             orders.Update(order);
