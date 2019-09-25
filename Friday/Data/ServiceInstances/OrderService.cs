@@ -124,7 +124,7 @@ namespace Friday.Data.ServiceInstances {
         /// <inheritdoc />
         public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
             var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
+            if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;
             order.Status = OrderStatus.Cancelled;
             orders.Update(order);
