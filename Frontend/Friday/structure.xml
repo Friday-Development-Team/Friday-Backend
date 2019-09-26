@@ -1,0 +1,71 @@
+<Document>
+    <App-Component>
+        <Outlet>
+            <Option1>
+                <AuthenticationContainer Service="AuthService">
+                    <Outlet>
+                        <Option1>
+                            <Login>Component</Login>
+                        </Option1>
+                        <Option2>
+                            <Register>Component</Register>
+                        </Option2>
+                    </Outlet>
+                </AuthenticationContainer>
+            </Option1>
+            <Option2>
+                <Navbar Service="UserService">
+                    Buttons to logout, view History and Current Orders
+                </Navbar>
+                <Outlet>
+                    <Option1>
+                        <StoreContainer>
+                            <FilterCartContainer>
+                                <FilterContainer Service="FilterService">
+                                    <Filters>Component</Filters>
+                                </FilterContainer>
+                                <CartContainer Service="CartService">
+                                    <Cart>Component</Cart>
+                                </CartContainer>
+                            </FilterCartContainer>
+                            <ShowcaseContainer Service="CartService, DataService">
+                                <Searchbars>Component</Searchbars>
+                                <Showcase Type="NgFor">
+                                    <ItemBox>Component</ItemBox>
+                                </Showcase>
+                            </ShowcaseContainer>
+                        </StoreContainer>
+                    </Option1>
+                    <Option2>
+                        <HistoryWrapper Service="DataService">
+                            <OrderHistory Type="NgFor">
+                                <HistoryItem>Component</HistoryItem>
+                            </OrderHistory>
+                            <LogHistory>Component</LogHistory>
+                        </HistoryWrapper>
+                    </Option2>
+                    <Option3>
+                        <RunningOrders Service="OrderService" Type="NgFor">
+                            <OrderStatus>Component</OrderStatus>
+                        </RunningOrders>
+                    </Option3>
+                    <Options4>
+                        <Tools Service="ToolService" Auth="Personnel">
+                            <Sidebar>
+                            Buttons for all tabs, controls routing
+                            </Sidebar>
+                            <Outlet>
+                                <Option1>
+                                    <AdminTools>Component, TBD</AdminTools>
+                                </Option1>
+                                <Option2>
+                                    <CateringTool>Component, both catering and kitchen</CateringTool>
+                                </Option2>
+                            </Outlet>
+                        </Tools>
+                    </Options4>
+                </Outlet>
+            </Option2>
+        </Outlet>
+    </App-Component>
+</Document>
