@@ -44,7 +44,7 @@ namespace Friday.Data.ServiceInstances
 
         public ICollection<Order> GetOrderHistory(int id, DateTime orderTime)
         {
-            var user = users.SingleOrDefault(s => s.Id == id);
+            var user = users.Single(s => s.Id == id);
             return user.Order.Where(t => t.OrderTime == orderTime).ToList();
         }
 
