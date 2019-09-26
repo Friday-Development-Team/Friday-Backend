@@ -4,24 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.Models;
+using Friday.Models.Logs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Friday.Data.ServiceInstances {
-    public class ItemService : IItemService {
+namespace Friday.Data.ServiceInstances
+{
+    public class ItemService : IItemService
+    {
 
         //private IList<Item> list;
         //#TODO Inject context
         private readonly Context context;
         private readonly DbSet<Item> items;
-        private readonly DbSet<ItemDetails> details;
+        private readonly DbSet<ItemLog> logs;
 
-        public ItemService(Context context) {
+        public ItemService(Context context)
+        {
             this.context = context;
-            this.items = this.context.Items;
-            details = this.context.ItemDetails;
+            items = this.context.Items;
+            logs = this.context.ItemLogs;
 
         }
-        public IList<Item> GetAll() {
+        public IList<Item> GetAll()
+        {
             return items.Include(s => s.ItemDetails).AsNoTracking().ToList();
         }
         ///// <summary>
@@ -38,7 +44,8 @@ namespace Friday.Data.ServiceInstances {
         /// <param name="id">Id of the item</param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public bool ChangeCount(int id, int amount) {
+        public bool ChangeCount(int id, int amount)
+        {
             var item = items.SingleOrDefault(s => s.Id == id);
             if (item == null || (amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
                 return false;
@@ -48,7 +55,16 @@ namespace Friday.Data.ServiceInstances {
 
             context.SaveChanges();
 
+            this.LogItem(item, amount);
+
             return true;
+        }
+
+        private void LogItem(Item item, int count)
+        {
+            var log = new ItemLog { Item = item, Count = count, Time = DateTime.Now };
+            logs.Add(log);
+            context.SaveChanges();
         }
     }
 }

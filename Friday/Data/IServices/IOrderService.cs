@@ -2,6 +2,7 @@
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
+using Friday.Models.Out.Order;
 
 namespace Friday.Data.IServices {
     public interface IOrderService {
@@ -47,7 +48,7 @@ namespace Friday.Data.IServices {
         /// Returns a List containing all the non-Completed and non-Cancelled Ordered. Accepted first, then ordered by date asc.
         /// </summary>
         /// <returns>List of all current orders</returns>
-        IList<Order> GetAll(bool isKitchen);
+        IList<CateringOrderDTO> GetAll(bool isKitchen);
 
     }
 }

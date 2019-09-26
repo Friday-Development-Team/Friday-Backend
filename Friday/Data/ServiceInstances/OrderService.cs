@@ -9,31 +9,37 @@ using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.ServiceInstances {
-    public class OrderService : IOrderService {
+namespace Friday.Data.ServiceInstances
+{
+    public class OrderService : IOrderService
+    {
 
         private readonly Context context;
         private readonly DbSet<Order> orders;
         private readonly DbSet<ShopUser> users;
         private readonly DbSet<Item> items;
 
-        public OrderService(Context context) {
+        public OrderService(Context context)
+        {
             this.context = context;
             orders = context.Orders;
             users = context.ShopUsers;
             items = context.Items;
         }
         /// <inheritdoc />
-        public OrderHistory GetHistory(string username) {
+        public OrderHistory GetHistory(string username)
+        {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
-            return new OrderHistory {
+            return new OrderHistory
+            {
                 UserName = username,
                 orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
-                        new HistoryOrder {
+                        new HistoryOrder
+                        {
                             OrderTime = s.OrderTime,
                             CompletionTime = s.CompletionTime,
                             TotalPrice = s.Items.Select(t => t.Amount * t.Item.Price).Sum(),
@@ -44,7 +50,8 @@ namespace Friday.Data.ServiceInstances {
 
         }
         /// <inheritdoc />
-        public bool SetAccepted(int id, bool value, bool toKitchen) {
+        public bool SetAccepted(int id, bool value, bool toKitchen)
+        {
 
             var needsKitchen = context.Configuration.Single();
 
@@ -61,7 +68,8 @@ namespace Friday.Data.ServiceInstances {
             return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
         /// <inheritdoc />
-        public int PlaceOrder(string username, OrderDTO orderdto) {
+        public int PlaceOrder(string username, OrderDTO orderdto)
+        {
             if (orderdto == null || !orderdto.IsValid())
                 return 0;
 
@@ -69,7 +77,8 @@ namespace Friday.Data.ServiceInstances {
             if (user == null)
                 return 0;
 
-            Order order = new Order {
+            Order order = new Order
+            {
                 User = user,
                 UserId = user.Id,
                 OrderTime = DateTime.Now,
@@ -77,7 +86,8 @@ namespace Friday.Data.ServiceInstances {
             };
 
             var orderitems = orderdto.Items.Select(s =>
-                    new OrderItem {
+                    new OrderItem
+                    {
                         Order = order,
                         Item = items.SingleOrDefault(t => t.Id == s.Id),
                         Amount = s.Amount
@@ -91,7 +101,8 @@ namespace Friday.Data.ServiceInstances {
             order.Items = orderitems;
 
 
-            foreach (var item in order.Items) {
+            foreach (var item in order.Items)
+            {
                 var temp = items.SingleOrDefault(s => s.Id == item.Item.Id);
                 if (temp == null)
                     return 0;
@@ -112,7 +123,8 @@ namespace Friday.Data.ServiceInstances {
         }
 
         /// <inheritdoc />
-        public bool SetCompleted(int id) {
+        public bool SetCompleted(int id)
+        {
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || order.Status != OrderStatus.Accepted)//Only accepted orders can be completed
                 return false;
@@ -122,7 +134,8 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
+        public bool Cancel(int id)
+        {//#TODO Config for option to allow accepted orders to be cancelled
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;
@@ -132,12 +145,28 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public string GetStatus(int id) {
-            return orders.SingleOrDefault(s => s.Id == id)?.ToString();
+        public string GetStatus(int id)
+        {
+            return orders.SingleOrDefault(s => s.Id == id)?.Status.ToString();
         }
         /// <inheritdoc />
-        public IList<Order> GetAll(bool isKitchen) {
-            return orders.Where(s => (isKitchen ? s.Status == OrderStatus.SentToKitchen : s.IsOngoing())).OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking().ToList();
+        public IList<CateringOrderDTO> GetAll(bool isKitchen)
+        {
+            var result = orders.Include(s => s.Items).ThenInclude(s => s.Item).ThenInclude(s => s.ItemDetails)
+                .Include(s => s.User)
+                .Where(s => (isKitchen ? s.Status == OrderStatus.SentToKitchen : s.IsOngoing()))
+                .OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking()
+                .Select(s => new CateringOrderDTO
+                {
+                    Id = s.Id,
+                    Status = ((OrderStatus) s.Status).ToString(),
+                    User = s.User,
+                    Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
+                        .ToList()
+                })
+                .ToList();
+
+            return result;
         }
     }
 }

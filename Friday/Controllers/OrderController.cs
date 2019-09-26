@@ -6,6 +6,7 @@ using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
+using Friday.Models.Out.Order;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,13 +15,16 @@ using Microsoft.AspNetCore.Routing;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Friday.Controllers {
+namespace Friday.Controllers
+{
     [Route("api/[controller]")]
-    public class OrderController : Controller {
+    public class OrderController : Controller
+    {
 
         private readonly IOrderService service;
 
-        public OrderController(IOrderService service) {
+        public OrderController(IOrderService service)
+        {
             this.service = service;
         }
 
@@ -35,7 +39,8 @@ namespace Friday.Controllers {
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<OrderHistory> Get(string name) {
+        public ActionResult<OrderHistory> Get(string name)
+        {
             var result = service.GetHistory(name);
             if (result == null)
                 return new NotFoundObjectResult(null);
@@ -54,7 +59,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<int> Post([FromBody]OrderDTO order) {
+        public ActionResult<int> Post([FromBody]OrderDTO order)
+        {
             var result = service.PlaceOrder(User.Identity.Name, order);
             if (result != 0)
                 return new OkObjectResult(result);
@@ -73,7 +79,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering,Kitchen")]
-        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
+        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value)
+        {
             var result = service.SetAccepted(id, value, isKitchen);
             if (result)
                 return new OkResult();
@@ -89,7 +96,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering")]
-        public ActionResult<bool> Cancel(int id) {
+        public ActionResult<bool> Cancel(int id)
+        {
             var result = service.Cancel(id);
             if (result)
                 return new OkResult();
@@ -106,7 +114,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering")]
-        public ActionResult<bool> Complete(int id) {
+        public ActionResult<bool> Complete(int id)
+        {
             var result = service.SetCompleted(id);
             if (result)
                 return new OkResult();
@@ -122,7 +131,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<string> GetStatus(int id) {
+        public ActionResult<string> GetStatus(int id)
+        {
             var result = service.GetStatus(id);
             if (result == null)
                 return new NotFoundResult();
@@ -134,9 +144,11 @@ namespace Friday.Controllers {
         /// <returns>List of all ongoing Orders</returns>
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = Role.Admin + Role.Catering + Role.Kitchen)]
-        public ActionResult<IList<Order>> GetAll(bool isKitchen) {
-            return new OkObjectResult(service.GetAll(isKitchen) ?? new List<Order>());
+        [Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
+        public ActionResult<IList<CateringOrderDTO>> GetAll(bool isKitchen)
+        {
+            var result = service.GetAll(isKitchen) ?? new List<CateringOrderDTO>();
+            return new OkObjectResult(result);
         }
 
     }
