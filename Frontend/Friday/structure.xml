@@ -2,16 +2,14 @@
     <App-Component>
         <Outlet>
             <Option1>
-                <AuthenticationContainer Service="AuthService">
-                    <Outlet>
-                        <Option1>
-                            <Login>Component</Login>
-                        </Option1>
-                        <Option2>
-                            <Register>Component</Register>
-                        </Option2>
-                    </Outlet>
-                </AuthenticationContainer>
+                <Outlet>
+                    <Option1>
+                        <Login Service="AuthService">Component</Login>
+                    </Option1>
+                    <Option2>
+                        <Register Service="AuthService">Component</Register>
+                    </Option2>
+                </Outlet>
             </Option1>
             <Option2>
                 <Navbar Service="UserService">
@@ -20,14 +18,12 @@
                 <Outlet>
                     <Option1>
                         <StoreContainer>
-                            <FilterCartContainer>
-                                <FilterContainer Service="FilterService">
-                                    <Filters>Component</Filters>
-                                </FilterContainer>
-                                <CartContainer Service="CartService">
-                                    <Cart>Component</Cart>
-                                </CartContainer>
-                            </FilterCartContainer>
+                            <FilterContainer Service="FilterService">
+                                <Filters>Component</Filters>
+                            </FilterContainer>
+                            <CartContainer Service="CartService">
+                                <Cart>Component</Cart>
+                            </CartContainer>
                             <ShowcaseContainer Service="CartService, DataService">
                                 <Searchbars>Component</Searchbars>
                                 <Showcase Type="NgFor">
@@ -37,16 +33,13 @@
                         </StoreContainer>
                     </Option1>
                     <Option2>
-                        <HistoryWrapper Service="DataService">
-                            <OrderHistory Type="NgFor">
-                                <HistoryItem>Component</HistoryItem>
-                            </OrderHistory>
-                            <LogHistory>Component</LogHistory>
-                        </HistoryWrapper>
+                        <OrderHistory Service="DataService" Type="NgFor">
+                            <HistoryItem>Component</HistoryItem>
+                        </OrderHistory>
                     </Option2>
                     <Option3>
-                        <RunningOrders Service="OrderService" Type="NgFor">
-                            <OrderStatus>Component</OrderStatus>
+                        <RunningOrders Service="UserService" Type="NgFor">
+                            Component
                         </RunningOrders>
                     </Option3>
                     <Options4>
