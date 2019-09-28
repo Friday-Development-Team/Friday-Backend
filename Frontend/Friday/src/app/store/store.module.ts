@@ -20,7 +20,7 @@ import { CateringtoolsComponent } from './tools/cateringtools/cateringtools.comp
 const routes: Routes = [
   {
     path: 'store', children: [
-      { path: '', redirectTo: 'shop' },
+      { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopcontainerComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'orders', component: OrdersComponent },
@@ -56,6 +56,6 @@ const routes: Routes = [
   ],
   providers: [
     UserService
-  ]
+  ], exports: [RouterModule]
 })
 export class StoreModule { }
