@@ -7,6 +7,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { StoreModule } from './store/store.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AuthenticationModule,
     StoreModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -81,6 +81,113 @@ namespace Friday.Data {
             };
             context.Items.Add(item);
 
+            item = new Item
+            {
+                Name = "Cola Light",
+                Price = 2D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "",
+                    Calories = 0D,
+                    SaltContent = 0D,
+                    Size = "200ml",
+                    SugarContent = 0D
+                }
+            };
+
+            context.Items.Add(item);
+
+            item = new Item
+            {
+                Name = "Cola Zero",
+                Price = 2D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "",
+                    Calories = 0D,
+                    SaltContent = 0D,
+                    Size = "200ml",
+                    SugarContent = 0D
+                }
+            };
+
+            context.Items.Add(item);
+
+            item = new Item
+            {
+                Name = "Red Bull",
+                Price = 2.5,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "Taurine, Caffeïne",
+                    Calories = 30D,
+                    SaltContent = 0D,
+                    Size = "250ml",
+                    SugarContent = 20D
+                }
+            };
+
+            context.Items.Add(item);
+
+            item = new Item
+            {
+                Name = "Fanta",
+                Price = 2D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "",
+                    Calories = 50D,
+                    SaltContent = 0D,
+                    Size = "200ml",
+                    SugarContent = 20D
+                }
+            };
+
+            context.Items.Add(item);
+
+            item = new Item
+            {
+                Name = "Jupiler",
+                Price = 2D,
+                Count = 50,
+                Type = "Beverage",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "",
+                    Calories = 50D,
+                    SaltContent = 0D,
+                    Size = "330ml",
+                    SugarContent = 0D
+                }
+            };
+
+            context.Items.Add(item);
+
+            item = new Item
+            {
+                Name = "Pizza",
+                Price = 4D,
+                Count = 50,
+                Type = "Food",
+                ItemDetails = new ItemDetails
+                {
+                    Allergens = "Cheese, Meat, Gluten",
+                    Calories = 500D,
+                    SaltContent = 20D,
+                    Size = "1 full pizza",
+                    SugarContent = 0D
+                }
+            };
+
+            context.Items.Add(item);
 
 
 

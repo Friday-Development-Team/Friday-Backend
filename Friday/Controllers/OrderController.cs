@@ -36,7 +36,7 @@ namespace Friday.Controllers
         /// <param name="name">Name of the user</param>
         /// <returns>Order history. Check schema for format</returns>
         [HttpGet("history/{name}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get(string name)
@@ -58,7 +58,7 @@ namespace Friday.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<int> Post([FromBody]OrderDTO order)
         {
             var result = service.PlaceOrder(User.Identity.Name, order);
@@ -78,7 +78,7 @@ namespace Friday.Controllers
         [HttpPut("accept/{id}/{isKitchen}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Catering,Kitchen")]
+        //[Authorize(Roles = "Catering,Kitchen")]
         public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value)
         {
             var result = service.SetAccepted(id, value, isKitchen);
@@ -95,7 +95,7 @@ namespace Friday.Controllers
         [HttpPut("cancel/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Catering")]
+        //[Authorize(Roles = "Catering")]
         public ActionResult<bool> Cancel(int id)
         {
             var result = service.Cancel(id);
@@ -113,7 +113,7 @@ namespace Friday.Controllers
         [HttpPut("complete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Catering")]
+        //[Authorize(Roles = "Catering")]
         public ActionResult<bool> Complete(int id)
         {
             var result = service.SetCompleted(id);
@@ -130,7 +130,7 @@ namespace Friday.Controllers
         [HttpGet("status/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<string> GetStatus(int id)
         {
             var result = service.GetStatus(id);
@@ -144,7 +144,7 @@ namespace Friday.Controllers
         /// <returns>List of all ongoing Orders</returns>
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
+        //[Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
         public ActionResult<IList<CateringOrderDTO>> GetAll(bool isKitchen)
         {
             var result = service.GetAll(isKitchen) ?? new List<CateringOrderDTO>();

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friday.Controllers {
     [Route("api/[controller]")]
-    [Authorize]
+    ////[Authorize]
     public class ItemController : Controller {
 
         private readonly IItemService service;
@@ -24,7 +24,7 @@ namespace Friday.Controllers {
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
         }
@@ -39,7 +39,7 @@ namespace Friday.Controllers {
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)
