@@ -53,6 +53,18 @@ namespace Friday.Controllers
         }
 
         /// <summary>
+        /// Gets the roles of the currently logged in user
+        /// </summary>
+        /// <returns>List of roles</returns>
+        [HttpGet("roles")]
+        public async Task<IList<string>> GetRolesAsync()
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            return await userManager.GetRolesAsync(user);
+
+        }
+
+        /// <summary>
         /// Login
         /// </summary>
         /// <param name="model">Model containing login information</param>
