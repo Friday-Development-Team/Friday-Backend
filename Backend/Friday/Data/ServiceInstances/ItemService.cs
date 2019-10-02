@@ -28,7 +28,8 @@ namespace Friday.Data.ServiceInstances
         }
         public IList<Item> GetAll()
         {
-            return items.Include(s => s.ItemDetails).AsNoTracking().ToList();
+            var result=items.Include(s => s.ItemDetails).AsNoTracking().ToList();
+            return result;
         }
         ///// <summary>
         ///// Returns the details of a specified Item

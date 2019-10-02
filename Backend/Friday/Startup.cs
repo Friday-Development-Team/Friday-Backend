@@ -111,6 +111,8 @@ namespace Friday {
                 app.UseHsts();
             }
 
+            app.UseCors();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

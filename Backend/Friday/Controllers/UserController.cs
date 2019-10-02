@@ -19,7 +19,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Friday.Controllers
 {
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [ApiController]
     //[Authorize]
     public class UserController : Controller
     {

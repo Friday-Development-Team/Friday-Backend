@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Friday.Controllers {
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [ApiController]
     ////[Authorize]
     public class ItemController : Controller {
 
@@ -25,6 +28,7 @@ namespace Friday.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
         }

@@ -19,12 +19,17 @@ namespace Friday.Data.ServiceInstances
         private readonly DbSet<ShopUser> users;
         private readonly DbSet<Item> items;
 
-        public OrderService(Context context)
+        private readonly IItemService itemService;
+        private readonly IUserService userService;
+
+        public OrderService(Context context, IItemService itemsService, IUserService userService)
         {
             this.context = context;
             orders = context.Orders;
             users = context.ShopUsers;
             items = context.Items;
+            this.itemService = itemsService;
+            this.userService = userService;
         }
         /// <inheritdoc />
         public OrderHistory GetHistory(string username)
@@ -100,14 +105,18 @@ namespace Friday.Data.ServiceInstances
 
             order.Items = orderitems;
 
-
+            Dictionary<Item, int> log = new Dictionary<Item, int>();
             foreach (var item in order.Items)
             {
                 var temp = items.SingleOrDefault(s => s.Id == item.Item.Id);
                 if (temp == null)
                     return 0;
 
-                temp.Count -= item.Amount;
+                //temp.Count -= item.Amount;
+                if (itemService.ChangeCount(temp.Id, -temp.Count))
+                    RevertItems(log);
+                log.Add(temp, temp.Count);
+
 
                 items.Update(temp);//Updated Item
             }
@@ -120,6 +129,21 @@ namespace Friday.Data.ServiceInstances
             context.SaveChanges();
 
             return result.Entity.Id;
+        }
+
+        private void RevertItems(Dictionary<Item, int> log)
+        {
+            foreach (var entry in log)
+            {
+                var item = entry.Key;
+                var amount = entry.Value;
+                itemService.ChangeCount(item.Id, amount);
+            }
+        }
+
+        private void RevertUser(int id, double amount)
+        {
+
         }
 
         /// <inheritdoc />
@@ -159,7 +183,7 @@ namespace Friday.Data.ServiceInstances
                 .Select(s => new CateringOrderDTO
                 {
                     Id = s.Id,
-                    Status = ((OrderStatus) s.Status).ToString(),
+                    Status = ((OrderStatus)s.Status).ToString(),
                     User = s.User,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
                         .ToList()
