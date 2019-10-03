@@ -63,6 +63,17 @@ namespace Friday.Controllers
             return await userManager.GetRolesAsync(user);
 
         }
+        /// <summary>
+        /// Checks if the provided username already exists
+        /// </summary>
+        /// <param name="name">Name to be checked</param>
+        /// <returns>True if doesn't exist</returns>
+        [AllowAnonymous]
+        [HttpGet("checkusername")]
+        public async Task<ActionResult<Boolean>> CheckAvailableUserName(string name)
+        {
+            return await userManager.FindByNameAsync(name) == null;
+        }
 
         /// <summary>
         /// Login

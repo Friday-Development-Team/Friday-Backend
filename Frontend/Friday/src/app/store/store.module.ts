@@ -16,10 +16,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { ToolscontainerComponent } from './tools/toolscontainer/toolscontainer.component';
 import { AdmintoolsComponent } from './tools/admintools/admintools.component';
 import { CateringtoolsComponent } from './tools/cateringtools/cateringtools.component';
+import { AuthGuard } from '../authentication/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'store', children: [
+    path: 'store', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopcontainerComponent },
       { path: 'history', component: HistoryComponent },

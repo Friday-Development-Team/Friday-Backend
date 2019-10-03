@@ -20,19 +20,31 @@ export class LoginComponent implements OnInit {
       password: builder.control('', [Validators.required, Validators.minLength(6)])
     })
 
-    
+
   }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    if (!this.form.invalid)
-      //auth.login()
-      console.log("login")
-    this.hasSubmitted = true
-    this.data.getAllItems().subscribe(s => console.log(s))
+    this.hasSubmitted = true;
+    if (this.form.valid)
+      this.auth
+        .login(this.form.value.username, this.form.value.password)
+        .subscribe(
+          val => {
+            if (val) {
+              if (this.auth.redirectUrl) {
+                this.router.navigateByUrl(this.auth.redirectUrl);
+                this.auth.redirectUrl = undefined;
+              } else {
+                this.router.navigate(['/store']);
+              }
+            }
+          }
+        );
   }
+
 
   toRegister() {
     this.router.navigate(['/auth/register'])
