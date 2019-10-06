@@ -36,16 +36,16 @@ export class AuthService {
     return !!localToken ? localToken : '';
   }
 
-  login(email: string, password: string): Observable<boolean> {
+  login(username: string, password: string): Observable<boolean> {
     return this.http.post(
-      `${environment.apiUrl}/account`,
-      { email, password },
+      `${environment.apiUrl}/user/login`,
+      { username, password },
       { responseType: 'text' }
     ).pipe(
       map((token: any) => {
         if (token) {
           localStorage.setItem(this.tokenKey, token);
-          this.user.next(email);
+          this.user.next(username);
           return true;
         } else {
           return false;
@@ -59,7 +59,7 @@ export class AuthService {
   ): Observable<boolean> {
     return this.http
       .post(
-        `${environment.apiUrl}/account/register`,
+        `${environment.apiUrl}/user/register`,
         {
           firstname, lastname,
           email, password,
@@ -106,3 +106,4 @@ function parseJwt(token) {
   const base64 = base64Token.replace(/-/g, '+').replace(/_/g, '/');
   return JSON.parse(window.atob(base64));
 }
+

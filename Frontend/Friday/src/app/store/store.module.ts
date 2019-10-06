@@ -20,7 +20,7 @@ import { AuthGuard } from '../authentication/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'store', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+    path: 'store', component: StoreContainerComponent, canActivate: [AuthGuard], children: [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopcontainerComponent },
       { path: 'history', component: HistoryComponent },
@@ -56,7 +56,9 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   providers: [
-    UserService
-  ], exports: [RouterModule]
+    UserService,
+    AuthGuard
+  ],
+  exports: [RouterModule]
 })
 export class StoreModule { }

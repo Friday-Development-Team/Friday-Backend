@@ -82,7 +82,7 @@ namespace Friday.Controllers
         /// <returns>JWT</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<String>> CreateToken(LoginDTO model)
+        public async Task<ActionResult<String>> CreateToken([FromBody] LoginDTO model)
         {
             var name = model.Username;
             var user = await userManager.FindByNameAsync(name);
@@ -91,10 +91,12 @@ namespace Friday.Controllers
                 var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (result.Succeeded)
                 {
-                    string token = await GetToken(user); return Created("", token); //returns only the token
+                    string token = await GetToken(user);
+                    return Created("", token); //returns only the token
 
                 }
             }
+
             return BadRequest();
         }
 

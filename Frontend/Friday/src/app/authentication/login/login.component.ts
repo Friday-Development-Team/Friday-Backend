@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    var username = this.form.value.username
+    var password = this.form.value.password
     this.hasSubmitted = true;
     if (this.form.valid)
       this.auth
