@@ -1,3 +1,20 @@
-<p>
-  showcase works!
-</p>
+<div class="container">
+
+  <div class="row" id="searchbars">
+    <div class="col-12">
+      <friday-searchbars></friday-searchbars>
+    </div>
+  </div>
+
+  <div class="row" id="itemboxes">
+    <div class="col-12">
+      <div class="row">
+        <friday-itembox *ngFor="let item of items" [item]="item" (onAdd)="addItemToCart($event)"
+          class="col-sm-12 col-md-6 col-lg-4 item" style="margin-bottom: 50px;"></friday-itembox>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- (items | async | price : priceFilter | search : (searchTerm | async)); let i=index 
+-->

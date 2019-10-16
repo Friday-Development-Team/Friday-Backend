@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CartService } from 'src/app/services/cart.service';
+import { Item } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-showcase',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShowcaseComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cart: CartService) { }
 
   ngOnInit() {
   }
+
+  addItemToCart(event: { item: Item, amount: number }) {
+    this.cart.addToCart(event.item, event.amount)
+  }
+  
 
 }

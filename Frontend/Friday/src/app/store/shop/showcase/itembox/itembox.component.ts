@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Item, OrderItem } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-itembox',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./itembox.component.scss']
 })
 export class ItemboxComponent implements OnInit {
+
+  @Input() item: Item
+  @Output() onAdd: EventEmitter<{ item: Item, amount: number }> = new EventEmitter()
 
   constructor() { }
 

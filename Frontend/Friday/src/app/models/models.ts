@@ -5,3 +5,12 @@ export class Item {
 export class ItemDetails {
     constructor(public id: number, public itemId: number, public size: string, public calories: number, public sugarContent: number, public saltContent: number, public allergens: number) { }
 }
+
+export class Cart {
+    total: number
+    items: OrderItem[]
+}
+
+export class OrderItem {
+    constructor(public item: Item, public amount: number) { }
+}
