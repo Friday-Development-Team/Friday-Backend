@@ -1,0 +1,18 @@
+.nobg {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.tempfill {
+  height: 300px;
+  border: 2px solid green;
+
+  &.cart {
+    margin-top: 10px;
+  }
+}
+
+.fluid-container {
+  margin: 40px;
+}

@@ -42,9 +42,9 @@ export class AuthService {
       { username, password },
       { responseType: 'text' }
     ).pipe(
-      map((token: any) => {
+      map((token: string) => {
         if (token) {
-          localStorage.setItem(this.tokenKey, token);
+          localStorage.setItem(this.tokenKey, token.replace(/^"(.*)"$/, '$1'));
           this.user.next(username);
           return true;
         } else {

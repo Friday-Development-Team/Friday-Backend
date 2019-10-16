@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
+import { UserService, ShopUser } from 'src/app/services/user.service';
 
 @Component({
   selector: 'friday-store-container',
@@ -8,7 +8,15 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class StoreContainerComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  currentUser: ShopUser
+
+  constructor(private userService: UserService) {
+    this.userService.user.subscribe(s => {
+
+      this.currentUser = s
+    })
+    this.userService.startUserPolling()
+  }
 
   ngOnInit() {
   }

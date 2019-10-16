@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
+using Friday.Models.Out;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,10 +47,12 @@ namespace Friday.Controllers
         /// </summary>
         /// <returns>Information of the User</returns>
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ShopUser Get()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ShopUserDTO Get()
         {
-            return service.GetUser(User.Identity.Name);
+            var name = User.Identity.Name;
+            var result = service.GetUser(name);
+            return result;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.Models;
+using Friday.Models.Out;
 using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data.ServiceInstances
@@ -48,9 +49,10 @@ namespace Friday.Data.ServiceInstances
             return user.Order.Where(t => t.OrderTime == orderTime).ToList();
         }
 
-        public ShopUser GetUser(string username)
+        public ShopUserDTO GetUser(string username)
         {
-            return users.FirstOrDefault(t => t.Name == username);
+            var user = users.FirstOrDefault(t => t.Name == username);
+            return user != null ? new ShopUserDTO { Name = user.Name, Balance = user.Balance } : null;
         }
 
         private void LogMoney(ShopUser user, double count)

@@ -1,6 +1,7 @@
 ﻿using Friday.Models;
 using System;
 using System.Collections.Generic;
+using Friday.Models.Out;
 
 namespace Friday.Data.IServices {
     public interface IUserService {
@@ -31,7 +32,7 @@ namespace Friday.Data.IServices {
         /// 
         /// </summary>
         /// <returns></returns>
-        ShopUser GetUser(string username);
+        ShopUserDTO GetUser(string username);
 
         /// <summary>
         /// 
