@@ -24,7 +24,7 @@ namespace Friday.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : Controller
     {
 
@@ -132,7 +132,7 @@ namespace Friday.Controllers
         /// <param name="id">Id of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("{id}")]
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public void UpdateBalance(int id, double amount)
         {
             service.ChangeBalance(id, amount);

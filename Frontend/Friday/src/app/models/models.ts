@@ -7,8 +7,12 @@ export class ItemDetails {
 }
 
 export class Cart {
-    total: number
-    items: OrderItem[]
+    total: number = 0
+    items: OrderItem[] = []
+
+    updateTotal() {
+        this.total = this.items.map(s => { return s.item.price * s.amount }).reduce((acc, cur) => acc + cur)
+    }
 }
 
 export class OrderItem {

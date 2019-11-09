@@ -15,7 +15,7 @@ namespace Friday.Controllers {
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ConfigurationController : Controller {
         private readonly IConfigurationService service;
 
@@ -36,7 +36,7 @@ namespace Friday.Controllers {
         /// Sets the configuration options
         /// </summary>
         /// <param name="config">Configuration option Object</param>
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [HttpPut]
         public void Put([FromBody]Configuration config) {
             service.SetConfig(config);

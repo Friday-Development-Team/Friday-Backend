@@ -17,6 +17,9 @@ import { ToolscontainerComponent } from './tools/toolscontainer/toolscontainer.c
 import { AdmintoolsComponent } from './tools/admintools/admintools.component';
 import { CateringtoolsComponent } from './tools/cateringtools/cateringtools.component';
 import { AuthGuard } from '../authentication/auth.guard';
+import { PricefilterPipe } from '../pipes/pricefilter.pipe';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchPipe } from '../pipes/search.pipe';
 
 const routes: Routes = [
   {
@@ -50,14 +53,20 @@ const routes: Routes = [
     OrdersComponent,
     ToolscontainerComponent,
     AdmintoolsComponent,
-    CateringtoolsComponent],
+    CateringtoolsComponent,
+    PricefilterPipe,
+    SearchPipe],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     UserService,
-    AuthGuard
+    AuthGuard,
+    PricefilterPipe,
+    SearchPipe
   ],
   exports: [RouterModule]
 })

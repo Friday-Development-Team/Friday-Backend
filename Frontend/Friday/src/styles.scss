@@ -7,8 +7,21 @@ app-root {
 }
 
 .bgcontainer {
-  height: 100%;
   width: 100%;
   margin: 0;
   background: linear-gradient(to bottom left, #b51f85, teal);
+  background-size: contain;
+  @media screen and (max-width: 720px) {
+    background: linear-gradient(to left, #b51f85, teal);
+  }
+}
+
+.nobg {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+datalist {
+  display: none;
 }

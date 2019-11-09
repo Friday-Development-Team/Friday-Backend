@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'friday-searchbars',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchbarsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private filter: FilterService) { }
 
   ngOnInit() {
+  }
+
+  searchName(event: any){
+    console.log(event.target.value)
+    this.filter.searchName(event.target.value)
   }
 
 }

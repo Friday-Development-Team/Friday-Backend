@@ -9,7 +9,7 @@ import { PriceFilter } from 'src/app/models/pricefilter';
 })
 export class FilterscontainerComponent implements OnInit {
 
-  private priceFilters: PriceFilterDisplay[] = [new PriceFilterDisplay('none', 0), new PriceFilterDisplay('<=', 1.5), new PriceFilterDisplay('>', 1.5)]
+  private priceFilters: PriceFilterDisplay[] = [new PriceFilterDisplay('none', 0, true), new PriceFilterDisplay('<=', 1.5), new PriceFilterDisplay('>', 1.5)]
 
   constructor(private service: FilterService) { }
 
@@ -26,8 +26,7 @@ export class FilterscontainerComponent implements OnInit {
 
 export class PriceFilterDisplay {
   public text: string
-  public checked: boolean = false
-  constructor(public type: string, public amount: number) {
+  constructor(public type: string, public amount: number, public checked: boolean = false) {
     this.text = this.getText()
   }
 
