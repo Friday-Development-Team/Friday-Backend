@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Models.Out.Order;
 
-namespace Friday.Models.Out {
-    public class OrderHistory {
+namespace Friday.Models.Out
+{
+    public class OrderHistory
+    {
         public string UserName { get; set; }
-        public IList<HistoryOrder> orders;
+        public IList<HistoryOrder> Orders { get; set; }
     }
 }

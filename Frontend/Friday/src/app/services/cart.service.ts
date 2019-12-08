@@ -16,12 +16,14 @@ export class CartService {
   }
 
   addToCart(item: Item, amount: number) {
-    var id = this.cart.items.map(s => { return s.item.id }).indexOf(item.id)
+    console.log(`Amount = ${amount}`)
+    let id = this.cart.items.map(s => { return s.item.id }).indexOf(item.id)
     if (id === -1)
       this.cart.items.push(new OrderItem(item, amount))
-    else
-      this.cart.items[id].amount += amount
-
+    else {
+      var temp: number = +this.cart.items[id].amount + +amount
+      this.cart.items[id].amount = temp
+    }
     this.cartItems.next(this.cart)
 
     this.cart.updateTotal()
@@ -29,7 +31,7 @@ export class CartService {
   }
 
   removeFromCart(item: number) {
-    var id = this.cart.items.map(s => s.item.id).indexOf(item)
+    let id = this.cart.items.map(s => s.item.id).indexOf(item)
     if (id === -1)
       return
     if (this.cart.items[id].amount === 1)
@@ -50,7 +52,9 @@ export class CartService {
   placeOrder(): boolean {
     var response: number
     this.data.placeOrder(new OrderDTO(this.cart.items.map(s => { return new OrderItemDTO(s.item.id, s.amount) }))).subscribe(s => response = s)
+    this.flushCart()
     return response !== null
+
   }
 
   private pushCart() {

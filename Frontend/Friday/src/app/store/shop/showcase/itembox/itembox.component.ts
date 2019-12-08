@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/models/models';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'friday-itembox',
@@ -10,16 +11,19 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class ItemboxComponent implements OnInit {
 
   @Input() item: Item
+  @Input() refresher: Observable<any>
   @Output() onAdd: EventEmitter<{ item: Item, amount: number }> = new EventEmitter()
   form: FormGroup
 
   constructor(builder: FormBuilder) {
     this.form = builder.group({
-      amount: builder.control('1')
+      amount: builder.control('1', Validators.pattern("[0-9]+"))
     })
+
   }
 
   ngOnInit() {
+    this.refresher.subscribe(s => this.sanitizeForm())
   }
 
   getURL() {
@@ -27,10 +31,17 @@ export class ItemboxComponent implements OnInit {
   }
 
   onAddToCart() {
-    if (this.form.invalid)
+    if (this.form.invalid) {
+      this.sanitizeForm()
       return
+    }
     var amount = this.form.get('amount').value
     this.onAdd.emit({ item: this.item, amount: amount })
+  }
+
+  sanitizeForm() {
+    this.form.get('amount').setValue('1')
+    this.form.updateValueAndValidity()
   }
 
 }

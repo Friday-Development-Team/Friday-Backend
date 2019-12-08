@@ -1,15 +1,19 @@
-<div class="wrapper">
-    <div class="container">
+<div class="container wrapper">
+    <form>
         <div class="row">
-            <form>
-                <div class="col-xs-4 offset-xs-2 col-sm-1 offset-sm-2 tempfill">Test</div>
-                <div class="col-xs-4 offset-xs-2 col-sm-2 offset-sm-6 tempfill"><input type="search" (keyup)="searchName($event)">
-
-                    <!-- <datalist id="orderfilter"></datalist> -->
-                </div>
-            </form>
+            <div class="col-xs-4 offset-xs-2 col-sm-1">
+                <select name="orders" id="orders" (change)="changeOrder($event)">
+                    <option value="" *ngFor="let filter of orderFilters" [value]="filter">{{filter}}</option>
+                </select>
+            </div>
+            <div class="col-xs-4 offset-xs-2 col-sm-2 offset-sm-6">
+                <input type="search" aria-placeholder="Search" placeholder="Search"  (keyup)="searchName($event)">
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <!-- <input list="orderfilter"> -->
+
+<!-- class="col-xs-4 offset-xs-2 col-sm-1 offset-sm-3 tempfill" -->
+<!--class="col-xs-4 offset-xs-2 col-sm-2 offset-sm-6 tempfill" -->

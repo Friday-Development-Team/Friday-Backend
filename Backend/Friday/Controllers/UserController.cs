@@ -63,8 +63,8 @@ namespace Friday.Controllers
         public async Task<IList<string>> GetRolesAsync()
         {
             var user = await userManager.FindByNameAsync(User.Identity.Name);
-            return await userManager.GetRolesAsync(user);
-
+            var temp = await userManager.GetRolesAsync(user);
+            return temp;
         }
         /// <summary>
         /// Checks if the provided username already exists

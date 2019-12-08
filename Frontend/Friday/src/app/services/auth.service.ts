@@ -95,6 +95,17 @@ export class AuthService {
       }
     );
   }
+  /**
+   * Checks if the user has a certain role or at least one of the required roels (only used for UI, always in conjunction with backend auth)
+   * @param role Roles to be checked
+   */
+  hasRole(role: string[]): Observable<boolean> {
+    return this.http.get<string[]>(`${environment.apiUrl}/user/roles`).pipe(map(s => s.map(t => t.toLowerCase())), map(t => <boolean>
+      (role.length === 1
+        ? t.includes(role[0].toLowerCase())//if only 1 role
+        : role.some(u => t.includes(u)))
+    ))
+  }
 
 }
 

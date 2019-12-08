@@ -38,12 +38,13 @@ namespace Friday.Controllers
         /// </summary>
         /// <param name="name">Name of the user</param>
         /// <returns>Order history. Check schema for format</returns>
-        [HttpGet("history/{name}")]
+        [HttpGet("history")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<OrderHistory> Get(string name)
+        public ActionResult<OrderHistory> Get()
         {
+            var name = User.Identity.Name;
             var result = service.GetHistory(name);
             if (result == null)
                 return new NotFoundObjectResult(null);

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RefService } from 'src/app/services/ref.service';
 
 @Component({
   selector: 'friday-toolscontainer',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolscontainerComponent implements OnInit {
 
-  constructor() { }
+  private readonly ref: string = 'tools'
+
+  constructor(private refService: RefService) {
+    this.refService.sendRef(this.ref)
+  }
 
   ngOnInit() {
+
   }
 
 }

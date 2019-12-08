@@ -24,11 +24,23 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <button class="btn btn-dark btn-padded">Tools<span class="sr-only">(current)</span></button>
-        </li>
+
+
         <li class="nav-item">
-          <button class="btn btn-dark btn-padded">History</button>
+          <button class="btn btn-dark btn-padded" *ngIf="(canActivateTools | async) && currentPage !== 'tools'"
+            [routerLink]="['/store/tools']">Tools</button>
+        </li>
+
+
+        <li class="nav-item">
+          <button class="btn btn-dark btn-padded" *ngIf="currentPage!=='history'"
+            [routerLink]="['/store/history']">History</button>
+        </li>
+
+
+        <li class="nav-item">
+          <button class="btn btn-dark btn-padded" *ngIf="currentPage!=='shop'"
+            [routerLink]="['/store/shop']">Shop</button>
         </li>
 
       </ul>

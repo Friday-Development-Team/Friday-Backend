@@ -53,7 +53,7 @@ namespace Friday.Data {
         private void SeedItems() {
             Item item = new Item {
                 Name = "Water",
-                Price = 1D,
+                Price = 1.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails {
@@ -68,7 +68,7 @@ namespace Friday.Data {
 
             item = new Item {
                 Name = "Cola",
-                Price = 2D,
+                Price = 2.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails {
@@ -84,7 +84,7 @@ namespace Friday.Data {
             item = new Item
             {
                 Name = "Cola Light",
-                Price = 2D,
+                Price = 2.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails
@@ -102,7 +102,7 @@ namespace Friday.Data {
             item = new Item
             {
                 Name = "Cola Zero",
-                Price = 2D,
+                Price = 2.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails
@@ -138,7 +138,7 @@ namespace Friday.Data {
             item = new Item
             {
                 Name = "Fanta",
-                Price = 2D,
+                Price = 2.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails
@@ -156,7 +156,7 @@ namespace Friday.Data {
             item = new Item
             {
                 Name = "Jupiler",
-                Price = 2D,
+                Price = 2.0,
                 Count = 50,
                 Type = "Beverage",
                 ItemDetails = new ItemDetails
@@ -174,7 +174,7 @@ namespace Friday.Data {
             item = new Item
             {
                 Name = "Pizza",
-                Price = 4D,
+                Price = 4.0,
                 Count = 50,
                 Type = "Food",
                 ItemDetails = new ItemDetails

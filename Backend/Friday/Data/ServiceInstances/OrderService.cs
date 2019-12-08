@@ -40,7 +40,7 @@ namespace Friday.Data.ServiceInstances
             return new OrderHistory
             {
                 UserName = username,
-                orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
+                Orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
                         new HistoryOrder
@@ -50,7 +50,8 @@ namespace Friday.Data.ServiceInstances
                             TotalPrice = s.Items.Select(t => t.Amount * t.Item.Price).Sum(),
                             Items = s.Items.Select(t => new HistoryOrderItem { ItemName = t.Item.Name, Amount = t.Amount }).ToList()
                         })
-                    .ToList()
+                    .ToList(),
+
             };
 
         }
@@ -87,7 +88,8 @@ namespace Friday.Data.ServiceInstances
                 User = user,
                 UserId = user.Id,
                 OrderTime = DateTime.Now,
-                Status = OrderStatus.Pending
+                CompletionTime = DateTime.Now.AddMinutes(10),
+                Status = OrderStatus.Completed
             };
 
             var orderitems = orderdto.Items.Select(s =>
@@ -153,6 +155,7 @@ namespace Friday.Data.ServiceInstances
             if (order == null || order.Status != OrderStatus.Accepted)//Only accepted orders can be completed
                 return false;
             order.Status = OrderStatus.Completed;
+            order.CompletionTime = DateTime.Now;
             orders.Update(order);
             context.SaveChanges();
             return true;

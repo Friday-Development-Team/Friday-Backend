@@ -1,4 +1,5 @@
 <div>
-  <friday-cart [cart]='cart' (onRemove)="deleteItem($event)" (onOrderPlace)="placeOrder()" (onCartClear)="clearCart()">
+  <friday-cart [cart]='(cart | async)' (onRemove)="deleteItem($event)" (onOrderPlace)="placeOrder()"
+    (onCartClear)="clearCart()">
   </friday-cart>
 </div>

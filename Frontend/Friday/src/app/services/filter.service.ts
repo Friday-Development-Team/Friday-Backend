@@ -9,6 +9,7 @@ export class FilterService {
 
   filter: BehaviorSubject<PriceFilter> = new BehaviorSubject(new PriceFilter('none', 0))
   search: Subject<string> = new Subject()
+  order: BehaviorSubject<string> = new BehaviorSubject("Price: low to high")
 
   changePriceFilter(filter: PriceFilter) {
     this.filter.next(filter)
@@ -16,5 +17,8 @@ export class FilterService {
 
   searchName(name: string) {
     this.search.next(name)
+  }
+  changeOrder(type: string) {
+    this.order.next(type)
   }
 }

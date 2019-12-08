@@ -37,10 +37,10 @@ export class LoginComponent implements OnInit {
           val => {
             if (val) {
               if (this.auth.redirectUrl) {
-                this.router.navigateByUrl(this.auth.redirectUrl);
-                this.auth.redirectUrl = undefined;
+                this.router.navigateByUrl(this.auth.redirectUrl)
+                this.auth.redirectUrl = undefined
               } else {
-                this.router.navigate(['/store']);
+                this.router.navigate(['/store'])
               }
             }
           }

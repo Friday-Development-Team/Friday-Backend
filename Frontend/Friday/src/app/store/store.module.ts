@@ -20,6 +20,9 @@ import { AuthGuard } from '../authentication/auth.guard';
 import { PricefilterPipe } from '../pipes/pricefilter.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchPipe } from '../pipes/search.pipe';
+import { OrderPipe } from '../pipes/order.pipe';
+import { RoleGuard } from './guards/role.guard';
+import { RunningComponent } from './running/running.component';
 
 const routes: Routes = [
   {
@@ -29,9 +32,10 @@ const routes: Routes = [
       { path: 'history', component: HistoryComponent },
       { path: 'orders', component: OrdersComponent },
       {
-        path: 'tools', children: [
-          { path: 'admin', component: AdmintoolsComponent },
-          { path: 'catering', component: CateringtoolsComponent }
+        path: 'tools', component: ToolscontainerComponent, /*canActivateChild: [RoleGuard], data: { role: ['admin', 'catering'] },*/ children: [
+          //{ path: '', redirectTo: 'catering', pathMatch: 'full' },
+          { path: 'admin', component: AdmintoolsComponent, canActivate: [RoleGuard], data: { role: ['admin'] } },
+          { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] } }
         ]
       }
     ]
@@ -55,7 +59,9 @@ const routes: Routes = [
     AdmintoolsComponent,
     CateringtoolsComponent,
     PricefilterPipe,
-    SearchPipe],
+    SearchPipe,
+    OrderPipe,
+    RunningComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -65,8 +71,10 @@ const routes: Routes = [
   providers: [
     UserService,
     AuthGuard,
+    RoleGuard,
     PricefilterPipe,
-    SearchPipe
+    SearchPipe,
+    OrderPipe
   ],
   exports: [RouterModule]
 })

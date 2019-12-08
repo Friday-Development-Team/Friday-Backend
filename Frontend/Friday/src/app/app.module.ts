@@ -9,15 +9,12 @@ import { StoreModule } from './store/store.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { httpInterceptorProviders } from './interceptors';
-import { PricefilterPipe } from './pipes/pricefilter.pipe';
-import { SearchPipe } from './pipes/search.pipe';
-import { OrderPipe } from './pipes/order.pipe';
+import { registerLocaleData } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotfoundComponent,
-    OrderPipe,
   ],
   imports: [
     BrowserModule,
