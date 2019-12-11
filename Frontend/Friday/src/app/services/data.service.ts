@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { OrderDTO } from './cart.service';
 import { RefreshService } from './refresh.service';
-import { Item, OrderHistory } from '../models/models';
+import { Item, OrderHistory, CateringOrder } from '../models/models';
 import { map } from 'rxjs/operators';
 
 
@@ -32,6 +32,10 @@ export class DataService {
       temp.fromJson(s)
       return temp
     }))
+  }
+
+  getRunning() {
+    return this.http.get<CateringOrder[]>(`${environment.apiUrl}/order/running`)
   }
 
 }

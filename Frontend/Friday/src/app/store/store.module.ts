@@ -30,10 +30,10 @@ const routes: Routes = [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopcontainerComponent },
       { path: 'history', component: HistoryComponent },
+      { path: 'running', component: RunningComponent },
       { path: 'orders', component: OrdersComponent },
       {
-        path: 'tools', component: ToolscontainerComponent, /*canActivateChild: [RoleGuard], data: { role: ['admin', 'catering'] },*/ children: [
-          //{ path: '', redirectTo: 'catering', pathMatch: 'full' },
+        path: 'tools', component: ToolscontainerComponent, canActivate: [RoleGuard], data: { role: ['admin', 'catering'] }, children: [
           { path: 'admin', component: AdmintoolsComponent, canActivate: [RoleGuard], data: { role: ['admin'] } },
           { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] } }
         ]
@@ -61,7 +61,8 @@ const routes: Routes = [
     PricefilterPipe,
     SearchPipe,
     OrderPipe,
-    RunningComponent],
+    RunningComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

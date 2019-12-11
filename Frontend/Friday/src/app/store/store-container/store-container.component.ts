@@ -16,6 +16,7 @@ export class StoreContainerComponent implements OnInit {
   currentPage: string
   currentUser: ShopUser
 
+  hasRunningOrders: boolean = true
   canActivateTools: Observable<boolean>
 
 

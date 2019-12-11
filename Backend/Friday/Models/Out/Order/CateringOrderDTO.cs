@@ -9,7 +9,10 @@ namespace Friday.Models.Out.Order
     {
         public int Id { get; set; }
         public IList<HistoryOrderItem> Items { get; set; }
-        public ShopUser User { get; set; }
+        public DateTime OrderTime { get; set; }
+        public string User { get; set; }
         public string Status { get; set; }
+        public double TotalPrice { get; set; }
+
     }
 }

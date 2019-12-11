@@ -154,6 +154,19 @@ namespace Friday.Controllers
             var result = service.GetAll(isKitchen) ?? new List<CateringOrderDTO>();
             return new OkObjectResult(result);
         }
+        /// <summary>
+        /// Returns a list of all the running orders of a user, sorted by Accepted first, then by date
+        /// </summary>
+        /// <returns>List of running orders of user</returns>
+        [HttpGet("running")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<IList<CateringOrderDTO>> GetRunningOrders()
+        {
+            var user = User.Identity.Name;
+            var result = service.GetAll(false).Where(s => s.User == user) ?? new List<CateringOrderDTO>();
+            return new OkObjectResult(result);
+        }
 
     }
 }

@@ -88,8 +88,8 @@ namespace Friday.Data.ServiceInstances
                 User = user,
                 UserId = user.Id,
                 OrderTime = DateTime.Now,
-                CompletionTime = DateTime.Now.AddMinutes(10),
-                Status = OrderStatus.Completed
+                //CompletionTime = DateTime.Now.AddMinutes(10),
+                Status = OrderStatus.Pending
             };
 
             var orderitems = orderdto.Items.Select(s =>
@@ -145,7 +145,7 @@ namespace Friday.Data.ServiceInstances
 
         private void RevertUser(int id, double amount)
         {
-
+            //#TODO
         }
 
         /// <inheritdoc />
@@ -179,7 +179,10 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public IList<CateringOrderDTO> GetAll(bool isKitchen)
         {
-            var result = orders.Include(s => s.Items).ThenInclude(s => s.Item).ThenInclude(s => s.ItemDetails)
+            var result = orders
+                .Include(s => s.Items)
+                .ThenInclude(s => s.Item)
+                .ThenInclude(s => s.ItemDetails)
                 .Include(s => s.User)
                 .Where(s => (isKitchen ? s.Status == OrderStatus.SentToKitchen : s.IsOngoing()))
                 .OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking()
@@ -187,9 +190,11 @@ namespace Friday.Data.ServiceInstances
                 {
                     Id = s.Id,
                     Status = ((OrderStatus)s.Status).ToString(),
-                    User = s.User,
+                    User = s.User.Name,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
-                        .ToList()
+                        .ToList(),
+                    OrderTime = s.OrderTime,
+                    TotalPrice = s.Items.Sum(t => t.Amount * t.Item.Price)
                 })
                 .ToList();
 

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { RefService } from 'src/app/services/ref.service';
+import { DataService } from 'src/app/services/data.service';
+import { CateringOrder } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-running',
@@ -7,7 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RunningComponent implements OnInit {
 
-  constructor() { }
+  private readonly ref: string = 'running'
+
+  orders: CateringOrder[]=[]
+
+  constructor(private refService: RefService, private data: DataService) {
+    this.refService.sendRef(this.ref)
+
+    this.data.getRunning().subscribe(s => {
+      console.log(s)
+      this.orders = s
+    })
+  }
 
   ngOnInit() {
   }

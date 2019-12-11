@@ -62,7 +62,11 @@ export class HistoryOrderItem {
     constructor(public itemName?: string, public amount?: number) { }
 }
 
-/*
-
-
-*/
+export class CateringOrder {
+    constructor(
+        private id: number,
+        private items: HistoryOrderItem[], private user: string,
+        private status: string,
+        private orderTime: Date,
+        private totalPrice: number) { }
+}
