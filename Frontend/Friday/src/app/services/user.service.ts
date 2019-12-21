@@ -34,7 +34,7 @@ export class UserService {
     )
   }
   stopUserPolling() {
-    this.userclock = null;
+    this.userclock = null
   }
 
   startOrderPolling() {
@@ -43,6 +43,10 @@ export class UserService {
     this.userclock.pipe(switchMap(() => this.data.getRunning())).subscribe(s => {
       this.running.next(s)
     })
+  }
+
+  stopOrderPolling() {
+    this.orderclock = null
   }
 
   getUserInformation(): Observable<ShopUser> {

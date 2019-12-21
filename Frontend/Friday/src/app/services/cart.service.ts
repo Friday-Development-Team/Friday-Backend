@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart, Item, OrderItem } from '../models/models';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class CartService {
   private cart: Cart
   cartItems: BehaviorSubject<Cart> = new BehaviorSubject(new Cart())
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService, private user: UserService) {
     this.cart = new Cart()
   }
 
@@ -53,8 +54,9 @@ export class CartService {
     var response: number
     this.data.placeOrder(new OrderDTO(this.cart.items.map(s => { return new OrderItemDTO(s.item.id, s.amount) }))).subscribe(s => response = s)
     this.flushCart()
-    return response !== null
-
+    if (!!response)
+      this.user.startOrderPolling()
+    return !!response
   }
 
   private pushCart() {

@@ -23,8 +23,10 @@ export class RunningComponent implements OnInit {
     })
 
     this.user.running.subscribe(s => {
+
+      this.orders = s
       if (!!s)
-        this.orders = s
+        this.user.stopOrderPolling()//If no more running orders, stop polling
     })
 
   }
