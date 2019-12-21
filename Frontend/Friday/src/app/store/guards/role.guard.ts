@@ -11,7 +11,7 @@ export class RoleGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    console.log('got into guard')
+    
     const user = this.auth.user$.getValue()
     if (!user) {
       this.router.navigate(['/store/shop'])

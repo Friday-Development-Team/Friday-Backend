@@ -23,6 +23,7 @@ import { SearchPipe } from '../pipes/search.pipe';
 import { OrderPipe } from '../pipes/order.pipe';
 import { RoleGuard } from './guards/role.guard';
 import { RunningComponent } from './running/running.component';
+import { AdjustUserComponent } from './tools/toolcomponents/admin/adjust-user/adjust-user.component';
 
 const routes: Routes = [
   {
@@ -61,7 +62,8 @@ const routes: Routes = [
     PricefilterPipe,
     SearchPipe,
     OrderPipe,
-    RunningComponent
+    RunningComponent,
+    AdjustUserComponent
   ],
   imports: [
     CommonModule,

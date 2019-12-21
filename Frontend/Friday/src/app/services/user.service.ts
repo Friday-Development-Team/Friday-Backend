@@ -5,17 +5,20 @@ import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs/operators';
 import { DataService } from './data.service';
 import { RefreshService } from './refresh.service';
+import { CateringOrder } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  clock: Observable<any> = interval(300000)
+  userclock: Observable<any> = interval(300000)
+  orderclock: Observable<any> = interval(30000)
 
   user: Subject<ShopUser> = new BehaviorSubject(new ShopUser('Loading ....', 0))
+  running: Subject<CateringOrder[]> = new Subject()
 
-  constructor(private http: HttpClient, private refresh: RefreshService) {
+  constructor(private http: HttpClient, private refresh: RefreshService, private data: DataService) {
     //Gets the first user information when this service is loaded in. Polling is started on component side to allow component to load
     this.getUserInformation().subscribe(s => this.user.next(s))
     //Triggers an instant refresh of information
@@ -23,21 +26,30 @@ export class UserService {
   }
 
   startUserPolling() {
-    if ((!this.clock))
-      this.clock = timer(300000)
-    this.clock.pipe(switchMap(() => this.getUserInformation())).subscribe(s => {
-      console.log("polling")
+    if ((!this.userclock))
+      this.userclock = interval(300000)
+    this.userclock.pipe(switchMap(() => this.getUserInformation())).subscribe(s => {
       this.user.next(s)
     }
     )
   }
   stopUserPolling() {
-    this.clock = null;
+    this.userclock = null;
+  }
+
+  startOrderPolling() {
+    if (!this.orderclock)
+      this.orderclock = interval(30000)
+    this.userclock.pipe(switchMap(() => this.data.getRunning())).subscribe(s => {
+      this.running.next(s)
+    })
   }
 
   getUserInformation(): Observable<ShopUser> {
     return this.http.get<ShopUser>(`${environment.apiUrl}/user`)
   }
+
+
 
 
 }
