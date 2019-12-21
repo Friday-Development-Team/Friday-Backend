@@ -40,4 +40,9 @@ export class StoreContainerComponent implements OnInit {
     this.router.navigate([`/store/${this.currentPage}`])
   }
 
+  logout(){
+    this.auth.logout()
+    this.router.navigate(['auth'])
+  }
+
 }
