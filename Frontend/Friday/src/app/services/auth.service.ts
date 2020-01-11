@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable, of } from 'rxjs'
+import { HttpClient } from '@angular/common/http'
+import { environment } from 'src/environments/environment'
+import { map } from 'rxjs/operators'
 
 
 @Injectable({
@@ -10,30 +10,32 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private readonly tokenKey = 'currentUser';
-  private user: BehaviorSubject<string>;
+  private readonly tokenKey = 'currentUser'
+  private user: BehaviorSubject<string>
 
-  public redirectUrl: string;
+  private roles: string[]
+
+  public redirectUrl: string
 
   constructor(private http: HttpClient) {
-    let parsedToken = parseJwt(localStorage.getItem(this.tokenKey));
+    let parsedToken = parseJwt(localStorage.getItem(this.tokenKey))
     if (parsedToken) {
-      const expires = new Date(parseInt(parsedToken.exp, 10) * 1000) < new Date();
+      const expires = new Date(parseInt(parsedToken.exp, 10) * 1000) < new Date()
       if (expires) {
-        localStorage.removeItem(this.tokenKey);
-        parsedToken = null;
+        localStorage.removeItem(this.tokenKey)
+        parsedToken = null
       }
     }
-    this.user = new BehaviorSubject<string>(parsedToken && parsedToken.unique_name);
+    this.user = new BehaviorSubject<string>(parsedToken && parsedToken.unique_name)
   }
 
   get user$(): BehaviorSubject<string> {
-    return this.user;
+    return this.user
   }
 
   get token(): string {
-    const localToken = localStorage.getItem(this.tokenKey);
-    return !!localToken ? localToken : '';
+    const localToken = localStorage.getItem(this.tokenKey)
+    return !!localToken ? localToken : ''
   }
 
   login(username: string, password: string): Observable<boolean> {
@@ -44,47 +46,47 @@ export class AuthService {
     ).pipe(
       map((token: string) => {
         if (token) {
-          localStorage.setItem(this.tokenKey, token.replace(/^"(.*)"$/, '$1'));
-          this.user.next(username);
-          return true;
+          localStorage.setItem(this.tokenKey, token.replace(/^"(.*)"$/, '$1'))
+          this.user.next(username)
+          return true
         } else {
-          return false;
+          return false
         }
       })
-    );
+    )
   }
 
   register(
-    firstname: string, lastname: string, email: string, password: string
+    name: string, password: string
   ): Observable<boolean> {
     return this.http
       .post(
         `${environment.apiUrl}/user/register`,
         {
-          firstname, lastname,
-          email, password,
-          passwordConfirmation: password
+          name, password
         },
         { responseType: 'text' }
       )
       .pipe(
         map((token: any) => {
-          if (token) {
-            localStorage.setItem(this.tokenKey, token);
-            this.user.next(email);
-            return true;
-          } else {
-            return false;
-          }
+          // if (token) {
+          //   //localStorage.setItem(this.tokenKey, token)
+          //   //this.user.next(name)
+          //   return true
+          // } else {
+          //   return false
+          // }
+          return !!token
         })
-      );
+      )
   }
 
   logout() {
     if (this.user.getValue()) {
-      localStorage.removeItem('currentUser');
-      this.user.next(null);
+      localStorage.removeItem('currentUser')
+      this.user.next(null)
     }
+    this.roles = null
   }
 
   checkUserNameAvailability = (name: string): Observable<boolean> => {
@@ -93,14 +95,22 @@ export class AuthService {
       {
         params: { name }
       }
-    );
+    )
   }
   /**
    * Checks if the user has a certain role or at least one of the required roels (only used for UI, always in conjunction with backend auth)
    * @param role Roles to be checked
    */
   hasRole(role: string[]): Observable<boolean> {
-    return this.http.get<string[]>(`${environment.apiUrl}/user/roles`).pipe(map(s => s.map(t => t.toLowerCase())), map(t => <boolean>
+    let response =
+      ((!!this.roles)
+        ? of(this.roles)
+        : this.http.get<string[]>(`${environment.apiUrl}/user/roles`))
+
+    return response.pipe(map(s => {
+      this.roles = s
+      return s.map(t => t.toLowerCase())
+    }), map(t => <boolean>
       (role.length === 1
         ? t.includes(role[0].toLowerCase())//if only 1 role
         : role.some(u => t.includes(u)))
@@ -109,12 +119,13 @@ export class AuthService {
 
 }
 
+
 function parseJwt(token) {
   if (!token) {
-    return null;
+    return null
   }
-  const base64Token = token.split('.')[1];
-  const base64 = base64Token.replace(/-/g, '+').replace(/_/g, '/');
-  return JSON.parse(window.atob(base64));
+  const base64Token = token.split('.')[1]
+  const base64 = base64Token.replace(/-/g, '+').replace(/_/g, '/')
+  return JSON.parse(window.atob(base64))
 }
 

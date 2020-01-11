@@ -31,7 +31,7 @@ namespace Friday.Data.IServices {
         /// </summary>
         /// <param name="id"></param>
         /// <returns>True if successful</returns>
-        bool SetCompleted(int id);
+        bool SetCompleted(int id, bool forBeverage);
         /// <summary>
         /// Cancels an Order. An Order can only be cancelled if it isn't Completed or, depending on configuration, not Accepted.
         /// </summary>

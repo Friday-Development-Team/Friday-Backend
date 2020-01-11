@@ -15,19 +15,16 @@ using Microsoft.AspNetCore.Routing;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Friday.Controllers
-{
+namespace Friday.Controllers {
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class OrderController : Controller
-    {
+    public class OrderController : ControllerBase {
 
         private readonly IOrderService service;
 
-        public OrderController(IOrderService service)
-        {
+        public OrderController(IOrderService service) {
             this.service = service;
         }
 
@@ -42,8 +39,7 @@ namespace Friday.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<OrderHistory> Get()
-        {
+        public ActionResult<OrderHistory> Get() {
             var name = User.Identity.Name;
             var result = service.GetHistory(name);
             if (result == null)
@@ -63,8 +59,7 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<int> Post([FromBody]OrderDTO order)
-        {
+        public ActionResult<int> Post([FromBody]OrderDTO order) {
             var result = service.PlaceOrder(User.Identity.Name, order);
             if (result != 0)
                 return new OkObjectResult(result);
@@ -83,8 +78,7 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering,Kitchen")]
-        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value)
-        {
+        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody]bool value) {
             var result = service.SetAccepted(id, value, isKitchen);
             if (result)
                 return new OkResult();
@@ -100,8 +94,7 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering")]
-        public ActionResult<bool> Cancel(int id)
-        {
+        public ActionResult<bool> Cancel(int id) {
             var result = service.Cancel(id);
             if (result)
                 return new OkResult();
@@ -118,9 +111,14 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Catering")]
-        public ActionResult<bool> Complete(int id)
-        {
-            var result = service.SetCompleted(id);
+        public ActionResult<bool> Complete(int id, [FromBody] string type) {
+            if (type.ToLower() != "food" && type.ToLower() != "beverage" && type.ToLower() != "both")
+                return new NotFoundResult();
+
+            var result = type.ToLower() == "both"
+                 ? service.SetCompleted(id, true) && service.SetCompleted(id, false)//If both need to set to complete
+                 : service.SetCompleted(id, type.ToLower() == "beverage");//Else either Beverage or Food
+
             if (result)
                 return new OkResult();
             return new NotFoundResult();
@@ -135,8 +133,7 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<string> GetStatus(int id)
-        {
+        public ActionResult<string> GetStatus(int id) {
             var result = service.GetStatus(id);
             if (result == null)
                 return new NotFoundResult();
@@ -149,8 +146,7 @@ namespace Friday.Controllers
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
-        public ActionResult<IList<CateringOrderDTO>> GetAll(bool isKitchen)
-        {
+        public ActionResult<IList<CateringOrderDTO>> GetAll(bool isKitchen) {
             var result = service.GetAll(isKitchen) ?? new List<CateringOrderDTO>();
             return new OkObjectResult(result);
         }
@@ -161,8 +157,7 @@ namespace Friday.Controllers
         [HttpGet("running")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IList<CateringOrderDTO>> GetRunningOrders()
-        {
+        public ActionResult<IList<CateringOrderDTO>> GetRunningOrders() {
             var user = User.Identity.Name;
             var result = service.GetAll(false).Where(s => s.User == user) ?? new List<CateringOrderDTO>();
             return new OkObjectResult(result);

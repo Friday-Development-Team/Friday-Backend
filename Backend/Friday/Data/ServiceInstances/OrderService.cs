@@ -9,10 +9,8 @@ using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.ServiceInstances
-{
-    public class OrderService : IOrderService
-    {
+namespace Friday.Data.ServiceInstances {
+    public class OrderService : IOrderService {
 
         private readonly Context context;
         private readonly DbSet<Order> orders;
@@ -22,8 +20,7 @@ namespace Friday.Data.ServiceInstances
         private readonly IItemService itemService;
         private readonly IUserService userService;
 
-        public OrderService(Context context, IItemService itemsService, IUserService userService)
-        {
+        public OrderService(Context context, IItemService itemsService, IUserService userService) {
             this.context = context;
             orders = context.Orders;
             users = context.ShopUsers;
@@ -32,21 +29,21 @@ namespace Friday.Data.ServiceInstances
             this.userService = userService;
         }
         /// <inheritdoc />
-        public OrderHistory GetHistory(string username)
-        {
+        public OrderHistory GetHistory(string username) {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
             return new OrderHistory
             {
                 UserName = username,
-                Orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.Status == OrderStatus.Completed)
+                Orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.StatusBeverage == OrderStatus.Completed && s.StatusFood == OrderStatus.Completed)
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
                         new HistoryOrder
                         {
                             OrderTime = s.OrderTime,
-                            CompletionTime = s.CompletionTime,
+                            CompletionTimeBeverage = s.CompletionTimeBeverage,
+                            CompletionTimeFood = s.CompletionTimeFood,
                             TotalPrice = s.Items.Select(t => t.Amount * t.Item.Price).Sum(),
                             Items = s.Items.Select(t => new HistoryOrderItem { ItemName = t.Item.Name, Amount = t.Amount }).ToList()
                         })
@@ -56,26 +53,27 @@ namespace Friday.Data.ServiceInstances
 
         }
         /// <inheritdoc />
-        public bool SetAccepted(int id, bool value, bool toKitchen)
-        {
+        public bool SetAccepted(int id, bool value, bool toKitchen) {
 
             var needsKitchen = context.Configuration.Single();
 
             var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
-            if (item == null || item.Status == OrderStatus.Completed || !item.IsOngoing())
+            if (item == null || item.StatusBeverage == OrderStatus.Completed || item.StatusFood == OrderStatus.Completed || !item.IsOngoing())
                 return false;
 
-            var old = item.Status;
-            item.Status = changed;
+            var oldbev = item.StatusBeverage;
+            var oldfood = item.StatusFood;
+            item.StatusFood = changed;
+            item.StatusBeverage = changed;
+
             orders.Update(item);
             context.SaveChanges();
-            return item.Status == changed && item.Status != old;//Ensures the value was correctly set. Returns false if it was already the given value.
+            return item.StatusFood == changed && item.StatusBeverage == changed && item.StatusFood != oldfood && item.StatusBeverage != oldbev;//Ensures the value was correctly set. Returns false if it was already the given value.
         }
         /// <inheritdoc />
-        public int PlaceOrder(string username, OrderDTO orderdto)
-        {
+        public int PlaceOrder(string username, OrderDTO orderdto) {
             if (orderdto == null || !orderdto.IsValid())
                 return 0;
 
@@ -89,7 +87,8 @@ namespace Friday.Data.ServiceInstances
                 UserId = user.Id,
                 OrderTime = DateTime.Now,
                 //CompletionTime = DateTime.Now.AddMinutes(10),
-                Status = OrderStatus.Pending
+                StatusBeverage = OrderStatus.Pending,
+                StatusFood = OrderStatus.Pending
             };
 
             var orderitems = orderdto.Items.Select(s =>
@@ -105,91 +104,93 @@ namespace Friday.Data.ServiceInstances
             if (!user.HasBalance(totalPrice))
                 return 0;
 
-            order.Items = orderitems;
+            var hasBev = orderitems.Any(s => s.Item.Type == ItemType.Beverage);
+            var hasFood = orderitems.Any(s => s.Item.Type == ItemType.Food);
 
+            order.Items = orderitems;
+            // IList<Item> rem = new List<Item>();
             Dictionary<Item, int> log = new Dictionary<Item, int>();
-            foreach (var item in order.Items)
-            {
-                var temp = items.SingleOrDefault(s => s.Id == item.Item.Id);
+            foreach (var item in orderdto.Items) {
+                var temp = items.SingleOrDefault(s => s.Id == item.Id);
                 if (temp == null)
                     return 0;
 
-                //temp.Count -= item.Amount;
-                if (itemService.ChangeCount(temp.Id, -temp.Count))
-                    RevertItems(log);
-                log.Add(temp, temp.Count);
+                //temp.Amount -= item.Amount;
+                if (itemService.ChangeCount(temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
+                    log.Add(temp, -item.Amount);
+                else
+                    RevertUser(user, temp.Count * temp.Price);//Refunds the failed item. It will not show up in the history.
 
 
                 items.Update(temp);//Updated Item
             }
 
             var result = orders.Add(order);//Order added
-            user.UpdateBalance(-totalPrice);
+            //user.UpdateBalance(-totalPrice);
 
-            users.Update(user);//Updated user
+            //users.Update(user);//Updated user
 
             context.SaveChanges();
+
+            userService.ChangeBalance(user.Name, -totalPrice, true);
 
             return result.Entity.Id;
         }
 
-        private void RevertItems(Dictionary<Item, int> log)
-        {
-            foreach (var entry in log)
-            {
-                var item = entry.Key;
-                var amount = entry.Value;
-                itemService.ChangeCount(item.Id, amount);
-            }
-        }
 
-        private void RevertUser(int id, double amount)
-        {
-            //#TODO
+        private void RevertUser(ShopUser user, double amount) {
+            userService.ChangeBalance(user.Id, amount, false);
+            user.UpdateBalance(amount);
         }
 
         /// <inheritdoc />
-        public bool SetCompleted(int id)
-        {
+        public bool SetCompleted(int id, bool forBeverage) {
             var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || order.Status != OrderStatus.Accepted)//Only accepted orders can be completed
+            if (order == null || (forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed
                 return false;
-            order.Status = OrderStatus.Completed;
-            order.CompletionTime = DateTime.Now;
+
+            if (forBeverage) {
+                order.StatusBeverage = OrderStatus.Completed;
+                order.CompletionTimeBeverage = DateTime.Now;
+            } else {
+                order.StatusFood = OrderStatus.Completed;
+                order.CompletionTimeFood = DateTime.Now;
+            }
+
             orders.Update(order);
             context.SaveChanges();
             return true;
         }
         /// <inheritdoc />
-        public bool Cancel(int id)
-        {//#TODO Config for option to allow accepted orders to be cancelled
+        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;
-            order.Status = OrderStatus.Cancelled;
+            order.StatusBeverage = OrderStatus.Cancelled;
+            order.StatusFood = OrderStatus.Cancelled;
             orders.Update(order);
             context.SaveChanges();
             return true;
         }
         /// <inheritdoc />
-        public string GetStatus(int id)
-        {
-            return orders.SingleOrDefault(s => s.Id == id)?.Status.ToString();
+        public string GetStatus(int id) {
+            var order = orders.SingleOrDefault(s => s.Id == id);
+            return order?.StatusBeverage.ToString() + order?.StatusFood.ToString();
         }
         /// <inheritdoc />
-        public IList<CateringOrderDTO> GetAll(bool isKitchen)
-        {
+        public IList<CateringOrderDTO> GetAll(bool isKitchen) {
             var result = orders
                 .Include(s => s.Items)
                 .ThenInclude(s => s.Item)
                 .ThenInclude(s => s.ItemDetails)
                 .Include(s => s.User)
-                .Where(s => (isKitchen ? s.Status == OrderStatus.SentToKitchen : s.IsOngoing()))
-                .OrderBy(s => (int)s.Status).ThenBy(s => s.OrderTime).AsNoTracking()
+                .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.IsOngoing()))
+                .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime).AsNoTracking()
                 .Select(s => new CateringOrderDTO
                 {
                     Id = s.Id,
-                    Status = ((OrderStatus)s.Status).ToString(),
+                    StatusBeverage = s.StatusBeverage.ToString(),
+                    StatusFood = s.StatusFood.ToString(),
                     User = s.User.Name,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
                         .ToList(),

@@ -7,7 +7,8 @@ namespace Friday.Models.Out.Order {
     public class HistoryOrder {
         public double TotalPrice { get; set; }
         public DateTime OrderTime { get; set; }
-        public DateTime CompletionTime { get; set; }
+        public DateTime CompletionTimeFood { get; set; }
+        public DateTime CompletionTimeBeverage { get; set; }
         public IList<HistoryOrderItem> Items { get; set; }
     }
 }

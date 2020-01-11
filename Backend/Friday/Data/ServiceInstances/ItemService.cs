@@ -40,7 +40,7 @@ namespace Friday.Data.ServiceInstances
         //    return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
         //}
         /// <summary>
-        /// Changes the Count of an Item. Will Add the specified amount to the Count. Will subtract if amount if negative. Addition/subtraction is needed to avoid concurrency issues.
+        /// Changes the Amount of an Item. Will Add the specified amount to the Amount. Will subtract if amount if negative. Addition/subtraction is needed to avoid concurrency issues.
         /// </summary>
         /// <param name="id">Id of the item</param>
         /// <param name="amount"></param>
@@ -56,14 +56,14 @@ namespace Friday.Data.ServiceInstances
 
             context.SaveChanges();
 
-            this.LogItem(item, amount);
+            LogItem(item, amount);
 
             return true;
         }
 
         private void LogItem(Item item, int count)
         {
-            var log = new ItemLog { Item = item, Count = count, Time = DateTime.Now };
+            var log = new ItemLog { Item = item, Amount = count, Time = DateTime.Now };
             logs.Add(log);
             context.SaveChanges();
         }

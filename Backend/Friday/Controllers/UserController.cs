@@ -18,23 +18,20 @@ using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Friday.Controllers
-{
+namespace Friday.Controllers {
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
     [Authorize]
-    public class UserController : Controller
-    {
+    public class UserController : ControllerBase {
 
         private readonly IUserService service;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration config;
 
-        public UserController(IUserService service, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration config)
-        {
+        public UserController(IUserService service, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration config) {
             this.service = service;
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -48,11 +45,17 @@ namespace Friday.Controllers
         /// <returns>Information of the User</returns>
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ShopUserDTO Get()
-        {
+        public ShopUserDTO Get() {
             var name = User.Identity.Name;
             var result = service.GetUser(name);
             return result;
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = Role.Admin)]
+        public IList<ShopUserDTO> GetAll() {
+            var users = service.GetAll();
+            return users;
         }
 
         /// <summary>
@@ -60,8 +63,7 @@ namespace Friday.Controllers
         /// </summary>
         /// <returns>List of roles</returns>
         [HttpGet("roles")]
-        public async Task<IList<string>> GetRolesAsync()
-        {
+        public async Task<IList<string>> GetRolesAsync() {
             var user = await userManager.FindByNameAsync(User.Identity.Name);
             var temp = await userManager.GetRolesAsync(user);
             return temp;
@@ -73,8 +75,7 @@ namespace Friday.Controllers
         /// <returns>True if doesn't exist</returns>
         [AllowAnonymous]
         [HttpGet("checkusername")]
-        public async Task<ActionResult<Boolean>> CheckAvailableUserName(string name)
-        {
+        public async Task<ActionResult<Boolean>> CheckAvailableUserName(string name) {
             return await userManager.FindByNameAsync(name) == null;
         }
 
@@ -85,15 +86,12 @@ namespace Friday.Controllers
         /// <returns>JWT</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<String>> CreateToken([FromBody] LoginDTO model)
-        {
+        public async Task<ActionResult<String>> CreateToken([FromBody] LoginDTO model) {
             var name = model.Username;
             var user = await userManager.FindByNameAsync(name);
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     string token = await GetToken(user);
                     return Created("", token); //returns only the token
 
@@ -110,15 +108,13 @@ namespace Friday.Controllers
         /// <returns>JWT</returns>
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<String>> Register(RegisterDTO model)
-        {
+        [Authorize(Roles = Role.Admin)]
+        public async Task<ActionResult<String>> Register(RegisterDTO model) {
             IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
             var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                if (service.AddUser(customer))
-                {
+            if (result.Succeeded) {
+                if (service.AddUser(customer)) {
                     string token = await GetToken(user);
                     return Created("", token);
                 }
@@ -128,21 +124,17 @@ namespace Friday.Controllers
 
         /// <summary>
         /// Adds Balance to the specified user's account
-        /// </summary>
-        /// <param name="id">Id of the User</param>
+        /// </summary>name">Name of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
-        [HttpPut("{id}")]
+        [HttpPut("updatebalance")]
         [Authorize(Roles = Role.Admin)]
-        public void UpdateBalance(int id, double amount)
-        {
-            service.ChangeBalance(id, amount);
+        public void UpdateBalance([FromBody] BalanceUpdateDTO dto) {
+            service.ChangeBalance(dto.Name, dto.Amount, true);
         }
 
-        private async Task<string> GetToken(IdentityUser user)
-        {
+        private async Task<string> GetToken(IdentityUser user) {
             // Create the token
-            var claims = new List<Claim>();
-            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName));
+            var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName) };
             claims.AddRange((await userManager.GetRolesAsync(user)).Select(s => new Claim(ClaimTypes.Role, s)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"]));
@@ -152,7 +144,7 @@ namespace Friday.Controllers
             var token = new JwtSecurityToken(
                 null, null,
                 claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddHours(2),
                 signingCredentials: creds);
 
 

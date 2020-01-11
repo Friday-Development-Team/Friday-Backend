@@ -14,7 +14,8 @@ namespace Friday.Controllers {
     [Produces("application/json")]
     [ApiController]
     //[Authorize]
-    public class ItemController : Controller {
+    public class ItemController : ControllerBase
+    {
 
         private readonly IItemService service;
         public ItemController(IItemService service) {
@@ -35,7 +36,7 @@ namespace Friday.Controllers {
 
         // PUT api/<controller>/5
         /// <summary>
-        /// Changes the Count of an Item, or how many items of a certain Item are still in stock. Use a negative number to subtract. 
+        /// Changes the Amount of an Item, or how many items of a certain Item are still in stock. Use a negative number to subtract. 
         /// </summary>
         /// <param name="id">Id of the Item</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>

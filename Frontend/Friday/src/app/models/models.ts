@@ -64,9 +64,14 @@ export class HistoryOrderItem {
 
 export class CateringOrder {
     constructor(
-        private id: number,
-        private items: HistoryOrderItem[], private user: string,
-        private status: string,
-        private orderTime: Date,
-        private totalPrice: number) { }
+        public id: number,
+        public items: HistoryOrderItem[], public user: string,
+        public statusfood: string,
+        public statusbeverage: string,
+        public orderTime: Date,
+        public totalPrice: number) { }
+}
+
+export class Log {
+    constructor(public name: string, public amount: number, public time: Date) { }
 }

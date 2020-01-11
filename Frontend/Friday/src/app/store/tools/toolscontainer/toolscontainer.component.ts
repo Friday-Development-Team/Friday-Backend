@@ -14,11 +14,8 @@ export class ToolscontainerComponent implements OnInit {
 
   private readonly ref: string = 'tools'
 
-  isAdmin: boolean | undefined
-  isCatering: boolean | undefined
-
-  doubleCheck: BehaviorSubject<number> = new BehaviorSubject(-1)
-  hasFinishedLoading: boolean = false
+  isAdmin: boolean | undefined = false
+  isCatering: boolean | undefined = false
 
   constructor(private refService: RefService, private auth: AuthService, private router: Router) {
     this.refService.sendRef(this.ref)
@@ -31,7 +28,7 @@ export class ToolscontainerComponent implements OnInit {
 
     this.auth.hasRole(['catering']).subscribe(s => {
       this.isCatering = s
-      if (s && !this.isAdmin)
+      if (s && !this.isAdmin)//Only if catering but not an admin
         this.router.navigate(['/store/tools/catering'])
     })
 

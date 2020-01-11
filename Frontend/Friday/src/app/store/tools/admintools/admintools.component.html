@@ -1,32 +1,43 @@
 <div class="toolcontainer container">
 
   <div class="row">
-    <div class="admincontainer col">
-      <ul>
-        <li>
-          <div class="noborder">Add User</div>
-        </li>
-        <li>
-          <div>Adjust User</div>
-        </li>
-        <li>
-          <div>Manage Funds</div>
-        </li>
-        <li>
-          <div>Manage Stock</div>
-        </li>
-        <li>
-          <div>Logs</div>
-        </li>
-        <li>
-          <div>Config</div>
-        </li>
-      </ul>
+    <div class="col-xs-12 col-sm-3">
+      <div class="admincontainer">
+        <ul>
+          <li>
+            <a [routerLink]="['/store/tools/admin/adduser']" (click)="setTouched()">
+              <div class="noborder">Add User</div>
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/store/tools/admin/adjustuser']" (click)="setTouched()">
+              <div>Adjust User</div>
+            </a>
+          </li>
+          <!-- <li>
+            <a [routerLink]="['/store/tools/admin/adjustuser']">
+              <div>Manage Stock</div>
+            </a>
+          </li> -->
+          <li>
+            <a [routerLink]="['/store/tools/admin/logs']" (click)="setTouched()">
+              <div>Logs</div>
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/store/tools/admin/adjustuser']" (click)="setTouched()">
+              <div>Config</div>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-
-
-    <div class="debug">
-
+    <div class="col-xs-12 offset-sm-2 col-sm-7">
+      <div [ngClass]="{'admincontainer': isTouched}">
+        <div>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
     </div>
 
   </div>

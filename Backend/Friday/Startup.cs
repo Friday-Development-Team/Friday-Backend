@@ -18,15 +18,19 @@ using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
 
 
-namespace Friday {
-    public class Startup {
-        public Startup(IConfiguration configuration) {
+namespace Friday
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
@@ -34,17 +38,20 @@ namespace Friday {
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
+            services.AddScoped<ILogsService, LogsService>();
             services.AddScoped<DataInitializer>();
 
             services.AddDbContext<Context>(Options =>
                 Options.UseSqlServer(Configuration.GetConnectionString("Context")));
 
-            services.AddSwaggerDocument(c => {
+            services.AddSwaggerDocument(c =>
+            {
                 c.DocumentName = "apidocs";
                 c.Title = "Friday API";
                 c.Version = "v1";
                 c.Description = "The Friday API documentation description.";
-                c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme {
+                c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
+                {
                     Type = SwaggerSecuritySchemeType.ApiKey,
                     Name = "Authorization",
                     In = SwaggerSecurityApiKeyLocation.Header,
@@ -57,14 +64,17 @@ namespace Friday {
             services.AddIdentity<IdentityUser, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true).AddEntityFrameworkStores<Context>();
 
 
-            services.AddAuthentication(x => {
+            services.AddAuthentication(x =>
+            {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(x => {
+                .AddJwtBearer(x =>
+                {
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters {
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
                         ValidateIssuer = false,
@@ -72,7 +82,8 @@ namespace Friday {
                     };
                 });
 
-            services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options =>
+            {
                 // Password settings.
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -94,7 +105,8 @@ namespace Friday {
 
             });
 
-            services.AddAuthorization(c => {
+            services.AddAuthorization(c =>
+            {
                 c.AddPolicy("AdminOnly", pol => pol.RequireRole("Admin"));
                 c.AddPolicy("Personnel", pol => pol.RequireRole(new[] { "Admin", "Catering", "Kitchen" }));
             });
@@ -103,11 +115,14 @@ namespace Friday {
         }
 
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer) {
-            if (env.IsDevelopment()) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer)
+        {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
             }
-            else {
+            else
+            {
                 app.UseHsts();
             }
 

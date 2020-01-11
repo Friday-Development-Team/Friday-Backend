@@ -55,7 +55,7 @@ namespace Friday.Data {
                 Name = "Water",
                 Price = 1.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails {
                     Allergens = "",
                     Calories = 0D,
@@ -70,7 +70,7 @@ namespace Friday.Data {
                 Name = "Cola",
                 Price = 2.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails {
                     Allergens = "",
                     Calories = 50D,
@@ -86,7 +86,7 @@ namespace Friday.Data {
                 Name = "Cola Light",
                 Price = 2.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -104,7 +104,7 @@ namespace Friday.Data {
                 Name = "Cola Zero",
                 Price = 2.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -122,7 +122,7 @@ namespace Friday.Data {
                 Name = "Red Bull",
                 Price = 2.5,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "Taurine, Caffeïne",
@@ -140,7 +140,7 @@ namespace Friday.Data {
                 Name = "Fanta",
                 Price = 2.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -158,7 +158,7 @@ namespace Friday.Data {
                 Name = "Jupiler",
                 Price = 2.0,
                 Count = 50,
-                Type = "Beverage",
+                Type = ItemType.Beverage,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -176,7 +176,7 @@ namespace Friday.Data {
                 Name = "Pizza",
                 Price = 4.0,
                 Count = 50,
-                Type = "Food",
+                Type = ItemType.Food,
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "Cheese, Meat, Gluten",

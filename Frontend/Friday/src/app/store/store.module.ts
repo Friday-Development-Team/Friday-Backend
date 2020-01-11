@@ -24,6 +24,10 @@ import { OrderPipe } from '../pipes/order.pipe';
 import { RoleGuard } from './guards/role.guard';
 import { RunningComponent } from './running/running.component';
 import { AdjustUserComponent } from './tools/toolcomponents/admin/adjust-user/adjust-user.component';
+import { AdminBaseComponent } from './tools/toolcomponents/admin/admin-base/admin-base.component';
+import { TwoDigitDecimalNumberDirective } from './directives/two-digit-decimal-nummer.directive';
+import { AdduserComponent } from './tools/toolcomponents/admin/adduser/adduser.component';
+import { LogsComponent } from './tools/toolcomponents/admin/logs/logs.component';
 
 const routes: Routes = [
   {
@@ -35,7 +39,14 @@ const routes: Routes = [
       { path: 'orders', component: OrdersComponent },
       {
         path: 'tools', component: ToolscontainerComponent, canActivate: [RoleGuard], data: { role: ['admin', 'catering'] }, children: [
-          { path: 'admin', component: AdmintoolsComponent, canActivate: [RoleGuard], data: { role: ['admin'] } },
+          {
+            path: 'admin', component: AdmintoolsComponent, canActivate: [RoleGuard], data: { role: ['admin'] }, children: [
+              // { path: '', redirectTo: 'adduser', pathMatch: 'full' },//Not needed, let user select first
+              { path: 'adduser', component: AdduserComponent },
+              { path: 'adjustuser', component: AdjustUserComponent },
+              { path: 'logs', component: LogsComponent }
+            ]
+          },
           { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] } }
         ]
       }
@@ -63,7 +74,11 @@ const routes: Routes = [
     SearchPipe,
     OrderPipe,
     RunningComponent,
-    AdjustUserComponent
+    AdjustUserComponent,
+    AdminBaseComponent,
+    TwoDigitDecimalNumberDirective,
+    AdduserComponent,
+    LogsComponent
   ],
   imports: [
     CommonModule,

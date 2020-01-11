@@ -10,16 +10,19 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Friday.Controllers {
+namespace Friday.Controllers
+{
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
     [Authorize]
-    public class ConfigurationController : Controller {
+    public class ConfigurationController : ControllerBase
+    {
         private readonly IConfigurationService service;
 
-        public ConfigurationController(IConfigurationService service) {
+        public ConfigurationController(IConfigurationService service)
+        {
             this.service = service;
         }
         /// <summary>
@@ -29,7 +32,8 @@ namespace Friday.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public Configuration Get() {
+        public Configuration Get()
+        {
             return service.GetConfig();
         }
         /// <summary>
@@ -38,7 +42,8 @@ namespace Friday.Controllers {
         /// <param name="config">Configuration option Object</param>
         [Authorize(Roles = Role.Admin)]
         [HttpPut]
-        public void Put([FromBody]Configuration config) {
+        public void Put([FromBody]Configuration config)
+        {
             service.SetConfig(config);
         }
 

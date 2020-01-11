@@ -1,0 +1,34 @@
+<div class="container">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="row">
+      <div class="col offset-1">
+
+        <label class="paddedright" for="selection">Select a log type: </label>
+        <select formControlName="selection" id="selection">
+          <option name="Log type" *ngFor="let item of logtypes">{{item.display}}</option>
+        </select>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col offset-1">
+        <button class="btn btn-primary" type="submit"></button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+
+      </div>
+    </div>
+
+
+    <!-- <div *ngIf="form.get('selection').touched && form.invalid && form.get('balance').touched && showError"
+        class="row paddedtop">
+        <div class="col-8 offset-1">
+          <p class="alert alert-danger">Please provide a valid balance. Balance will be added or subtracted</p>
+        </div>
+      </div> -->
+  </form>
+</div>

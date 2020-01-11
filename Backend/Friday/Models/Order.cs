@@ -10,16 +10,19 @@ namespace Friday.Models {
         public ShopUser User { get; set; }
         public IList<OrderItem> Items { get; set; }
         public DateTime OrderTime { get; set; }
-        public DateTime CompletionTime { get; set; }
-        public OrderStatus Status { get; set; }
+        public DateTime CompletionTimeBeverage { get; set; }
+        public DateTime CompletionTimeFood { get; set; }
+        public OrderStatus StatusBeverage { get; set; }
+        public OrderStatus StatusFood { get; set; }
 
         public bool IsOngoing() {
-            return Status == OrderStatus.Pending || Status == OrderStatus.Accepted ||
-                   Status == OrderStatus.SentToKitchen;
+            return StatusBeverage == OrderStatus.Pending || StatusBeverage == OrderStatus.Accepted ||
+                   StatusFood == OrderStatus.SentToKitchen || StatusFood == OrderStatus.Pending ||
+                   StatusFood == OrderStatus.Accepted;
         }
 
         public bool CanBeCancelled(bool OnAccept) {
-            return Status == OrderStatus.Pending || (OnAccept && Status == OrderStatus.Accepted);
+            return (StatusFood == OrderStatus.Pending && StatusBeverage == OrderStatus.Pending) || (OnAccept && StatusFood == OrderStatus.Accepted && StatusBeverage == OrderStatus.Accepted);
         }
     }
     /// <summary>
@@ -45,6 +48,10 @@ namespace Friday.Models {
         /// <summary>
         /// Order has been cancelled and cannot be processed in any way
         /// </summary>
-        Cancelled
+        Cancelled,
+        /// <summary>
+        /// Signals that this Order has no Status. Only applicable when an Order only has beverages and no food or vice versa
+        /// </summary>
+        None
     }
 }

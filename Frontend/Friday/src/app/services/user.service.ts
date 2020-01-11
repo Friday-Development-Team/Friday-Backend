@@ -12,6 +12,7 @@ import { CateringOrder } from '../models/models';
 })
 export class UserService {
 
+
   userclock: Observable<any> = interval(300000)
   orderclock: Observable<any> = interval(30000)
 
@@ -53,6 +54,11 @@ export class UserService {
     return this.http.get<ShopUser>(`${environment.apiUrl}/user`)
   }
 
+  updateBalance(name: string, amount: any) {
+    this.refresh.trigger(3000)
+    return this.http.put(`${environment.apiUrl}/user/updatebalance`, new BalanceUpdateDTO(name, amount))
+  }
+
 
 
 
@@ -60,4 +66,8 @@ export class UserService {
 
 export class ShopUser {
   constructor(public name: string, public balance: number) { }
+}
+
+export class BalanceUpdateDTO{
+  constructor(public name: string, public amount: number){}
 }

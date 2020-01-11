@@ -36,7 +36,7 @@ namespace Friday.Data
 
             builder.Entity<ShopUser>();
 
-            builder.Entity<Order>().HasOne(t => t.User).WithMany(t => t.Order);
+            builder.Entity<Order>().HasOne(t => t.User).WithMany(t => t.Orders);
 
             builder.Entity<OrderItem>().HasKey(s => new { s.OrderId, s.ItemId });
 
