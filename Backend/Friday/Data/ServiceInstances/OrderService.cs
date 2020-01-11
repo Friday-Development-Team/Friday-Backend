@@ -60,17 +60,20 @@ namespace Friday.Data.ServiceInstances {
             var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
 
-            if (item == null || item.StatusBeverage == OrderStatus.Completed || item.StatusFood == OrderStatus.Completed || !item.IsOngoing())
+            if (item == null || item.StatusBeverage == OrderStatus.Completed || item.StatusFood == OrderStatus.Completed || !item.IsOngoing() ||
+                (item.StatusFood == OrderStatus.None && toKitchen))
                 return false;
 
-            var oldbev = item.StatusBeverage;
-            var oldfood = item.StatusFood;
-            item.StatusFood = changed;
-            item.StatusBeverage = changed;
+
+
+            if (item.StatusFood != OrderStatus.None)
+                item.StatusFood = changed;
+            if (item.StatusBeverage != OrderStatus.None)
+                item.StatusBeverage = changed;
 
             orders.Update(item);
             context.SaveChanges();
-            return item.StatusFood == changed && item.StatusBeverage == changed && item.StatusFood != oldfood && item.StatusBeverage != oldbev;//Ensures the value was correctly set. Returns false if it was already the given value.
+            return true;
         }
         /// <inheritdoc />
         public int PlaceOrder(string username, OrderDTO orderdto) {
@@ -85,10 +88,7 @@ namespace Friday.Data.ServiceInstances {
             {
                 User = user,
                 UserId = user.Id,
-                OrderTime = DateTime.Now,
-                //CompletionTime = DateTime.Now.AddMinutes(10),
-                StatusBeverage = OrderStatus.Pending,
-                StatusFood = OrderStatus.Pending
+                OrderTime = DateTime.Now
             };
 
             var orderitems = orderdto.Items.Select(s =>
@@ -106,6 +106,9 @@ namespace Friday.Data.ServiceInstances {
 
             var hasBev = orderitems.Any(s => s.Item.Type == ItemType.Beverage);
             var hasFood = orderitems.Any(s => s.Item.Type == ItemType.Food);
+
+            order.StatusBeverage = (hasBev ? OrderStatus.Pending : OrderStatus.None);
+            order.StatusFood = (hasFood ? OrderStatus.Pending : OrderStatus.None);
 
             order.Items = orderitems;
             // IList<Item> rem = new List<Item>();
@@ -146,7 +149,7 @@ namespace Friday.Data.ServiceInstances {
         /// <inheritdoc />
         public bool SetCompleted(int id, bool forBeverage) {
             var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || (forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed
+            if (order == null || (forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed. SentToKitchen has to return them to Catering.
                 return false;
 
             if (forBeverage) {
@@ -189,7 +192,7 @@ namespace Friday.Data.ServiceInstances {
                 .Select(s => new CateringOrderDTO
                 {
                     Id = s.Id,
-                    StatusBeverage = s.StatusBeverage.ToString(),
+                    StatusBeverage = isKitchen ? null : s.StatusBeverage.ToString(),
                     StatusFood = s.StatusFood.ToString(),
                     User = s.User.Name,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
