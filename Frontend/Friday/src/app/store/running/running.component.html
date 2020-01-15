@@ -10,13 +10,20 @@
           <div class="row fitted">
 
             <div class="fitted col-sm-6 col-12">
-              <div>Ordered: {{order.orderTime | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
-              <div>Status: {{order.status}} <div class="status"></div>
+
+              <div>
+                <div>Ordered: {{order.orderTime | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+                <div class="status" *ngIf="order.statusBeverage !=='None'">Status drinks:
+                  {{order.statusBeverage}}</div>
+                <div class="status" *ngIf="order.statusFood !=='None'">Status food: {{order.statusFood}}</div>
               </div>
+
 
             </div>
 
-            <div class=" fitted col-sm-4 offset-sm-1 col-12">
+
+
+            <div class="fitted col-sm-4 offset-sm-1 col-12">
 
               <div class="row" *ngFor="let item of order.items">
                 <div class="col-sm-8 col-4">{{item.itemName}} </div>
@@ -27,8 +34,6 @@
             </div>
 
           </div>
-
-
         </div>
 
       </div>

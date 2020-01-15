@@ -6,19 +6,31 @@
 
         <label class="paddedright" for="selection">Select a log type: </label>
         <select formControlName="selection" id="selection">
-          <option name="Log type" *ngFor="let item of logtypes">{{item.display}}</option>
+          <option name="Log type" [ngValue]="item" *ngFor="let item of logtypes">{{item.display}}</option>
         </select>
+        <div *ngIf="needsInput">
+          <label class="paddedright" for="input">Input: </label>
+          <input formControlName="input" id="input">
+
+        </div>
 
       </div>
     </div>
     <div class="row">
       <div class="col offset-1">
-        <button class="btn btn-primary" type="submit"></button>
+        <button class="btn btn-primary" type="submit">Submit</button>
       </div>
     </div>
 
     <div class="row">
       <div class="col offset-1">
+        <ng-container *ngIf="expression; then thenTemplate; else elseTemplate"></ng-container>
+        <ng-template #thenTemplate>
+
+        </ng-template>
+        <ng-template #elseTemplate>
+
+        </ng-template>
 
       </div>
     </div>

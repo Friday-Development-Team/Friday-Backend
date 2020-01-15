@@ -12,6 +12,7 @@ export class LogsComponent implements OnInit {
 
   logtypes: LogType[]
   selected: LogType
+  needsInput: boolean = false
 
   data: number | Log[]
 
@@ -19,6 +20,7 @@ export class LogsComponent implements OnInit {
 
   constructor(public admin: AdminService, public fb: FormBuilder) {
     this.logtypes = this.initLogs()
+    this.selected = this.logtypes[0]
     this.form = fb.group({
       selection: fb.control('', Validators.required),
       input: fb.control('')
@@ -26,6 +28,7 @@ export class LogsComponent implements OnInit {
 
     this.form.get('selection').valueChanges.subscribe(s => {
       this.selected = s
+      this.needsInput=s.needInput
       this.form.get('input').setValidators((this.selected.needInput ? [Validators.required] : null))
     }
 

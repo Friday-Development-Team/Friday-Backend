@@ -36,7 +36,10 @@ namespace Friday.Data.ServiceInstances {
             return new OrderHistory
             {
                 UserName = username,
-                Orders = orders.Include(s => s.Items).Include(s => s.User).Where(s => s.User.Name == username).Where(s => s.StatusBeverage == OrderStatus.Completed && s.StatusFood == OrderStatus.Completed)
+                Orders = orders.Include(s => s.Items).Include(s => s.User)
+                    .Where(s => s.User.Name == username)
+                    .Where(s => (s.StatusBeverage == OrderStatus.Completed || s.StatusBeverage == OrderStatus.None) &&
+                                (s.StatusFood == OrderStatus.Completed || s.StatusFood == OrderStatus.None))
                     .OrderBy(s => s.OrderTime)
                     .Select(s =>
                         new HistoryOrder
@@ -69,7 +72,7 @@ namespace Friday.Data.ServiceInstances {
             if (item.StatusFood != OrderStatus.None)
                 item.StatusFood = changed;
             if (item.StatusBeverage != OrderStatus.None)
-                item.StatusBeverage = changed;
+                item.StatusBeverage = value ? OrderStatus.Accepted : OrderStatus.Pending;
 
             orders.Update(item);
             context.SaveChanges();

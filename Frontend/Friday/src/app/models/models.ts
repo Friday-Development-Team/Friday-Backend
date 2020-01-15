@@ -41,12 +41,14 @@ export class OrderHistory {
 
 export class HistoryOrder {
 
-    constructor(public totalPrice?: number, public orderTime?: Date, public completionTime?: Date, public items?: HistoryOrderItem[]) { }
+    constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date, 
+        public completionTimeBeverage?: Date ,public items?: HistoryOrderItem[]) { }
 
     fromJson(json: any) {
         this.totalPrice = json.totalPrice
         this.orderTime = json.orderTime
-        this.completionTime = json.completionTime
+        this.completionTimeFood = json.completionTimeFood
+        this.completionTimeBeverage = json.completionTimeBeverage
         this.items = json.items.map(s => {
             let item = new HistoryOrderItem()
             item.fromJson(s)
