@@ -75,5 +75,9 @@ export class CateringOrder {
 }
 
 export class Log {
-    constructor(public name: string, public amount: number, public time: Date) { }
+    constructor(public name: string, public amount: number, public time: Date, public logtype: string) { }
+}
+
+export class ItemAmount{
+    constructor(public name: Item, public amount: number){}
 }

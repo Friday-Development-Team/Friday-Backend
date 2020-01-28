@@ -22,13 +22,96 @@
       </div>
     </div>
 
+    <hr>
+
     <div class="row">
       <div class="col offset-1">
-        <ng-container *ngIf="expression; then thenTemplate; else elseTemplate"></ng-container>
-        <ng-template #thenTemplate>
+        <ng-container *ngIf="(data && hasSelectedLog && selectedLogType.displaytype==='list'); then list; else number">
+        </ng-container>
+        <ng-template #list>
+          <!-- <div *ngFor="let log of (data | async)">
+            <div class="row">
+              <div class="col-12">
+                {{log.name}}
+              </div>
+              <div class="col-12 log">{{(log.logtype==='currency'?(log.amount | currency: 'EUR'): (log.amount))}} {{(log.logtype==='currency'?"": (log.amount===1?"item":"items"))}}</div>
+              <div class="col-12"></div>
+            </div>
+          </div> -->
+
+
+
+          <div class="centered">
+            <ng-container *ngIf="logtype.type==='log'; then loglist; else itemamountlist"></ng-container>
+
+            <ng-template #loglist>
+              <div *ngFor="let report of (data | async)" class="for">
+
+                <div class="row fitted">
+
+                  <div class="fitted col-sm-6 col-12">
+                    <div>Time: {{report.time | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+
+
+                  </div>
+
+                  <div class=" fitted col-sm-4 offset-sm-1 col-12">
+
+                    <div class="row" *ngFor="let item of order.items">
+                      <div class="col-sm-8 col-4">{{report.name}}: </div>
+                      <div class="col-2">
+
+                        {{report.logtype==='currency'?
+                        (report.amount | currency : 'EUR'):
+                        (report.amount)
+                      }}
+
+                      </div>
+                    </div>
+
+                    <div class="priceTotal">Total: {{order.totalPrice |  currency: 'EUR'}}</div>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </ng-template>
+
+            <ng-template #itemamountlist>
+              <div *ngFor="let report of (data | async)" class="for">
+
+                <div class="row fitted">
+
+                  <div class="fitted col-sm-6 col-12">
+                    <div>Time: {{report.time | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+
+
+                  </div>
+
+                  <div class=" fitted col-sm-4 offset-sm-1 col-12">
+
+                    <div class="row" *ngFor="let item of order.items">
+                      <div class="col-sm-8 col-4">{{item.itemName}} </div>
+                      <div class="col-2">X{{item.amount}}</div>
+                    </div>
+
+                    <div class="priceTotal">Total: {{order.totalPrice |  currency: 'EUR'}}</div>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </ng-template>
+
+
+
+          </div>
 
         </ng-template>
-        <ng-template #elseTemplate>
+
+        <ng-template #number>
 
         </ng-template>
 

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Log } from 'src/app/models/models';
+import { Log, ItemAmount } from 'src/app/models/models';
+import { interval, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'friday-logs',
@@ -14,7 +15,11 @@ export class LogsComponent implements OnInit {
   selected: LogType
   needsInput: boolean = false
 
-  data: number | Log[]
+  selectedLogType: string | undefined
+
+  hasSelectedLog: boolean = false//set to true when in subscribe method to avoid null errors in html
+
+  data: Observable<Log[] | ItemAmount[] | number>
 
   form: FormGroup
 
@@ -28,7 +33,7 @@ export class LogsComponent implements OnInit {
 
     this.form.get('selection').valueChanges.subscribe(s => {
       this.selected = s
-      this.needsInput=s.needInput
+      this.needsInput = s.needInput
       this.form.get('input').setValidators((this.selected.needInput ? [Validators.required] : null))
     }
 
@@ -54,17 +59,23 @@ export class LogsComponent implements OnInit {
   submit() {
     if (!!!this.selected)
       return
+    console.log('has selected')
     let param = null
     if (this.selected.needInput) {
       param = this.form.get('input').value
       if (!!!param)
         return
     }
+    console.log('input checked')
+    this.hasSelectedLog = true
+    let temp = new Log('temp', 2, null, null)
+    this.data = of([temp, temp, temp, temp, temp])
+
 
     switch (this.selected.type.toLowerCase()) {
       case 'log':
 
-        this.admin.getLogs(this.selected.route).subscribe(s => this.data = s)
+        this.data = this.admin.getLogs(this.selected.route)
       case 'itemamount':
         break
       case 'amount':
