@@ -28,6 +28,7 @@ import { AdminBaseComponent } from './tools/toolcomponents/admin/admin-base/admi
 import { TwoDigitDecimalNumberDirective } from './directives/two-digit-decimal-nummer.directive';
 import { AdduserComponent } from './tools/toolcomponents/admin/adduser/adduser.component';
 import { LogsComponent } from './tools/toolcomponents/admin/logs/logs.component';
+import { ConfigComponent } from './tools/toolcomponents/admin/config/config.component';
 
 const routes: Routes = [
   {
@@ -44,7 +45,8 @@ const routes: Routes = [
               // { path: '', redirectTo: 'adduser', pathMatch: 'full' },//Not needed, let user select first
               { path: 'adduser', component: AdduserComponent },
               { path: 'adjustuser', component: AdjustUserComponent },
-              { path: 'logs', component: LogsComponent }
+              { path: 'logs', component: LogsComponent },
+              { path: 'config', component: ConfigComponent }
             ]
           },
           { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] } }
@@ -78,7 +80,8 @@ const routes: Routes = [
     AdminBaseComponent,
     TwoDigitDecimalNumberDirective,
     AdduserComponent,
-    LogsComponent
+    LogsComponent,
+    ConfigComponent
   ],
   imports: [
     CommonModule,
