@@ -46,19 +46,23 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = Role.Admin)]
-        public ActionResult<IList<LogDTO>> GetByUser([FromQuery] string name) {
-            var result = service.GetByUser(name);
+        public ActionResult<IList<LogDTO>> GetByUser([FromQuery] string param) {
+            var result = service.GetByUser(param);
             if (result != null)
                 return new OkObjectResult(result);
             return NotFound();
         }
-
+        /// <summary>
+        /// Returns all available logs linked to a given item.
+        /// </summary>
+        /// <param name="param">Parameter. ID of the item.</param>
+        /// <returns></returns>
         [HttpGet("item/id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = Role.Admin)]
-        public ActionResult<IList<LogDTO>> GetPerItem([FromQuery] int id) {
-            var result = service.GetPerItem(id);
+        public ActionResult<IList<LogDTO>> GetPerItem([FromQuery] int param) {
+            var result = service.GetPerItem(param);
             if (result != null)
                 return new OkObjectResult(result);
             return NotFound();

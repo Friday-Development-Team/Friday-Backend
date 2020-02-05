@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ShopUser } from './user.service';
 import { environment } from 'src/environments/environment';
-import { Log } from '../models/models';
+import { Log, ItemAmount } from '../models/models';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +17,23 @@ export class AdminService {
     return this.http.get<ShopUser[]>(`${environment.apiUrl}/user/all`)
   }
 
-  getLogs(route: string, param?: number | string): Observable<Log[]> {
-    return null
+  getLogs(route: string, param?: any): Observable<Log[]> {
+    let params = new HttpParams().set('param', param)
+    return this.http.get<Log[]>(`${environment.apiUrl}/logs/${route}`, { params })
+      .pipe(
+        map(s => s.map(t => {
+          let temp = t
+          temp.type = temp.type.toLowerCase()
+          return temp
+        })))
   }
 
-  getItemAmounts(isSoldOnly: boolean): Observable<any> {
-    return null
+  getItemAmounts(isSoldOnly: boolean): Observable<ItemAmount[]> {
+    let route='logs/stock/'.concat(isSoldOnly?'sold':'remaining')
+    return this.http.get<ItemAmount[]>(`${environment.apiUrl}/${route}`)
   }
 
   getTotalIncome(): Observable<number> {
-    return null
+    return this.http.get<number>(`${environment.apiUrl}/logs/total`)
   }
 }

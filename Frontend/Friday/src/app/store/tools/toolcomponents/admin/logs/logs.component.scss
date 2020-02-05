@@ -1,5 +1,5 @@
 .container {
-  padding: 10px;
+  padding: 20px;
 }
 
 .paddedright {
@@ -17,7 +17,9 @@
 .noOrders {
   width: 100%;
   text-align: center;
-  margin-top: 250px;
+  &:not(.noMargin) {
+    margin-top: 250px;
+  }
 }
 
 .maxwidth {
@@ -47,7 +49,7 @@ table.bordered {
 
 .centered {
   margin: auto;
-  margin-top: 75px;
+  //margin-top: 75px;
   border: 1px solid black;
   border-radius: 5px;
   background-color: white;

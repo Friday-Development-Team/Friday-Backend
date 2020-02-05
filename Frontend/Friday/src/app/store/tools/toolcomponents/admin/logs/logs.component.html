@@ -1,6 +1,7 @@
 <div class="container">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
+    <!-- Control form -->
     <div class="row">
       <div class="col offset-1">
 
@@ -9,114 +10,132 @@
           <option name="Log type" [ngValue]="item" *ngFor="let item of logtypes">{{item.display}}</option>
         </select>
         <div *ngIf="needsInput">
-          <label class="paddedright" for="input">Input: </label>
-          <input formControlName="input" id="input">
+          <label class="paddedright" for="input">
+
+            {{selected.inputDisplayName}}:
+
+          </label>
+          <select formControlName="input" id="input">
+
+            <option [ngValue]="item" *ngFor="let item of displayList">{{item}}</option>
+
+          </select>
 
         </div>
 
       </div>
     </div>
+    <!-- End control form -->
+
+    <!-- Submit -->
     <div class="row">
       <div class="col offset-1">
         <button class="btn btn-primary" type="submit">Submit</button>
       </div>
     </div>
+    <!-- End submit -->
 
-    <hr>
+    <hr *ngIf="hasSelectedLog">
 
+    <!-- Data -->
     <div class="row">
       <div class="col offset-1">
-        <ng-container *ngIf="(data && hasSelectedLog && selectedLogType.displaytype==='list'); then list; else number">
-        </ng-container>
-        <ng-template #list>
-          <!-- <div *ngFor="let log of (data | async)">
-            <div class="row">
-              <div class="col-12">
-                {{log.name}}
-              </div>
-              <div class="col-12 log">{{(log.logtype==='currency'?(log.amount | currency: 'EUR'): (log.amount))}} {{(log.logtype==='currency'?"": (log.amount===1?"item":"items"))}}</div>
-              <div class="col-12"></div>
-            </div>
-          </div> -->
+
+        <!-- Has data -->
+        <div *ngIf="data && hasSelectedLog">
+          <ng-container *ngIf="(selectedDisplayType==='list'); then list; else number">
+          </ng-container>
+
+          <!-- List data -->
+          <ng-template #list>
+
+            <div class="centered">
+              <ng-container *ngIf="selectedLogType==='log'; then loglist; else itemamountlist"></ng-container>
+
+              <!-- Log list -->
+              <ng-template #loglist>
+                <div *ngFor="let report of (data | async)" class="for">
+                  <p>{{report.name}}</p>
+                  <div class="row fitted">
+
+                    <div class="fitted col-sm-6 col-12">
+                      <div>Time: {{report.time | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+
+
+                    </div>
+
+                    <div class=" fitted col-sm-4 offset-sm-1 col-12">
+
+                      <div class="row">
+                        <!-- <div class="col-sm-8 col-4">{{report.name}}: </div> -->
+                        <div class="col">
+
+                          <ng-container *ngIf="report.type==='currency'; then currency; else item">
+                          </ng-container>
+                          <ng-template #currency>
+                            {{report.amount | currency : 'EUR'}}
+                          </ng-template>
+                          <ng-template #item>
+                            {{report.amount}} {{report.amount===1?'item': 'items'}}
+                          </ng-template>
 
 
 
-          <div class="centered">
-            <ng-container *ngIf="logtype.type==='log'; then loglist; else itemamountlist"></ng-container>
-
-            <ng-template #loglist>
-              <div *ngFor="let report of (data | async)" class="for">
-
-                <div class="row fitted">
-
-                  <div class="fitted col-sm-6 col-12">
-                    <div>Time: {{report.time | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
-
-
-                  </div>
-
-                  <div class=" fitted col-sm-4 offset-sm-1 col-12">
-
-                    <div class="row" *ngFor="let item of order.items">
-                      <div class="col-sm-8 col-4">{{report.name}}: </div>
-                      <div class="col-2">
-
-                        {{report.logtype==='currency'?
-                        (report.amount | currency : 'EUR'):
-                        (report.amount)
-                      }}
-
+                        </div>
                       </div>
+
+
                     </div>
 
-                    <div class="priceTotal">Total: {{order.totalPrice |  currency: 'EUR'}}</div>
+                  </div>
+
+
+                </div>
+              </ng-template>
+              <!-- End log list -->
+
+              <!-- Item amount -->
+              <ng-template #itemamountlist>
+                <div *ngFor="let item of ( data | async)" class="for">
+
+                  <div class="row fitted">
+
+                    <div class="fitted col-sm-6 col-12">
+                      <div>{{item.item.name}}</div>
+                      <div>{{item.amount}} {{displayText}}</div>
+
+                    </div>
+
                   </div>
 
                 </div>
+              </ng-template>
+              <!-- End item amount -->
 
+            </div>
 
-              </div>
-            </ng-template>
+          </ng-template>
+          <!-- End list -->
 
-            <ng-template #itemamountlist>
-              <div *ngFor="let report of (data | async)" class="for">
+          <ng-template #number >
+            Total income: {{(data | async) | currency : 'EUR'}}
+          </ng-template>
+        </div>
+        <!-- End has data -->
 
-                <div class="row fitted">
-
-                  <div class="fitted col-sm-6 col-12">
-                    <div>Time: {{report.time | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
-
-
-                  </div>
-
-                  <div class=" fitted col-sm-4 offset-sm-1 col-12">
-
-                    <div class="row" *ngFor="let item of order.items">
-                      <div class="col-sm-8 col-4">{{item.itemName}} </div>
-                      <div class="col-2">X{{item.amount}}</div>
-                    </div>
-
-                    <div class="priceTotal">Total: {{order.totalPrice |  currency: 'EUR'}}</div>
-                  </div>
-
-                </div>
-
-
-              </div>
-            </ng-template>
-
-
-
-          </div>
-
-        </ng-template>
-
-        <ng-template #number>
-
-        </ng-template>
+        <!-- No data -->
+        <div *ngIf="
+          (selected.displayType==='list' && (!!!data || !!!data.length))
+           || 
+           (selected.displayType==='number' && data===-1)
+           && hasSelectedLog">
+          <h3 class="noOrders noMargin">No data found!</h3>
+        </div>
+        <!-- End no data -->
 
       </div>
     </div>
+    <!-- End data -->
 
 
     <!-- <div *ngIf="form.get('selection').touched && form.invalid && form.get('balance').touched && showError"
