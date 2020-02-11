@@ -29,6 +29,9 @@ import { TwoDigitDecimalNumberDirective } from './directives/two-digit-decimal-n
 import { AdduserComponent } from './tools/toolcomponents/admin/adduser/adduser.component';
 import { LogsComponent } from './tools/toolcomponents/admin/logs/logs.component';
 import { ConfigComponent } from './tools/toolcomponents/admin/config/config.component';
+import { AdditemComponent } from './tools/toolcomponents/catering/additem/additem.component';
+import { ManagestockComponent } from './tools/toolcomponents/catering/managestock/managestock.component';
+import { TotalhistoryComponent } from './tools/toolcomponents/catering/totalhistory/totalhistory.component';
 
 const routes: Routes = [
   {
@@ -49,7 +52,11 @@ const routes: Routes = [
               { path: 'config', component: ConfigComponent }
             ]
           },
-          { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] } }
+          { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] }, children: [
+            {path: 'additem', component: AdditemComponent},
+            {path: 'managestock', component: ManagestockComponent},
+            {path: 'history', component: TotalhistoryComponent}
+          ] }
         ]
       }
     ]
@@ -81,7 +88,10 @@ const routes: Routes = [
     TwoDigitDecimalNumberDirective,
     AdduserComponent,
     LogsComponent,
-    ConfigComponent
+    ConfigComponent,
+    AdditemComponent,
+    ManagestockComponent,
+    TotalhistoryComponent
   ],
   imports: [
     CommonModule,

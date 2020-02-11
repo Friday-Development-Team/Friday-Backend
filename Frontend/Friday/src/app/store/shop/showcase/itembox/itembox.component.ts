@@ -27,7 +27,7 @@ export class ItemboxComponent implements OnInit {
   }
 
   getURL() {
-    return `assets/${this.item.name.split(" ").join("_").toLowerCase()}.jpg`
+    return `assets/${this.item.normalizedImageName}.jpg`
   }
 
   onAddToCart() {

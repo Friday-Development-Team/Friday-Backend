@@ -3,7 +3,7 @@
  */
 
 export class Item {
-    constructor(public id: number, public name: string, public price: number, public type: string, public count: number, public itemDetails: ItemDetails, public logs: null) { }
+    constructor(public id: number, public name: string, public price: number, public type: string, public count: number, public itemDetails: ItemDetails, public logs: null, public normalizedImageName: string) { }
 }
 
 export class ItemDetails {
