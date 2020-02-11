@@ -56,6 +56,7 @@ namespace Friday.Data {
                 Price = 1.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "water",
                 ItemDetails = new ItemDetails {
                     Allergens = "",
                     Calories = 0D,
@@ -71,6 +72,7 @@ namespace Friday.Data {
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "cola",
                 ItemDetails = new ItemDetails {
                     Allergens = "",
                     Calories = 50D,
@@ -87,6 +89,7 @@ namespace Friday.Data {
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "cola_light",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -105,6 +108,7 @@ namespace Friday.Data {
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "cola_zero",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -123,6 +127,7 @@ namespace Friday.Data {
                 Price = 2.5,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "red_bull",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "Taurine, Caffeïne",
@@ -141,6 +146,7 @@ namespace Friday.Data {
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "fanta",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -159,6 +165,7 @@ namespace Friday.Data {
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
+                NormalizedImageName = "jupiler",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "",
@@ -177,6 +184,7 @@ namespace Friday.Data {
                 Price = 4.0,
                 Count = 50,
                 Type = ItemType.Food,
+                NormalizedImageName = "pizza",
                 ItemDetails = new ItemDetails
                 {
                     Allergens = "Cheese, Meat, Gluten",

@@ -17,6 +17,7 @@ namespace Friday.Models {
         public int Count { get; set; }
         public ItemDetails ItemDetails { get; set; }
         public ICollection<ItemLog> Logs { get; set; }
+        public string NormalizedImageName { get; set; }
 
     }
 
