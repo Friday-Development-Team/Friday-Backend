@@ -32,6 +32,8 @@ export class AdditemComponent implements OnInit {
         allergens: fb.control('')
       })
     })
+
+    
   }
 
   ngOnInit() {
