@@ -22,6 +22,8 @@ export class RunningComponent implements OnInit {
       this.orders = s
     })
 
+    this.user.startOrderPolling()
+
     this.user.running.subscribe(s => {
 
       this.orders = s

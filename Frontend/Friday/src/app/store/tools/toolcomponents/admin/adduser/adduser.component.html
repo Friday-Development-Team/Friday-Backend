@@ -41,6 +41,11 @@
         <button type="button" type="submit" class="btn btn-primary btn-block">Submit</button>
       </div>
 
+      <div class="inputcontainer" *ngIf="hasSubmitted && check">
+        <p class="alert alert-success" *ngIf="success">User added!</p>
+        <p class="alert alert-danger" *ngIf="!success">Something went wrong there!</p>
+      </div>
+
     </div>
   </div>
 </form>

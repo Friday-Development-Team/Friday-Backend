@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Item } from 'src/app/models/models';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'friday-additem',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdditemComponent implements OnInit {
 
-  constructor() { }
+  item: Item
+
+  constructor(private admin: AdminService) { }
 
   ngOnInit() {
   }
+
+  
 
 }

@@ -19,6 +19,11 @@ export class AdjustUserComponent implements OnInit {
 
   showError: boolean = false
 
+  hasSubmitted: boolean=false
+  check: boolean=false
+  success: boolean=false
+
+
   constructor(private admin: AdminService, public builder: FormBuilder, private user: UserService, private refresh: RefreshService) {
     //Form building
     this.users = this.admin.getAllUsers()
@@ -54,10 +59,14 @@ export class AdjustUserComponent implements OnInit {
       return
     }
 
+    this.hasSubmitted=true
+
     let name = this.selectedUser.name
     let amount = this.form.get('balance').value
 
-    this.user.updateBalance(name, amount).subscribe()
+    this.user.updateBalance(name, amount).subscribe(s=> {
+      
+    })
 
     this.users = this.admin.getAllUsers()
 

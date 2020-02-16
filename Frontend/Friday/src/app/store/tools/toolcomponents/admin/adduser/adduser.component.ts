@@ -14,6 +14,9 @@ export class AdduserComponent implements OnInit {
   hasSubmitted = false
   form: FormGroup
 
+  check: boolean=false
+  success: boolean=false
+
   constructor(private auth: AuthService, builder: FormBuilder) {
     this.form = builder.group({
       username: builder.control('', [Validators.required, serverSideValidateUsername(this.auth.checkUserNameAvailability)]),
@@ -31,19 +34,15 @@ export class AdduserComponent implements OnInit {
   register() {
     this.hasSubmitted = true
     if (this.form.invalid) {
-      console.log("bruv")
-      console.log(this.form.get('username').errors)
       return
     }
 
     let name = this.form.get('username').value
     let pass = this.form.get('passwordgroup').get('password').value
 
-
-
-    console.log('is good')
-    console.log({ name, pass })
-
+    let temp=this.auth.register(name, pass)
+    console.log(temp)
+    temp.subscribe(s=> this.success=s)
   }
 
 }

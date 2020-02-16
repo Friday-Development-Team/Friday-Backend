@@ -38,7 +38,7 @@ namespace Friday.Models {
         /// </summary>
         Pending,
         /// <summary>
-        /// 
+        /// Order has been sent to Kitchen, awaiting release to Catering on completion
         /// </summary>
         SentToKitchen,
         /// <summary>

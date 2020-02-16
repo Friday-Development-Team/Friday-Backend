@@ -81,3 +81,7 @@ export class Log {
 export class ItemAmount{
     constructor(public item: Item, public amount: number){}
 }
+
+export class Configuration{
+    constructor(public combinedCateringKitchen: boolean, public cancelOnAccepted: boolean){}
+}

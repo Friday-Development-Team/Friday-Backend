@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable, of } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
-import { map } from 'rxjs/operators'
+import { map, catchError } from 'rxjs/operators'
 
 
 @Injectable({
@@ -59,23 +59,10 @@ export class AuthService {
   register(
     name: string, password: string
   ): Observable<boolean> {
-    return this.http
-      .post(
-        `${environment.apiUrl}/user/register`,
-        {
-          name, password
-        },
-        { responseType: 'text' }
-      )
-      .pipe(
+    return this.http 
+      .post(`${environment.apiUrl}/user/register`, { name, password })
+      .pipe(catchError(s => null),
         map((token: any) => {
-          // if (token) {
-          //   //localStorage.setItem(this.tokenKey, token)
-          //   //this.user.next(name)
-          //   return true
-          // } else {
-          //   return false
-          // }
           return !!token
         })
       )
