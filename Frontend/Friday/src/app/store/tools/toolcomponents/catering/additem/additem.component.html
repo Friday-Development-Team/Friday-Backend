@@ -1,48 +1,80 @@
 <div class="container">
-  <form action="">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
     <div formControlName="name" class="row">
-      <div class="col offset-1"><input type="text"></div>
+      <div class="col offset-1">
+        <label for="name">Name: </label>
+        <input id="name" type="text">
+      </div>
     </div>
 
     <div formControlName="price" class="row">
-      <div class="col offset-1"><input type="number"></div>
+      <div class="col offset-1">
+        <label for="price">Price: </label>
+        <input id="price" type="number">
+      </div>
     </div>
 
     <div formControlName="type" class="row">
-      <div class="col offset-1"><input type="text"></div>
+      <div class="col offset-1">
+        <label for="type">Type: </label>
+        <input id="type" type="text">
+      </div>
     </div>
 
     <div formControlName="count" class="row">
-      <div class="col offset-1"><input type="number"></div>
+      <div class="col offset-1">
+        <label for="count">Count: </label>
+        <input id="count" type="number">
+      </div>
     </div>
 
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="image"></div>
+    <div formControlName="image" class="row">
+      <div class="col offset-1">
+        <label for="image">Image: </label>
+        <input id="image" type="image">
+      </div>
     </div>
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="size"></div>
-    </div>
-
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="calories"></div>
-    </div>
-
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="sugarcontent"></div>
+    <div formControlName="size" class="row">
+      <div class="col offset-1">
+        <label for="size">Portion size: </label>
+        <input id="size" type="text">
+      </div>
     </div>
 
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="saltcontent"></div>
+    <div formControlName="calories" class="row">
+      <div class="col offset-1">
+        <label for="calories">Calories: </label>
+        <input id="calories" type="number">
+      </div>
     </div>
 
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="text"></div>
+    <div formControlName="sugarcontent" class="row">
+      <div class="col offset-1">
+        <label for="sugar">Sugar content: </label>
+        <input id=sugar type="number">
+      </div>
     </div>
 
-    <div formControlName="control" class="row">
-      <div class="col offset-1"><input type="allergens"></div>
+    <div formControlName="saltcontent" class="row">
+      <div class="col offset-1">
+        <label for="salt">Salt content: </label>
+        <input id="salt" type="number">
+      </div>
     </div>
 
+    <div formControlName="allergens" class="row">
+      <div class="col offset-1">
+        <label for="allergens">Allergens: </label>
+        <input id="allergens" type="text">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <button type="submit">Submit</button>
+      </div>
+    </div>
 
   </form>
 </div>
