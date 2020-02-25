@@ -1,79 +1,84 @@
 <div class="container">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <div formControlName="name" class="row">
+    <div class="row">
       <div class="col offset-1">
         <label for="name">Name: </label>
-        <input id="name" type="text">
-      </div>
-    </div>
-
-    <div formControlName="price" class="row">
-      <div class="col offset-1">
-        <label for="price">Price: </label>
-        <input id="price" type="number">
-      </div>
-    </div>
-
-    <div formControlName="type" class="row">
-      <div class="col offset-1">
-        <label for="type">Type: </label>
-        <input id="type" type="text">
-      </div>
-    </div>
-
-    <div formControlName="count" class="row">
-      <div class="col offset-1">
-        <label for="count">Count: </label>
-        <input id="count" type="number">
-      </div>
-    </div>
-
-    <div formControlName="image" class="row">
-      <div class="col offset-1">
-        <label for="image">Image: </label>
-        <input id="image" type="image">
-      </div>
-    </div>
-    <div formControlName="size" class="row">
-      <div class="col offset-1">
-        <label for="size">Portion size: </label>
-        <input id="size" type="text">
-      </div>
-    </div>
-
-    <div formControlName="calories" class="row">
-      <div class="col offset-1">
-        <label for="calories">Calories: </label>
-        <input id="calories" type="number">
-      </div>
-    </div>
-
-    <div formControlName="sugarcontent" class="row">
-      <div class="col offset-1">
-        <label for="sugar">Sugar content: </label>
-        <input id=sugar type="number">
-      </div>
-    </div>
-
-    <div formControlName="saltcontent" class="row">
-      <div class="col offset-1">
-        <label for="salt">Salt content: </label>
-        <input id="salt" type="number">
-      </div>
-    </div>
-
-    <div formControlName="allergens" class="row">
-      <div class="col offset-1">
-        <label for="allergens">Allergens: </label>
-        <input id="allergens" type="text">
+        <input formControlName="name" id="name" type="text">
       </div>
     </div>
 
     <div class="row">
       <div class="col offset-1">
-        <button type="submit">Submit</button>
+        <label for="price">Price: </label>
+        <input formControlName="price" id="price" type="number">
       </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="type">Type: </label>
+        <input formControlName="type" id="type" type="text">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="count">Count: </label>
+        <input formControlName="count" id="count" type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="image">Image: </label>
+        <input formControlName="image" id="image" type="image">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col offset-1">
+        <label for="size">Portion size: </label>
+        <input formControlName="size" id="size" type="text">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="calories">Calories: </label>
+        <input formControlName="calories" id="calories" type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="sugar">Sugar content: </label>
+        <input formControlName="sugarcontent" id="sugar" type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="salt">Salt content: </label>
+        <input formControlName="saltcontent" id="salt" type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <label for="allergens">Allergens: </label>
+        <input formControlName="allergens" id="allergens" type="text">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col offset-1">
+        <button class="btn btn-primary" type="submit">Submit</button>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="hasSubmitted && check">
+      <div *ngIf="!success && form.invalid" class="col-12 alert alert-danger">Woa, something went wrong there. Check the tooltips for formatting.</div>
+      <div *ngIf="success" class="col-12 alert alert-success">Item successfully added!</div>
     </div>
 
   </form>

@@ -41,8 +41,8 @@ export class OrderHistory {
 
 export class HistoryOrder {
 
-    constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date, 
-        public completionTimeBeverage?: Date ,public items?: HistoryOrderItem[]) { }
+    constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date,
+        public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
 
     fromJson(json: any) {
         this.totalPrice = json.totalPrice
@@ -78,10 +78,14 @@ export class Log {
     constructor(public name: string, public amount: number, public time: Date, public type: string) { }
 }
 
-export class ItemAmount{
-    constructor(public item: Item, public amount: number){}
+export class ItemAmount {
+    constructor(public item: Item, public amount: number) { }
 }
 
-export class Configuration{
-    constructor(public combinedCateringKitchen: boolean, public cancelOnAccepted: boolean){}
+export class Configuration {
+    constructor(public combinedCateringKitchen: boolean, public cancelOnAccepted: boolean) { }
+}
+
+export class ItemDTO {
+    constructor(public name: string, public price: number, public type: string, public count: number, public normalizedImageName: string, public portionSize: string, public calories: number, public sugarContent: number, public saltContent: number, public allergens: string) { }
 }
