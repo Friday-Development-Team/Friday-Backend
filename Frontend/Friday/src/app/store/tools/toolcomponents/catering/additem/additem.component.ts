@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Item, ItemDTO } from 'src/app/models/models';
 import { AdminService } from 'src/app/services/admin.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'friday-additem',
@@ -14,13 +15,15 @@ export class AdditemComponent {
   item: Item
   form: FormGroup
 
+  images: string[]
+
   items: string[]
 
   hasSubmitted: boolean = false
   check: boolean = false
   success: boolean = false
 
-  constructor(private admin: AdminService, private fb: FormBuilder, private data: DataService) {
+  constructor(private admin: AdminService, private fb: FormBuilder, private data: DataService, private modalService: NgbModal) {
     let decimal = '[0-9]+(\.|,?[0-9]+)?'
     let nodecimal = '[1-9]?[0-9]+'
 
@@ -37,6 +40,12 @@ export class AdditemComponent {
       allergens: fb.control('')
     })
 
+    
+
+  }
+
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
   }
 
   submit() {
@@ -62,7 +71,7 @@ export class AdditemComponent {
       this.form.get('saltcontent').value,
       this.form.get('allergens').value)
 
-      console.log(item)
+    console.log(item)
   }
 
 
