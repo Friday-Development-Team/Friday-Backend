@@ -32,6 +32,7 @@ import { ConfigComponent } from './tools/toolcomponents/admin/config/config.comp
 import { AdditemComponent } from './tools/toolcomponents/catering/additem/additem.component';
 import { ManagestockComponent } from './tools/toolcomponents/catering/managestock/managestock.component';
 import { TotalhistoryComponent } from './tools/toolcomponents/catering/totalhistory/totalhistory.component';
+import { CateringComponent } from './catering/catering.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
       { path: 'history', component: HistoryComponent },
       { path: 'running', component: RunningComponent },
       { path: 'orders', component: OrdersComponent },
+      { path: 'catering', component: CateringComponent, canActivate: [RoleGuard], data: { role: ['admin', 'catering'] } },
       {
         path: 'tools', component: ToolscontainerComponent, canActivate: [RoleGuard], data: { role: ['admin', 'catering'] }, children: [
           {
@@ -52,11 +54,13 @@ const routes: Routes = [
               { path: 'config', component: ConfigComponent }
             ]
           },
-          { path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] }, children: [
-            {path: 'additem', component: AdditemComponent},
-            {path: 'managestock', component: ManagestockComponent},
-            {path: 'history', component: TotalhistoryComponent}
-          ] }
+          {
+            path: 'catering', component: CateringtoolsComponent, canActivate: [RoleGuard], data: { role: ['catering'] }, children: [
+              { path: 'additem', component: AdditemComponent },
+              { path: 'managestock', component: ManagestockComponent },
+              { path: 'history', component: TotalhistoryComponent }
+            ]
+          }
         ]
       }
     ]
@@ -91,7 +95,8 @@ const routes: Routes = [
     ConfigComponent,
     AdditemComponent,
     ManagestockComponent,
-    TotalhistoryComponent
+    TotalhistoryComponent,
+    CateringComponent
   ],
   imports: [
     CommonModule,

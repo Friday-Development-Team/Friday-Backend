@@ -59,7 +59,7 @@ export class AuthService {
   register(
     name: string, password: string
   ): Observable<boolean> {
-    return this.http 
+    return this.http
       .post(`${environment.apiUrl}/user/register`, { name, password })
       .pipe(catchError(s => null),
         map((token: any) => {
@@ -92,7 +92,7 @@ export class AuthService {
     let response =
       ((!!this.roles)
         ? of(this.roles)
-        : this.http.get<string[]>(`${environment.apiUrl}/user/roles`))
+        : this.getRoles())
 
     return response.pipe(map(s => {
       this.roles = s
@@ -102,6 +102,10 @@ export class AuthService {
         ? t.includes(role[0].toLowerCase())//if only 1 role
         : role.some(u => t.includes(u)))
     ))
+  }
+
+  getRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/user/roles`)
   }
 
 }

@@ -30,7 +30,7 @@ namespace Friday.Models {
     /// </summary>
     public enum OrderStatus {
         /// <summary>
-        /// Order has been Accepted and is being handled
+        /// Order has been Accepted and is being handlead
         /// </summary>
         Accepted,//Should be first to be able to order all orders
         /// <summary>

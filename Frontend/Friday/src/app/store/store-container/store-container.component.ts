@@ -15,6 +15,7 @@ export class StoreContainerComponent implements OnInit {
 
   currentPage: string
   currentUser: ShopUser
+  userRoles: string[]
 
   hasRunningOrders: boolean = true
   canActivateTools: Observable<boolean>
@@ -22,7 +23,6 @@ export class StoreContainerComponent implements OnInit {
 
   constructor(private userService: UserService, private refService: RefService, private ren: Renderer2, private auth: AuthService, private router: Router) {
     this.userService.user.subscribe(s => {
-
       this.currentUser = s
     })
     this.userService.startUserPolling()
@@ -34,13 +34,19 @@ export class StoreContainerComponent implements OnInit {
     })
 
     this.canActivateTools = this.auth.hasRole(['admin', 'catering'])
+
+    this.auth.getRoles().subscribe(s => this.userRoles = s.map(t => t.toLowerCase()))
+  }
+
+  hasRole(role: string): boolean {
+    return !!this.userRoles && !!this.userRoles.find(s => s === role.toLowerCase())
   }
 
   ngOnInit() {
     this.router.navigate([`/store/${this.currentPage}`])
   }
 
-  logout(){
+  logout() {
     this.auth.logout()
     this.router.navigate(['auth'])
   }
