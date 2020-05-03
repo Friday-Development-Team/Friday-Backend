@@ -68,10 +68,16 @@ export class CateringOrder {
     constructor(
         public id: number,
         public items: HistoryOrderItem[], public user: string,
-        public statusfood: string,
-        public statusbeverage: string,
+        public statusFood: string,
+        public statusBeverage: string,
         public orderTime: Date,
         public totalPrice: number) { }
+
+    isActive(): boolean {
+        const bool = this.statusBeverage === 'Accepted' || this.statusBeverage === 'Accepted' || this.statusFood === 'SentToKitchen'
+        console.log(bool)
+        return bool
+    }
 }
 
 export class Log {

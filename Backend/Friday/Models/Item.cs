@@ -24,5 +24,17 @@ namespace Friday.Models {
     public enum ItemType {
         Food,
         Beverage
+
+    }
+
+    public class ItemTools {
+        public static ItemType FromString(string s) {
+            switch (s.ToUpper()) {
+                case "FOOD": return ItemType.Food;
+                case "BEVERAGE":
+                default: return ItemType.Beverage;
+            }
+        }
     }
 }
+

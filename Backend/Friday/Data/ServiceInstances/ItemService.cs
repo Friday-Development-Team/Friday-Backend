@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Friday.Data.IServices;
@@ -8,10 +9,8 @@ using Friday.Models.Logs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Friday.Data.ServiceInstances
-{
-    public class ItemService : IItemService
-    {
+namespace Friday.Data.ServiceInstances {
+    public class ItemService : IItemService {
 
         //private IList<Item> list;
         //#TODO Inject context
@@ -19,16 +18,14 @@ namespace Friday.Data.ServiceInstances
         private readonly DbSet<Item> items;
         private readonly DbSet<ItemLog> logs;
 
-        public ItemService(Context context)
-        {
+        public ItemService(Context context) {
             this.context = context;
             items = this.context.Items;
             logs = this.context.ItemLogs;
 
         }
-        public IList<Item> GetAll()
-        {
-            var result=items.Include(s => s.ItemDetails).AsNoTracking().ToList();
+        public IList<Item> GetAll() {
+            var result = items.Include(s => s.ItemDetails).AsNoTracking().ToList();
             return result;
         }
         ///// <summary>
@@ -45,8 +42,7 @@ namespace Friday.Data.ServiceInstances
         /// <param name="id">Id of the item</param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public bool ChangeCount(int id, int amount)
-        {
+        public bool ChangeCount(int id, int amount) {
             var item = items.SingleOrDefault(s => s.Id == id);
             if (item == null || (amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
                 return false;
@@ -61,11 +57,22 @@ namespace Friday.Data.ServiceInstances
             return true;
         }
 
-        private void LogItem(Item item, int count)
-        {
+        private void LogItem(Item item, int count) {
             var log = new ItemLog { Item = item, Amount = count, Time = DateTime.Now };
             logs.Add(log);
             context.SaveChanges();
+        }
+
+        public bool AddItem(Item item, ItemDetails details) {
+            items.Add(item);//Add Item itself to data
+            context.SaveChanges();//Save to generate the ID
+
+            details.ItemId = item.Id;//Set ItemId with newly generated value from Item
+
+            items.Update(item);//Sets the Item as updated to new Details are saved too
+            context.SaveChanges();//Save to generated ID
+
+            return item.Id != 0 && details.Id != 0 && items.Contains(item);//Check if Item was succesfully added and all values generated. This ensures proper saving.
         }
     }
 }

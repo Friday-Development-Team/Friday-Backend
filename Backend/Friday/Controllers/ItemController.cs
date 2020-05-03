@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Friday.Data.IServices;
+using Friday.DTOs.Items;
 using Friday.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,8 +15,7 @@ namespace Friday.Controllers {
     [Produces("application/json")]
     [ApiController]
     //[Authorize]
-    public class ItemController : ControllerBase
-    {
+    public class ItemController : ControllerBase {
 
         private readonly IItemService service;
         public ItemController(IItemService service) {
@@ -50,6 +50,23 @@ namespace Friday.Controllers {
             if (result)
                 return new OkResult();
             return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// Adds a new Item to the database.
+        /// </summary>
+        /// <param name="dto">DTO object containing the data to make the object</param>
+        /// <returns>HTTP Code depending on result.</returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Catering,Admin")]
+        public ActionResult Post(ItemDTO dto) {
+            var result = service.AddItem(dto.ToItem(), dto.Details.ToItemDetails());
+            if (result)
+                return new OkResult();
+            return new BadRequestResult();
+
         }
 
         //// DELETE api/<controller>/5
