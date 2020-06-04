@@ -9,28 +9,32 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Friday.Controllers {
+namespace Friday.Controllers
+{
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
     //  [Authorize]
-    public class ItemController : ControllerBase {
+    public class ItemController : ControllerBase
+    {
 
         private readonly IItemService service;
-        public ItemController(IItemService service) {
+        public ItemController(IItemService service)
+        {
             this.service = service;
         }
         // GET: api/<controller>
         /// <summary>
-        /// Returns a list containing all the Items. Check Schema's for their format.
+        /// Returns a list containing all the Items. Check Schema's for their format. A default set of Items has been provided. These can be modified or deleted if needed.
         /// </summary>
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [AllowAnonymous]
-        public ActionResult<IList<Item>> Get() {
+        public ActionResult<IList<Item>> Get()
+        {
             return new OkObjectResult(service.GetAll());
         }
 
@@ -45,7 +49,8 @@ namespace Friday.Controllers {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // [Authorize(Roles = Role.Admin)]
-        public ActionResult<bool> Put(int id, int amount) {
+        public ActionResult<bool> Put(int id, int amount)
+        {
             var result = service.ChangeCount(id, amount);
             if (result)
                 return new OkResult();
@@ -55,13 +60,14 @@ namespace Friday.Controllers {
         /// <summary>
         /// Adds a new Item to the database.
         /// </summary>
-        /// <param name="dto">DTO object containing the data to make the object</param>
+        /// <param name="dto">ItemDTO object containing the data to make the Item</param>
         /// <returns>HTTP Code depending on result.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // [Authorize(Roles = "Catering")]
-        public ActionResult Post(ItemDTO dto) {
+        public ActionResult Post(ItemDTO dto)
+        {
             var result = service.AddItem(dto.ToItem(), dto.Details.ToItemDetails());
             if (result)
                 return new OkResult();
@@ -69,10 +75,19 @@ namespace Friday.Controllers {
 
         }
 
+        /// <summary>
+        /// Deletes an Item. Removes the Item itself, its ItemDetails and all Orders where this Item was ordered.
+        /// Use this with caution. This action cannot be undone and should only be used during setup.
+        /// </summary>
+        /// <param name="id">ID of the Item</param>
+        /// <returns>ActionResult depending on the outcome</returns>
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         // [Authorize(Roles = "Catering")]
-        public ActionResult Delete(int id) {
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult Delete(int id)
+        {
             var result = service.DeleteItem(id);
             if (result)
                 return new OkResult();
