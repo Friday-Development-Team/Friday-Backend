@@ -49,7 +49,7 @@ namespace Friday
                 c.DocumentName = "apidocs";
                 c.Title = "Friday API";
                 c.Version = "v1";
-                c.Description = "The Friday API documentation description.";
+                c.Description = "The Friday API documentation. A seeded set of common Items has been provided. These can be changed or deleted according to the requirements.";
                 c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
                 {
                     Type = SwaggerSecuritySchemeType.ApiKey,
@@ -109,6 +109,7 @@ namespace Friday
             {
                 c.AddPolicy("AdminOnly", pol => pol.RequireRole("Admin"));
                 c.AddPolicy("Personnel", pol => pol.RequireRole(new[] { "Admin", "Catering", "Kitchen" }));
+                c.AddPolicy("Catering", pol => pol.RequireRole(new []{"Admin", "Catering"}));
             });
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));

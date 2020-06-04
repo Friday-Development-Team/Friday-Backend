@@ -23,7 +23,7 @@ namespace Friday.Controllers {
         [HttpGet("currency/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+      //  [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetAllCurrencyLogs() {
             var result = service.GetAllCurrencyLogs();
             if (result != null)
@@ -34,7 +34,7 @@ namespace Friday.Controllers {
         [HttpGet("item/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetAllItemLogs() {
             var result = service.GetAllItemLogs();
             if (result != null)
@@ -45,7 +45,7 @@ namespace Friday.Controllers {
         [HttpGet("currency/user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetByUser([FromQuery] string param) {
             var result = service.GetByUser(param);
             if (result != null)
@@ -60,7 +60,7 @@ namespace Friday.Controllers {
         [HttpGet("item/id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetPerItem([FromQuery] int param) {
             var result = service.GetPerItem(param);
             if (result != null)
@@ -71,7 +71,7 @@ namespace Friday.Controllers {
         [HttpGet("stock/remaining")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<ItemAmountDTO>> GetRemainingStock() {
             var result = service.GetRemainingStock();
             if (result != null)
@@ -82,7 +82,7 @@ namespace Friday.Controllers {
         [HttpGet("stock/sold")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<ItemAmountDTO>> GetTotalStockSold() {
             var result = service.GetTotalStockSold();
             if (result != null)
@@ -94,7 +94,7 @@ namespace Friday.Controllers {
         [HttpGet("total")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public ActionResult<double> GetTotalIncome() {
             var result = service.GetTotalIncome();
             if (result != null)

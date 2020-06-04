@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Friday.Models {
-    public class ItemDetails {
+namespace Friday.Models
+
+{
+    /// <summary>
+    /// Contains the details of an Item.
+    /// </summary>
+    public class ItemDetails
+    {
+        /// <summary>
+        /// ID of this object
+        /// </summary>
         public int Id { get; set; }
         public int ItemId { get; set; }
         /// <summary>

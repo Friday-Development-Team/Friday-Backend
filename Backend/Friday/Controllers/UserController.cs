@@ -44,7 +44,7 @@ namespace Friday.Controllers {
         /// </summary>
         /// <returns>Information of the User</returns>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+      //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ShopUserDTO Get() {
             var name = User.Identity.Name;
             var result = service.GetUser(name);
@@ -52,7 +52,7 @@ namespace Friday.Controllers {
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         public IList<ShopUserDTO> GetAll() {
             var users = service.GetAll();
             return users;
@@ -108,7 +108,7 @@ namespace Friday.Controllers {
         /// <returns>JWT</returns>
         [AllowAnonymous]
         [HttpPost("register")]
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<String>> Register(RegisterDTO model) {
             IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
@@ -127,6 +127,7 @@ namespace Friday.Controllers {
         /// </summary>name">Name of the User</param>
         /// <param name="amount">Amount to be added. Negative to subtract</param>
         [HttpPut("updatebalance")]
+      //
         [Authorize(Roles = Role.Admin)]
         public void UpdateBalance([FromBody] BalanceUpdateDTO dto) {
             service.ChangeBalance(dto.Name, dto.Amount, true);

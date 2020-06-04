@@ -184,7 +184,7 @@ namespace Friday.Data.ServiceInstances {
             return order?.StatusBeverage.ToString() + order?.StatusFood.ToString();
         }
         /// <inheritdoc />
-        public IList<CateringOrderDTO> GetAll(bool isKitchen) {
+        public IList<CateringOrder> GetAll(bool isKitchen) {
             var result = orders
                 .Include(s => s.Items)
                 .ThenInclude(s => s.Item)
@@ -192,7 +192,7 @@ namespace Friday.Data.ServiceInstances {
                 .Include(s => s.User)
                 .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.IsOngoing()))
                 .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime).AsNoTracking()
-                .Select(s => new CateringOrderDTO
+                .Select(s => new CateringOrder
                 {
                     Id = s.Id,
                     StatusBeverage = isKitchen ? null : s.StatusBeverage.ToString(),

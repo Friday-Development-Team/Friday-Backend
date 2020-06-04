@@ -14,7 +14,7 @@ namespace Friday.Controllers {
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    //[Authorize]
+    //  [Authorize]
     public class ItemController : ControllerBase {
 
         private readonly IItemService service;
@@ -28,7 +28,7 @@ namespace Friday.Controllers {
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [AllowAnonymous]
         public ActionResult<IList<Item>> Get() {
             return new OkObjectResult(service.GetAll());
@@ -44,7 +44,7 @@ namespace Friday.Controllers {
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = Role.Admin)]
+        // [Authorize(Roles = Role.Admin)]
         public ActionResult<bool> Put(int id, int amount) {
             var result = service.ChangeCount(id, amount);
             if (result)
@@ -60,7 +60,7 @@ namespace Friday.Controllers {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = "Catering,Admin")]
+        // [Authorize(Roles = "Catering")]
         public ActionResult Post(ItemDTO dto) {
             var result = service.AddItem(dto.ToItem(), dto.Details.ToItemDetails());
             if (result)
@@ -69,9 +69,14 @@ namespace Friday.Controllers {
 
         }
 
-        //// DELETE api/<controller>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id) {
-        //}
+        // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
+        // [Authorize(Roles = "Catering")]
+        public ActionResult Delete(int id) {
+            var result = service.DeleteItem(id);
+            if (result)
+                return new OkResult();
+            return NotFound();
+        }
     }
 }

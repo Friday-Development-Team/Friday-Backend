@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Friday.Models.Out
 {/// <summary>
-/// Couples an Item to an Amount (amount sold, amount remaining, used to make a Dictionary easier to send via JSON)
+/// Links an Item to an Amount (amount sold, amount remaining, used to make a Dictionary easier to send via JSON)
 /// </summary>
     public class ItemAmountDTO
     {
