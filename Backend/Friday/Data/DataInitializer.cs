@@ -6,29 +6,42 @@ using Friday.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Friday.Data {
-    public class DataInitializer {
+namespace Friday.Data
+{
+    /// <summary>
+    /// Used to initialize all the needed data on startup.
+    /// </summary>
+    public class DataInitializer
+    {
         private readonly Context context;
         private readonly UserManager<IdentityUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
 
-        public DataInitializer(Context context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager) {
+        public DataInitializer(Context context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
             this.context = context;
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
 
-        public async Task InitializeData() {
+        /// <summary>
+        /// Initializes and seeds all the data. Checks if the databased already exists and creates it if needed.
+        /// </summary>
+        /// <returns>Task</returns>
+        public async Task InitializeData()
+        {
 
 
-            //context.Database.EnsureDeleted();
-            if (context.Database.EnsureCreated()) {
+            //context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
+            if (context.Database.EnsureCreated())
+            {
 
                 await CreateRoles();
 
                 await CreateUser("Admin", null, "T3stP4ssw0rd4dm1n", Role.Admin);
                 await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", Role.Catering);
                 await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", Role.Kitchen);
+
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin" });//#TODO Base balance
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering" });//#TODO Base balance
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen" });
@@ -50,14 +63,20 @@ namespace Friday.Data {
 
         }
 
-        private void SeedItems() {
-            Item item = new Item {
+        /// <summary>
+        /// Seeds all the Item objects.
+        /// </summary>
+        private void SeedItems()
+        {
+            Item item = new Item
+            {
                 Name = "Water",
                 Price = 1.0,
                 Count = 50,
                 Type = ItemType.Beverage,
                 NormalizedImageName = "water",
-                ItemDetails = new ItemDetails {
+                ItemDetails = new ItemDetails
+                {
                     Allergens = "",
                     Calories = 0D,
                     SaltContent = 0D,
@@ -67,13 +86,15 @@ namespace Friday.Data {
             };
             context.Items.Add(item);
 
-            item = new Item {
+            item = new Item
+            {
                 Name = "Cola",
                 Price = 2.0,
                 Count = 50,
                 Type = ItemType.Beverage,
                 NormalizedImageName = "cola",
-                ItemDetails = new ItemDetails {
+                ItemDetails = new ItemDetails
+                {
                     Allergens = "",
                     Calories = 50D,
                     SaltContent = 0D,
@@ -201,10 +222,20 @@ namespace Friday.Data {
 
         }
 
-        private async Task CreateUser(string name, string email, string password, string role) {
+        /// <summary>
+        /// Creates a User account for authentication purposes
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        private async Task CreateUser(string name, string email, string password, string role)
+        {
             var user = new IdentityUser { UserName = name, Email = email };
             var result = await userManager.CreateAsync(user, password);
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 var createdUser = await userManager.FindByNameAsync(user.UserName);
                 if (name != "Admin")
                     await userManager.AddToRoleAsync(createdUser, role);
@@ -214,10 +245,16 @@ namespace Friday.Data {
 
         }
 
-        private async Task CreateRoles() {
+        /// <summary>
+        /// Creates all the roles needed.
+        /// </summary>
+        /// <returns></returns>
+        private async Task CreateRoles()
+        {
             string[] roles = { Role.Admin, Role.Catering, Role.Kitchen, Role.User };
 
-            foreach (var role in roles) {
+            foreach (var role in roles)
+            {
                 if (!await roleManager.RoleExistsAsync(role))
                     await roleManager.CreateAsync(new IdentityRole(role));
             }

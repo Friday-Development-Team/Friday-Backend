@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data
 {
+    /// <summary>
+    /// Declares a DBContext. Used to map and declare the DbSets and the mapping for each class.
+    /// </summary>
     public class Context : IdentityDbContext
     {
 
@@ -26,6 +29,7 @@ namespace Friday.Data
 
         }
 
+        /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
