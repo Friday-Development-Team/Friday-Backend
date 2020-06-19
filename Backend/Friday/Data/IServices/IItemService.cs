@@ -3,6 +3,9 @@ using Friday.Models;
 
 namespace Friday.Data.IServices
 {
+    /// <summary>
+    /// Service that handles Items.
+    /// </summary>
     public interface IItemService
     {
 

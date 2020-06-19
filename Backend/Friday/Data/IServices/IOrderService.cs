@@ -4,8 +4,13 @@ using Friday.Models;
 using Friday.Models.Out;
 using Friday.Models.Out.Order;
 
-namespace Friday.Data.IServices {
-    public interface IOrderService {
+namespace Friday.Data.IServices
+{
+    /// <summary>
+    /// Service that handles Orders or information derived from these Orders.
+    /// </summary>
+    public interface IOrderService
+    {
         /// <summary>
         /// Returns all the completed Orders of a specified user.
         /// </summary>

@@ -10,23 +10,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Friday.Data.ServiceInstances
-{
-    public class ItemService : IItemService
+{/// <inheritdoc />
+    public class ItemService : ServiceBase, IItemService
     {
-
-        //private IList<Item> list;
-        //#TODO Inject context
-        private readonly Context context;
         private readonly DbSet<Item> items;
         private readonly DbSet<ItemLog> logs;
 
-        public ItemService(Context context)
+
+        public ItemService(Context context) : base(context)
         {
-            this.context = context;
             items = this.context.Items;
             logs = this.context.ItemLogs;
 
         }
+        /// <inheritdoc />
         public IList<Item> GetAll()
         {
             var result = items.Include(s => s.ItemDetails).AsNoTracking().ToList();
@@ -40,12 +37,9 @@ namespace Friday.Data.ServiceInstances
         //public ItemDetails GetDetails(int id) {
         //    return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
         //}
-        /// <summary>
-        /// Changes the Amount of an Item. Will Add the specified amount to the Amount. Will subtract if amount if negative. Addition/subtraction is needed to avoid concurrency issues.
-        /// </summary>
-        /// <param name="id">Id of the item</param>
-        /// <param name="amount"></param>
-        /// <returns></returns>
+
+
+        /// <inheritdoc />
         public bool ChangeCount(int id, int amount)
         {
             var item = items.SingleOrDefault(s => s.Id == id);
@@ -61,14 +55,14 @@ namespace Friday.Data.ServiceInstances
 
             return true;
         }
-
+        /// <inheritdoc />
         private void LogItem(Item item, int count)
         {
             var log = new ItemLog { Item = item, Amount = count, Time = DateTime.Now };
             logs.Add(log);
             context.SaveChanges();
         }
-
+        /// <inheritdoc />
         public bool AddItem(Item item, ItemDetails details)
         {
             items.Add(item);//Add Item itself to data
@@ -81,7 +75,7 @@ namespace Friday.Data.ServiceInstances
 
             return item.Id != 0 && details.Id != 0 && items.Contains(item);//Check if Item was succesfully added and all values generated. This ensures proper saving.
         }
-
+        /// <inheritdoc />
         public bool DeleteItem(int id)
         {
             var item = items.SingleOrDefault(s => s.Id == id);
@@ -91,7 +85,7 @@ namespace Friday.Data.ServiceInstances
             return context.SaveChanges() != 0;//False if nothing was written and the operation failed.
 
         }
-
+        /// <inheritdoc />
         public bool ChangeItem(Item item)
         {
             throw new NotImplementedException();

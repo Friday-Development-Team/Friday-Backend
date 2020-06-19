@@ -9,10 +9,11 @@ using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friday.Data.ServiceInstances {
-    public class OrderService : IOrderService {
+namespace Friday.Data.ServiceInstances
+{
+    public class OrderService : ServiceBase, IOrderService
+    {
 
-        private readonly Context context;
         private readonly DbSet<Order> orders;
         private readonly DbSet<ShopUser> users;
         private readonly DbSet<Item> items;
@@ -20,8 +21,8 @@ namespace Friday.Data.ServiceInstances {
         private readonly IItemService itemService;
         private readonly IUserService userService;
 
-        public OrderService(Context context, IItemService itemsService, IUserService userService) {
-            this.context = context;
+        public OrderService(Context context, IItemService itemsService, IUserService userService) : base(context)
+        {
             orders = context.Orders;
             users = context.ShopUsers;
             items = context.Items;
@@ -29,7 +30,8 @@ namespace Friday.Data.ServiceInstances {
             this.userService = userService;
         }
         /// <inheritdoc />
-        public OrderHistory GetHistory(string username) {
+        public OrderHistory GetHistory(string username)
+        {
             if (users.Single(s => s.Name == username) == null)
                 return null;
 
@@ -56,7 +58,8 @@ namespace Friday.Data.ServiceInstances {
 
         }
         /// <inheritdoc />
-        public bool SetAccepted(int id, bool value, bool toKitchen) {
+        public bool SetAccepted(int id, bool value, bool toKitchen)
+        {
 
             var needsKitchen = context.Configuration.Single();
 
@@ -79,7 +82,8 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public int PlaceOrder(string username, OrderDTO orderdto) {
+        public int PlaceOrder(string username, OrderDTO orderdto)
+        {
             if (orderdto == null || !orderdto.IsValid())
                 return 0;
 
@@ -116,7 +120,8 @@ namespace Friday.Data.ServiceInstances {
             order.Items = orderitems;
             // IList<Item> rem = new List<Item>();
             Dictionary<Item, int> log = new Dictionary<Item, int>();
-            foreach (var item in orderdto.Items) {
+            foreach (var item in orderdto.Items)
+            {
                 var temp = items.SingleOrDefault(s => s.Id == item.Id);
                 if (temp == null)
                     return 0;
@@ -144,21 +149,26 @@ namespace Friday.Data.ServiceInstances {
         }
 
 
-        private void RevertUser(ShopUser user, double amount) {
+        private void RevertUser(ShopUser user, double amount)
+        {
             userService.ChangeBalance(user.Id, amount, false);
             user.UpdateBalance(amount);
         }
 
         /// <inheritdoc />
-        public bool SetCompleted(int id, bool forBeverage) {
+        public bool SetCompleted(int id, bool forBeverage)
+        {
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || (forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed. SentToKitchen has to return them to Catering.
                 return false;
 
-            if (forBeverage) {
+            if (forBeverage)
+            {
                 order.StatusBeverage = OrderStatus.Completed;
                 order.CompletionTimeBeverage = DateTime.Now;
-            } else {
+            }
+            else
+            {
                 order.StatusFood = OrderStatus.Completed;
                 order.CompletionTimeFood = DateTime.Now;
             }
@@ -168,7 +178,8 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public bool Cancel(int id) {//#TODO Config for option to allow accepted orders to be cancelled
+        public bool Cancel(int id)
+        {//#TODO Config for option to allow accepted orders to be cancelled
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;
@@ -179,12 +190,14 @@ namespace Friday.Data.ServiceInstances {
             return true;
         }
         /// <inheritdoc />
-        public string GetStatus(int id) {
+        public string GetStatus(int id)
+        {
             var order = orders.SingleOrDefault(s => s.Id == id);
             return order?.StatusBeverage.ToString() + order?.StatusFood.ToString();
         }
         /// <inheritdoc />
-        public IList<CateringOrder> GetAll(bool isKitchen) {
+        public IList<CateringOrder> GetAll(bool isKitchen)
+        {
             var result = orders
                 .Include(s => s.Items)
                 .ThenInclude(s => s.Item)

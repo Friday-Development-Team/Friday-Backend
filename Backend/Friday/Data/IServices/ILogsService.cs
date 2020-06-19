@@ -9,6 +9,9 @@ using Friday.DTOs;
 
 namespace Friday.Data.IServices
 {
+    /// <summary>
+    /// Service that handles both currency logs and item logs, and information derived from these.
+    /// </summary>
     public interface ILogsService
     {
         /// <summary>

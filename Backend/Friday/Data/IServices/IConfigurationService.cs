@@ -4,11 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Friday.Models;
 
-namespace Friday.Data.IServices {
-    public interface IConfigurationService {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+namespace Friday.Data.IServices
+{
+    /// <summary>
+    /// Service that handles Configurations. Only used to get and set the configuration.
+    /// </summary>
+    public interface IConfigurationService
+    {
+        /// <summary>
+        /// Returns the configuration object for this API instance.
+        /// </summary>
+        /// <returns>Configuration</returns>
         Configuration GetConfig();
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         /// <summary>
         /// Sets the Configuration options
         /// </summary>

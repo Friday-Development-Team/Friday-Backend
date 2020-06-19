@@ -24,7 +24,7 @@ namespace Friday.Controllers
         }
 
         /// <summary>
-        /// Returns a List containing all the logs involving currency.
+        /// Returns a List containing all the logs involving currency. Each time an Order is placed or money is added or subtracted, a log is made.
         /// </summary>
         /// <returns>List of currency logs</returns>
         [HttpGet("currency/all")]
@@ -39,6 +39,10 @@ namespace Friday.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Returns a List contains all the logs involving Items. Each time time the amount of an Item is changed, a log is made.
+        /// </summary>
+        /// <returns>List of item logs</returns>
         [HttpGet("item/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,6 +55,11 @@ namespace Friday.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Returns a List of all the currency logs concerning a specific User.
+        /// </summary>
+        /// <param name="param">Username of the user</param>
+        /// <returns>List of currency logs</returns>
         [HttpGet("currency/user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -79,6 +88,10 @@ namespace Friday.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Returns a list of the remaining stock, grouped per Item. Wraps each of these in a object containing the Item and the remaining amount for that Item.
+        /// </summary>
+        /// <returns>Map-like List containing remaining stock</returns>
         [HttpGet("stock/remaining")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -103,7 +116,10 @@ namespace Friday.Controllers
             return NotFound();
         }
 
-
+        /// <summary>
+        /// Returns the calculated income based on the amount of money added to the system. This does not consider the starting funds added to the default admin and catering accounts. 
+        /// </summary>
+        /// <returns>Total amount of income so far</returns>
         [HttpGet("total")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
