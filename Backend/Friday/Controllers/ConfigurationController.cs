@@ -12,15 +12,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friday.Controllers
 {
+    /// <summary>
+    /// Controller for the get and set of the Configuration class.
+    /// </summary>
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-  //  [Authorize]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfigurationService service;
-
+        /// <summary>
+        /// Ctor. Gets auto injected.
+        /// </summary>
+        /// <param name="service">Configuration service</param>
         public ConfigurationController(IConfigurationService service)
         {
             this.service = service;

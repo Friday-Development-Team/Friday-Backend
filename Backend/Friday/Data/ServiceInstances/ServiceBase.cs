@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Friday.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,9 @@ namespace Friday.Data.ServiceInstances
     /// </summary>
     public class ServiceBase
     {
+        /// <summary>
+        /// Link to DB.
+        /// </summary>
         protected readonly Context context;
         /// <summary>
         /// Creates a new instance of this service. Should never be used directly.

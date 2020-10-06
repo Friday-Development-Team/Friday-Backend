@@ -18,7 +18,9 @@ namespace Friday.Models.Out.Order
         /// List of Items ordered, stored in an object that only exposes necessary information
         /// </summary>
         public IList<HistoryOrderItem> Items { get; set; }
-        //Time of Order placement
+        /// <summary>
+        /// Time the Order was placed
+        /// </summary>
         public DateTime OrderTime { get; set; }
         /// <summary>
         /// User that placed this Order

@@ -15,15 +15,38 @@ namespace Friday.Data
     /// </summary>
     public class Context : IdentityDbContext
     {
-
+        /// <summary>
+        /// DB data for Items. Can include ItemDetails.
+        /// </summary>
         public DbSet<Item> Items { get; set; }
+        /// <summary>
+        /// DB data for ShopUsers. Can include Orders and CurrencyLogs.
+        /// </summary>
         public DbSet<ShopUser> ShopUsers { get; set; }
+        /// <summary>
+        /// DB data for Orders. Can include OrderItems and ShopUser.
+        /// </summary>
         public DbSet<Order> Orders { get; set; }
+        /// <summary>
+        /// DB data for ItemDetails.
+        /// </summary>
         public DbSet<ItemDetails> ItemDetails { get; set; }
+        /// <summary>
+        /// DB data for Configuration.
+        /// </summary>
         public DbSet<Configuration> Configuration { get; set; }
+        /// <summary>
+        /// DB data for CurrencyLogs. Can Include ShopUser.
+        /// </summary>
         public DbSet<CurrencyLog> CurrencyLogs { get; set; }
+        /// <summary>
+        /// DB data for ItemLogs. Can include Item and ShopUser.
+        /// </summary>
         public DbSet<ItemLog> ItemLogs { get; set; }
-
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="options">Options for DB</param>
         public Context(DbContextOptions options) : base(options)
         {
 

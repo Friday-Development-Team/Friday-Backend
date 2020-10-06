@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 using Friday.Models;
 
 namespace Friday.DTOs {
+    /// <summary>
+    /// DTO for placing an order.
+    /// </summary>
     public class OrderDTO {
         //[Required]
         //public string Username { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         [Required]
         public IList<OrderItemDTO> Items { get; set; }
         /// <summary>

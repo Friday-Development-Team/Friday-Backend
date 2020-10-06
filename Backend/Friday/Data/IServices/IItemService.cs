@@ -25,10 +25,11 @@ namespace Friday.Data.IServices
         /// <summary>
         /// Changes the count of a single Item. Works additively. Use a negative int to subtract. Used for convenience.
         /// </summary>
+        /// <param name="user">User that caused the change</param>
         /// <param name="id">ID of the Item</param>
         /// <param name="amount">Amount to add. Negative to subtract.</param>
         /// <returns>True if the change was successful</returns>
-        bool ChangeCount(int id, int amount);
+        bool ChangeCount(ShopUser user, int id, int amount);
         /// <summary>
         /// Changes an Item.
         /// </summary>

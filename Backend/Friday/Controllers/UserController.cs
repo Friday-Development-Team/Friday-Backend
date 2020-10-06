@@ -20,11 +20,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Friday.Controllers
 {
+    /// <summary>
+    /// Controller for Users. Shows methods like login, register or gathering of information.
+    /// </summary>
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [Authorize]
+    
     public class UserController : ControllerBase
     {
 
@@ -33,6 +36,13 @@ namespace Friday.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration config;
 
+        /// <summary>
+        /// Default Ctor. Gets auto injected.
+        /// </summary>
+        /// <param name="service">Service for Users</param>
+        /// <param name="signInManager">Manager to handle login</param>
+        /// <param name="userManager">Handles Identity Users</param>
+        /// <param name="config">Current configuration file</param>
         public UserController(IUserService service, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration config)
         {
             this.service = service;
@@ -47,12 +57,10 @@ namespace Friday.Controllers
         /// </summary>
         /// <returns>Information of the User</returns>
         [HttpGet]
-        //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ShopUserDTO Get()
         {
-            var name = User.Identity.Name;
-            var result = service.GetUser(name);
-            return result;
+            return service.GetUser(User.Identity.Name);
         }
 
         /// <summary>
@@ -60,11 +68,10 @@ namespace Friday.Controllers
         /// </summary>
         /// <returns>List of username and balance for each user</returns>
         [HttpGet("all")]
-        // [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IList<ShopUserDTO> GetAll()
         {
-            var users = service.GetAll();
-            return users;
+            return service.GetAll();
         }
 
         /// <summary>
@@ -72,11 +79,10 @@ namespace Friday.Controllers
         /// </summary>
         /// <returns>List of roles</returns>
         [HttpGet("roles")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IList<string>> GetRolesAsync()
         {
-            var user = await userManager.FindByNameAsync(User.Identity.Name);
-            var temp = await userManager.GetRolesAsync(user);
-            return temp;
+            return await userManager.GetRolesAsync(await userManager.FindByNameAsync(User.Identity.Name));
         }
         /// <summary>
         /// Checks if the provided username already exists
@@ -85,7 +91,7 @@ namespace Friday.Controllers
         /// <returns>True if doesn't exist</returns>
         [AllowAnonymous]
         [HttpGet("checkusername")]
-        public async Task<ActionResult<Boolean>> CheckAvailableUserName(string name)
+        public async Task<ActionResult<bool>> CheckAvailableUserName(string name)
         {
             return await userManager.FindByNameAsync(name) == null;
         }
@@ -97,21 +103,11 @@ namespace Friday.Controllers
         /// <returns>JWT token</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<String>> CreateToken([FromBody] LoginDTO model)
+        public async Task<ActionResult<string>> CreateToken([FromBody] LoginDTO model)
         {
-            var name = model.Username;
-            var user = await userManager.FindByNameAsync(name);
-            if (user != null)
-            {
-                var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-                if (result.Succeeded)
-                {
-                    string token = await GetToken(user);
-                    return Created("", token); //returns only the token
-
-                }
-            }
-
+            var user = await userManager.FindByNameAsync(model.Username);
+            if (user != null && (await signInManager.CheckPasswordSignInAsync(user, model.Password, false)).Succeeded)
+                return Created("", await GetToken(user)); //returns only the token
             return BadRequest();
         }
 
@@ -122,29 +118,22 @@ namespace Friday.Controllers
         /// <returns>JWT Token</returns>
         [AllowAnonymous]
         [HttpPost("register")]
-        //[Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<String>> Register(RegisterDTO model)
         {
             IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
             var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                if (service.AddUser(customer))
-                {
-                    string token = await GetToken(user);
-                    return Created("", token);
-                }
-            }
+            if (result.Succeeded && service.AddUser(customer))
+                return Created("", await GetToken(user));
             return BadRequest();
         }
 
         /// <summary>
         /// Adds Balance to the specified user's account
-        /// </summary>name">Name of the User</param>
-        /// <param name="amount">Amount to be added. Negative to subtract</param>
+        /// </summary>
+        /// <param name="dto">Object contain the data for a balance update</param>
+        /// <param name="log">Whether or not this event should be logged</param>
         [HttpPut("updatebalance")]
-        //
         [Authorize(Roles = Role.Admin)]
         public ActionResult UpdateBalance([FromBody] BalanceUpdateDTO dto, bool log = true)
         {

@@ -10,14 +10,22 @@ using Friday.DTOs;
 
 namespace Friday.Controllers
 {
+    /// <summary>
+    /// Controller for methods involving Logs. 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Role.Admin)]
     public class LogsController : ControllerBase
     {
 
         private readonly ILogsService service;
-        private readonly IItemService itemService;
 
+        /// <summary>
+        /// Gives access to different types of logs. Every time a certain action is performed involving currency or items (changing amounts, adding, subtracting, etc),
+        /// that event is logged. Useful data for administration and checking purposes.
+        /// </summary>
+        /// <param name="service">Log service</param>
         public LogsController(ILogsService service)
         {
             this.service = service;
@@ -30,12 +38,11 @@ namespace Friday.Controllers
         [HttpGet("currency/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //  [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetAllCurrencyLogs()
         {
             var result = service.GetAllCurrencyLogs();
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
 
@@ -46,12 +53,11 @@ namespace Friday.Controllers
         [HttpGet("item/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetAllItemLogs()
         {
             var result = service.GetAllItemLogs();
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
 
@@ -63,28 +69,27 @@ namespace Friday.Controllers
         [HttpGet("currency/user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize(Roles = Role.Admin)]
+
         public ActionResult<IList<LogDTO>> GetByUser([FromQuery] string param)
         {
             var result = service.GetByUser(param);
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
         /// <summary>
         /// Returns all available logs linked to a given item.
         /// </summary>
         /// <param name="param">Parameter. ID of the item.</param>
-        /// <returns></returns>
+        /// <returns>List of logs for the given item</returns>
         [HttpGet("item/id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<LogDTO>> GetPerItem([FromQuery] int param)
         {
             var result = service.GetPerItem(param);
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
 
@@ -95,24 +100,26 @@ namespace Friday.Controllers
         [HttpGet("stock/remaining")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<ItemAmountDTO>> GetRemainingStock()
         {
             var result = service.GetRemainingStock();
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
 
+        /// <summary>
+        /// Gives an overview of how much of each Item has been sold so far.
+        /// </summary>
+        /// <returns>List with amount sold per item, in List format</returns>
         [HttpGet("stock/sold")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = Role.Admin)]
         public ActionResult<IList<ItemAmountDTO>> GetTotalStockSold()
         {
             var result = service.GetTotalStockSold();
             if (result != null)
-                return new OkObjectResult(result);
+                return Ok(result);
             return NotFound();
         }
 
@@ -122,16 +129,9 @@ namespace Friday.Controllers
         /// <returns>Total amount of income so far</returns>
         [HttpGet("total")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = Role.Admin)]
         public ActionResult<double> GetTotalIncome()
         {
-            var result = service.GetTotalIncome();
-            if (result != null)
-                return new OkObjectResult(result);
-            return NotFound();
+            return Ok(service.GetTotalIncome());
         }
-
-
     }
 }

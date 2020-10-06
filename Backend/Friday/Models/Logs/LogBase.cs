@@ -9,8 +9,11 @@ namespace Friday.Models.Logs
     /// <summary>
     /// Base for all Log types
     /// </summary>
-    public class LogBase
+    public abstract class LogBase
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         public int Id { get; set; }
         /// <summary>
         /// User that causes this log to be placed

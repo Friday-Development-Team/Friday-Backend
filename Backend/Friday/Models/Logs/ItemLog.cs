@@ -19,11 +19,21 @@ namespace Friday.Models.Logs
         /// </summary>
         public int ItemId { get; set; }
 
+        /// <summary>
+        /// Empty ctor used for EF. Don't use directly.
+        /// </summary>
         public ItemLog() : base()
         {
 
         }
 
+        /// <summary>
+        /// Creates a new instance of this log
+        /// </summary>
+        /// <param name="user">User that placed this log</param>
+        /// <param name="amount">Amount of items in the transaction. Positive for an addition of items, negative for items being sold</param>
+        /// <param name="time">Timestamp</param>
+        /// <param name="item">Item a log is made about</param>
         public ItemLog(ShopUser user, double amount, DateTime time, Item item) : base(user, amount, time)
         {
             Item = item;
@@ -32,4 +42,3 @@ namespace Friday.Models.Logs
 
     }
 }
-//TODO Add User that used transaction (customer for orders, admin for orders and inventory management)

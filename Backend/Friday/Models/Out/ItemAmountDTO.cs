@@ -9,7 +9,13 @@ namespace Friday.Models.Out
 /// </summary>
     public class ItemAmountDTO
     {
+        /// <summary>
+        /// Item
+        /// </summary>
         public Item Item { get; set; }
+        /// <summary>
+        /// Amount of said Item
+        /// </summary>
         public int Amount { get; set; }
     }
 }

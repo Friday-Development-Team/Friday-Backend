@@ -51,7 +51,13 @@ namespace Friday.Models
     /// </summary>
     public enum ItemType
     {
+        /// <summary>
+        /// Food itels, such as pizza, hot dogs, ...
+        /// </summary>
         Food,
+        /// <summary>
+        /// Drinks such as water, lemonade, energy drink, ...
+        /// </summary>
         Beverage
     }
 

@@ -20,15 +20,29 @@ using NSwag.SwaggerGeneration.Processors.Security;
 
 namespace Friday
 {
+    /// <summary>
+    /// Configuration options for the application
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Who even reads these?
+        /// </summary>
+        /// <param name="configuration">Config options</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Configuration options
+        /// </summary>
         public IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Configures used services to build and run the application
+        /// </summary>
+        /// <param name="services">List of services</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -109,13 +123,18 @@ namespace Friday
             {
                 c.AddPolicy("AdminOnly", pol => pol.RequireRole("Admin"));
                 c.AddPolicy("Personnel", pol => pol.RequireRole(new[] { "Admin", "Catering", "Kitchen" }));
-                c.AddPolicy("Catering", pol => pol.RequireRole(new []{"Admin", "Catering"}));
+                c.AddPolicy("Catering", pol => pol.RequireRole(new[] { "Admin", "Catering" }));
             });
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
         }
 
-
+        /// <summary>
+        /// Configures the application itself
+        /// </summary>
+        /// <param name="app">Builder</param>
+        /// <param name="env">Environment in which the application is hosted</param>
+        /// <param name="initializer">Object that initializes data</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer)
         {
             if (env.IsDevelopment())

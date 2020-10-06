@@ -18,8 +18,8 @@ namespace Friday.Models
         /// Whether or not the catering (bar/beverages) and kitchen (food) are combined
         /// </summary>
         public bool CombinedCateringKitchen { get; set; }
-
-        // public bool UsersSetSpot { get; set; }//#TODO Add set users spots
+        //#TODO Re-implement somewhere in the future
+        // public bool UsersSetSpot { get; set; }
         /// <summary>
         /// Whether or not Accepted Orders can be cancelled
         /// </summary>
@@ -27,7 +27,7 @@ namespace Friday.Models
         /// <summary>
         /// Copies the information of a Configuration object to this, as to preserve this single instance.
         /// </summary>
-        /// <param name="con"></param>
+        /// <param name="con">Configuration object to copy from</param>
         public void Copy(Configuration con)
         {
             CancelOnAccepted = con.CancelOnAccepted;

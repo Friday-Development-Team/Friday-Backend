@@ -9,12 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data.ServiceInstances
 {
+    /// <inheritdoc cref="IUserService" />
     public class UserService : ServiceBase, IUserService
     {
 
         private readonly DbSet<ShopUser> users;
         private readonly DbSet<CurrencyLog> logs;
-
+        /// <summary>
+        /// Service for Users.
+        /// </summary>
+        /// <param name="context">Link to DB.</param>
         public UserService(Context context) : base(context)
         {
             users = this.context.ShopUsers;
@@ -55,6 +59,12 @@ namespace Friday.Data.ServiceInstances
             var list = users.AsNoTracking().Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance }).ToList();
             return list;
         }
+        /// <inheritdoc/>
+        public ShopUser GetByUsername(string username)
+        {
+            return users.SingleOrDefault(s => s.Name == username);
+        }
+
         ///// <inheritdoc/>
         //public ICollection<Order> GetOrderHistory(int id, DateTime orderTime) {
         //    var user = users.Single(s => s.Id == id);

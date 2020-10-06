@@ -23,18 +23,23 @@ namespace Friday.Data.IServices
         /// </summary>
         /// <param name="id">Id of the Order</param>
         /// <param name="value">New value</param>
+        /// <param name="toKitchen">Whether or not items should be sent to the kitchen</param>
         /// <returns>True if the value was correctly changed, false if the Order wasn't found or the old value was equal to the new value</returns>
         bool SetAccepted(int id, bool value, bool toKitchen);
+
         /// <summary>
         /// Places an Order. Checks if the Order is valid and can be placed.
         /// </summary>
+        /// <param name="user">User that placed the Order</param>
         /// <param name="orderdto">DTO</param>
         /// <returns>True if the Order is valid and could be placed</returns>
         int PlaceOrder(string user, OrderDTO orderdto);
+
         /// <summary>
         /// Sets the Order status to completed.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">ID of the Order</param>
+        /// <param name="forBeverage">Only complete for beverages or not</param>
         /// <returns>True if successful</returns>
         bool SetCompleted(int id, bool forBeverage);
         /// <summary>

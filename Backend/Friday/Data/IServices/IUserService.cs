@@ -64,5 +64,11 @@ namespace Friday.Data.IServices
         /// <returns>List of all users</returns>
         IList<ShopUserDTO> GetAll();
 
+        /// <summary>
+        /// Retrieves a ShopUser by their username. Should be only be used for internal purposes.
+        /// </summary>
+        /// <returns>User</returns>
+        ShopUser GetByUsername(string username);
+
     }
 }

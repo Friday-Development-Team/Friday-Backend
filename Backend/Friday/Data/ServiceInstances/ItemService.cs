@@ -10,13 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Friday.Data.ServiceInstances
-{/// <inheritdoc />
+{/// <inheritdoc cref="IItemService" />
     public class ItemService : ServiceBase, IItemService
     {
         private readonly DbSet<Item> items;
         private readonly DbSet<ItemLog> logs;
 
-
+        /// <summary>
+        /// Service for Items.
+        /// </summary>
+        /// <param name="context">Link to DB</param>
         public ItemService(Context context) : base(context)
         {
             items = this.context.Items;
@@ -40,8 +43,10 @@ namespace Friday.Data.ServiceInstances
 
 
         /// <inheritdoc />
-        public bool ChangeCount(int id, int amount)
+        public bool ChangeCount(ShopUser user, int id, int amount)
         {
+            if (user == null)
+                return false;
             var item = items.SingleOrDefault(s => s.Id == id);
             if (item == null || (amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
                 return false;
@@ -51,14 +56,14 @@ namespace Friday.Data.ServiceInstances
 
             context.SaveChanges();
 
-            LogItem(item, amount);
+            LogItem(user, item, amount);
 
             return true;
         }
         /// <inheritdoc />
-        private void LogItem(Item item, int count)
+        private void LogItem(ShopUser user, Item item, int amount)
         {
-            var log = new ItemLog { Item = item, Amount = count, Time = DateTime.Now };
+            var log = new ItemLog(user, amount, DateTime.Now, item);
             logs.Add(log);
             context.SaveChanges();
         }
@@ -73,7 +78,7 @@ namespace Friday.Data.ServiceInstances
             items.Update(item);//Sets the Item as updated to new Details are saved too
             context.SaveChanges();//Save to generated ID
 
-            return item.Id != 0 && details.Id != 0 && items.Contains(item);//Check if Item was succesfully added and all values generated. This ensures proper saving.
+            return item.Id != 0 && details.Id != 0 && items.Contains(item);//Check if Item was successfully added and all values generated. This ensures proper saving.
         }
         /// <inheritdoc />
         public bool DeleteItem(int id)
@@ -82,13 +87,16 @@ namespace Friday.Data.ServiceInstances
             if (item == null)
                 return false;
             items.Remove(item);
-            return context.SaveChanges() != 0;//False if nothing was written and the operation failed.
+            return context.SaveChanges() > 0;//False if nothing was written and the operation failed.
 
         }
         /// <inheritdoc />
         public bool ChangeItem(Item item)
         {
-            throw new NotImplementedException();
+            var old = items.Single(s => item.Id == s.Id);
+            old = item;
+            items.Update(old);
+            return context.SaveChanges() > 0;//True if at least 1 one line in the DB was changed
         }
     }
 }

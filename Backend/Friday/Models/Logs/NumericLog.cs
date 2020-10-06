@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace Friday.Models.Logs
 {
-    public class NumericLog : LogBase
+    /// <summary>
+    /// Base type for logs tracking a numeric value, such as money or stock.
+    /// </summary>
+    public abstract class NumericLog : LogBase
     {
         /// <summary>
         /// Amount for this log

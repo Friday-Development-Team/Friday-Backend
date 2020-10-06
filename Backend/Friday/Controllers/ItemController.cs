@@ -2,6 +2,7 @@
 using Friday.Data.IServices;
 using Friday.DTOs.Items;
 using Friday.Models;
+using Friday.Models.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,18 +12,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friday.Controllers
 {
+    /// <summary>
+    /// Controller for all methods involving Item instances.
+    /// </summary>
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    //  [Authorize]
     public class ItemController : ControllerBase
     {
 
         private readonly IItemService service;
-        public ItemController(IItemService service)
+        private readonly IUserService users;
+        /// <summary>
+        /// Default ctor. Gets auto inject.
+        /// </summary>
+        /// <param name="service">Service for Items</param>
+        /// <param name="userSer">Service for Users</param>
+        public ItemController(IItemService service, IUserService userSer)
         {
             this.service = service;
+            users = userSer;
         }
         // GET: api/<controller>
         /// <summary>
@@ -35,7 +45,7 @@ namespace Friday.Controllers
         [AllowAnonymous]
         public ActionResult<IList<Item>> Get()
         {
-            return new OkObjectResult(service.GetAll());
+            return Ok(service.GetAll());
         }
 
         // PUT api/<controller>/5
@@ -48,13 +58,14 @@ namespace Friday.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // [Authorize(Roles = Role.Admin)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<bool> Put(int id, int amount)
         {
-            var result = service.ChangeCount(id, amount);
+            var user = users.GetByUsername(User.Identity.Name);
+            var result = service.ChangeCount(user, id, amount);
             if (result)
-                return new OkResult();
-            return new BadRequestResult();
+                return Ok();
+            return BadRequest();
         }
 
         /// <summary>
@@ -65,13 +76,13 @@ namespace Friday.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // [Authorize(Roles = "Catering")]
+        [AuthorizeAdminOrCatering]
         public ActionResult Post(ItemDTO dto)
         {
             var result = service.AddItem(dto.ToItem(), dto.Details.ToItemDetails());
             if (result)
-                return new OkResult();
-            return new BadRequestResult();
+                return Ok();
+            return BadRequest();
 
         }
 
@@ -83,14 +94,14 @@ namespace Friday.Controllers
         /// <returns>ActionResult depending on the outcome</returns>
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        // [Authorize(Roles = "Catering")]
+        [AuthorizeAdminOrCatering]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Delete(int id)
         {
             var result = service.DeleteItem(id);
             if (result)
-                return new OkResult();
+                return Ok();
             return NotFound();
         }
     }

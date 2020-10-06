@@ -36,17 +36,17 @@ namespace Friday.DTOs
         /// <returns>DTO with the data from the log</returns>
         public static LogDTO FromCurrencyLog(CurrencyLog log)
         {
-            return new LogDTO { Name = log.User.Name, Amount = log.Amount, Time = log.Time, Type = LogType.Currency.ToString().ToLower() };
+            return new LogDTO { Name = log.User.Name, Amount = log.Count, Time = log.Time, Type = LogType.Currency.ToString().ToLower() };
         }
 
         /// <summary>
-        /// Creates an isntance of this DTO From an ItemLog.
+        /// Creates an instance of this DTO From an ItemLog.
         /// </summary>
         /// <param name="log">ItemLog instance</param>
         /// <returns>DTO with the data from the log</returns>
         public static LogDTO FromItemLog(ItemLog log)
         {
-            return new LogDTO { Name = log.Item.Name, Amount = log.Amount, Time = log.Time, Type = LogType.Item.ToString().ToLower() };
+            return new LogDTO { Name = log.Item.Name, Amount = log.Count, Time = log.Time, Type = LogType.Item.ToString().ToLower() };
         }
     }
 
@@ -55,7 +55,13 @@ namespace Friday.DTOs
     /// </summary>
     public enum LogType
     {
+        /// <summary>
+        /// Logs involving changes in currency.
+        /// </summary>
         Currency,
+        /// <summary>
+        /// Logs involving items.
+        /// </summary>
         Item
     }
 }

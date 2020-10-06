@@ -10,14 +10,17 @@ using System.Linq;
 
 namespace Friday.Data.ServiceInstances
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="ILogsService" />
     public class LogsService : ServiceBase, ILogsService
     {
 
         private readonly DbSet<CurrencyLog> currencyLogs;
         private readonly DbSet<ItemLog> itemLogs;
         private readonly DbSet<Item> items;
-
+        /// <summary>
+        /// Service for all types of Logs.
+        /// </summary>
+        /// <param name="ctext">Link to DB</param>
         public LogsService(Context ctext) : base(ctext)
         {
             currencyLogs = context.CurrencyLogs;
@@ -76,8 +79,8 @@ namespace Friday.Data.ServiceInstances
         {
             //var result = itemLogs.Where(s => s.Amount < 0).ToList();
             //return result.ToDictionary(s => s.Item, s => result.Where(t => t.Equals(s))).Select(s => new ItemAmountDTO { Item = s.Key, Amount = s.Value.Sum(t => t.Amount) }).ToList();
-            return itemLogs.Where(s => s.Amount < 0).GroupBy(s => s.Item).Select(s => new ItemAmountDTO
-            { Item = s.Key, Amount = s.Sum(t => Math.Abs(t.Amount)) }).ToList();
+            return itemLogs.Where(s => s.Count < 0).GroupBy(s => s.Item).Select(s => new ItemAmountDTO
+            { Item = s.Key, Amount = (int)s.Sum(t => Math.Floor(Math.Abs(t.Count)))}).ToList();
         }
 
 

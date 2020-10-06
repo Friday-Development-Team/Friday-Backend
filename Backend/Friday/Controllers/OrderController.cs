@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
+using Friday.Models.Annotations;
 using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +18,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Friday.Controllers
 {
+    /// <summary>
+    /// Controller for Orders.
+    /// </summary>
     [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [Produces("application/json")]
@@ -26,6 +30,10 @@ namespace Friday.Controllers
 
         private readonly IOrderService service;
 
+        /// <summary>
+        /// Default Ctor. Gets auto injected.
+        /// </summary>
+        /// <param name="service"> Service for Orders</param>
         public OrderController(IOrderService service)
         {
             this.service = service;
@@ -36,10 +44,9 @@ namespace Friday.Controllers
         /// <summary>
         /// Returns the history of all the completed Orders placed by a user.
         /// </summary>
-        /// <param name="name">Name of the user</param>
         /// <returns>Order history. Check schema for format</returns>
         [HttpGet("history")]
-        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get()
@@ -47,8 +54,8 @@ namespace Friday.Controllers
             var name = User.Identity.Name;
             var result = service.GetHistory(name);
             if (result == null)
-                return new NotFoundObjectResult(null);
-            return new OkObjectResult(result);
+                return NotFound();
+            return Ok(result);
         }
 
 
@@ -62,13 +69,13 @@ namespace Friday.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<int> Post([FromBody] OrderDTO order)
         {
             var result = service.PlaceOrder(User.Identity.Name, order);
             if (result != 0)
-                return new OkObjectResult(result);
-            return new BadRequestResult();
+                return Ok(result);
+            return BadRequest();
         }
 
         // PUT api/<controller>/5
@@ -82,13 +89,13 @@ namespace Friday.Controllers
         [HttpPut("accept/{id}/{isKitchen}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize(Roles = "Catering,Kitchen")]
+        [AuthorizeNotUser]
         public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody] bool value)
         {
             var result = service.SetAccepted(id, value, isKitchen);
             if (result)
-                return new OkResult();
-            return new NotFoundResult();
+                return Ok();
+            return NotFound();
         }
         /// <summary>
         /// Cancels an Order. Sets the Status flag to Cancelled. This cannot be undone. A new Order needs to be placed instead.
@@ -99,37 +106,39 @@ namespace Friday.Controllers
         [HttpPut("cancel/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //  [Authorize(Roles = "Catering")]
+        [AuthorizeAdminOrCatering]
         public ActionResult<bool> Cancel(int id)
         {
             var result = service.Cancel(id);
             if (result)
-                return new OkResult();
-            return new NotFoundResult();
+                return Ok();
+            return NotFound();
         }
 
         /// <summary>
         /// Completed an Order. Sets the Status flag to Completed. This cannot be undone.
         /// An Order can only be Completed if its Status is Accepted.
         /// </summary>
-        /// <param name="id">ID of the Order</param>
+        /// <param name="id" type="int">ID of the Order</param>
+        /// <param name="type">What part of the order to complete (food, beverage or both)</param>
         /// <returns>True if the change was successful.</returns>
         [HttpPut("complete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // [Authorize(Roles = "Catering")]
+        [AuthorizeAdminOrCatering]
         public ActionResult<bool> Complete(int id, [FromBody] string type)
         {
             if (type.ToLower() != "food" && type.ToLower() != "beverage" && type.ToLower() != "both")
-                return new NotFoundResult();
+                return BadRequest();
 
             var result = type.ToLower() == "both"
                  ? service.SetCompleted(id, true) && service.SetCompleted(id, false)//If both need to set to complete
                  : service.SetCompleted(id, type.ToLower() == "beverage");//Else either Beverage or Food
 
             if (result)
-                return new OkResult();
-            return new NotFoundResult();
+                return Ok();
+            return NotFound();
         }
 
         /// <summary>
@@ -140,13 +149,13 @@ namespace Friday.Controllers
         [HttpGet("status/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<string> GetStatus(int id)
         {
             var result = service.GetStatus(id);
             if (result == null)
-                return new NotFoundResult();
-            return new OkObjectResult(result);
+                return NotFound();
+            return Ok(result);
         }
         /// <summary>
         /// Returns a List of all the ongoing Orders
@@ -157,8 +166,7 @@ namespace Friday.Controllers
         //[Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
         public ActionResult<IList<CateringOrder>> GetAll(bool isKitchen)
         {
-            var result = service.GetAll(isKitchen) ?? new List<CateringOrder>();
-            return new OkObjectResult(result);
+            return Ok(service.GetAll(isKitchen) ?? new List<CateringOrder>());
         }
         /// <summary>
         /// Returns a list of all the running orders of a user, sorted by Accepted first, then by date
@@ -169,9 +177,8 @@ namespace Friday.Controllers
         // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<IList<CateringOrder>> GetRunningOrders()
         {
-            var user = User.Identity.Name;
-            var result = service.GetAll(false).Where(s => s.User == user) ?? new List<CateringOrder>();
-            return new OkObjectResult(result);
+            //Return either running orders or empty list
+            return Ok(service.GetAll(false).Where(s => s.User == User.Identity.Name));
         }
 
     }

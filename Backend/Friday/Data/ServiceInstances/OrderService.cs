@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data.ServiceInstances
 {
+    /// <inheritdoc cref="IOrderService" />
     public class OrderService : ServiceBase, IOrderService
     {
 
@@ -21,6 +22,12 @@ namespace Friday.Data.ServiceInstances
         private readonly IItemService itemService;
         private readonly IUserService userService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="itemsService"></param>
+        /// <param name="userService"></param>
         public OrderService(Context context, IItemService itemsService, IUserService userService) : base(context)
         {
             orders = context.Orders;
@@ -127,7 +134,7 @@ namespace Friday.Data.ServiceInstances
                     return 0;
 
                 //temp.Amount -= item.Amount;
-                if (itemService.ChangeCount(temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
+                if (itemService.ChangeCount(user, temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
                     log.Add(temp, -item.Amount);
                 else
                     RevertUser(user, temp.Count * temp.Price);//Refunds the failed item. It will not show up in the history.
@@ -179,7 +186,7 @@ namespace Friday.Data.ServiceInstances
         }
         /// <inheritdoc />
         public bool Cancel(int id)
-        {//#TODO Config for option to allow accepted orders to be cancelled
+        {
             var order = orders.SingleOrDefault(s => s.Id == id);
             if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
                 return false;

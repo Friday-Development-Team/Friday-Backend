@@ -15,6 +15,9 @@ namespace Friday.Models
         /// ID of this object
         /// </summary>
         public int Id { get; set; }
+        /// <summary>
+        /// ID of the Item
+        /// </summary>
         public int ItemId { get; set; }
         /// <summary>
         /// How much one item is. Item is responsible for both amount and unit (33cl, 200g, 1 hot dog).

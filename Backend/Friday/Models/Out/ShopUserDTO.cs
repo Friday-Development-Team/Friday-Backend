@@ -10,7 +10,13 @@ namespace Friday.Models.Out
     /// </summary>
     public class ShopUserDTO
     {
+        /// <summary>
+        /// Username of the User
+        /// </summary>
         public String Name { get; set; }
+        /// <summary>
+        /// Balance of said User, currency is arbitrary
+        /// </summary>
         public double Balance { get; set; }
     }
 }

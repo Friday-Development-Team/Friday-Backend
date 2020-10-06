@@ -17,6 +17,12 @@ namespace Friday.Data
         private readonly UserManager<IdentityUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
 
+        /// <summary>
+        /// Initializes Database data.
+        /// </summary>
+        /// <param name="context">Context managing the data.</param>
+        /// <param name="userManager">Managers IdentityUsers</param>
+        /// <param name="roleManager">Manages roles</param>
         public DataInitializer(Context context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.context = context;
@@ -42,8 +48,8 @@ namespace Friday.Data
                 await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", Role.Catering);
                 await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", Role.Kitchen);
 
-                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin" });//#TODO Base balance
-                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering" });//#TODO Base balance
+                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin" });
+                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering" });
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen" });
 
                 ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
