@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Friday.Models.Out.Order
+﻿namespace Friday.Models.Out.Order
 {
     /// <summary>
     /// Links an Item's name to an amount ordered. Used to visually show how much of this Item was ordered.

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Friday.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
-using Friday.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Friday.Data
 {
@@ -31,14 +28,14 @@ namespace Friday.Data
         }
 
         /// <summary>
-        /// Initializes and seeds all the data. Checks if the databased already exists and creates it if needed.
+        /// Initializes and seeds all the data. Checks if the database already exists and creates it if needed.
         /// </summary>
         /// <returns>Task</returns>
         public async Task InitializeData()
         {
 
 
-            //context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
+            context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
             if (context.Database.EnsureCreated())
             {
 
@@ -48,14 +45,14 @@ namespace Friday.Data
                 await CreateUser("Catering", null, "T3stP4ssw0rdC4t3r1ng", Role.Catering);
                 await CreateUser("Kitchen", null, "T3stP4ssw0rdK1tch3n", Role.Kitchen);
 
-                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin" });
-                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering" });
-                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen" });
+                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Admin", Seat = "Entrance" });
+                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering", Seat = "Bar" });
+                context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen", Seat = "Kitchen" });
 
-                ShopUser user = new ShopUser { Name = "Test", Balance = 200D };
+                ShopUser user = new ShopUser { Name = "Test", Balance = 200D, Seat = "A1" };
                 context.ShopUsers.Add(user);
                 await CreateUser(user.Name, "Test@Test.test", "Testen", Role.User);
-                ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D };
+                ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D, Seat = "A2" };
                 context.ShopUsers.Add(user2);
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen", Role.User);
 

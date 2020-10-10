@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Data.IServices;
+﻿using Friday.Data.IServices;
 using Friday.Models;
 using Friday.Models.Out;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -56,7 +55,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc/>
         public IList<ShopUserDTO> GetAll()
         {
-            var list = users.AsNoTracking().Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance }).ToList();
+            var list = users.AsNoTracking().Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = context.Configuration.Single().UsersSetSpot ? s.Seat : null }).ToList();
             return list;
         }
         /// <inheritdoc/>
@@ -74,7 +73,7 @@ namespace Friday.Data.ServiceInstances
         public ShopUserDTO GetUser(string username)
         {
             var user = users.FirstOrDefault(t => t.Name == username);
-            return user != null ? new ShopUserDTO { Name = user.Name, Balance = user.Balance } : null;
+            return user != null ? new ShopUserDTO { Name = user.Name, Balance = user.Balance, Seat = context.Configuration.Single().UsersSetSpot ? user.Seat : null } : null;
         }
         private void LogMoney(ShopUser user, double count)
         {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Friday.Models.Out
 {
@@ -18,5 +15,9 @@ namespace Friday.Models.Out
         /// Balance of said User, currency is arbitrary
         /// </summary>
         public double Balance { get; set; }
+        /// <summary>
+        /// Where the User is seated
+        /// </summary>
+        public string Seat { get; set; }
     }
 }

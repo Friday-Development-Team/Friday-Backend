@@ -1,11 +1,6 @@
-﻿using Friday.Models;
-using Friday.Models.Logs;
+﻿using Friday.DTOs;
 using Friday.Models.Out;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.DTOs;
 
 namespace Friday.Data.IServices
 {

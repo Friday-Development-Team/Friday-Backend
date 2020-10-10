@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Data.IServices;
+﻿using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Friday.Data.ServiceInstances
 {

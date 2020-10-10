@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Friday.Models
 {
@@ -22,6 +20,10 @@ namespace Friday.Models
         /// The amount of money this User has in their account and can use to place orders
         /// </summary>
         public double Balance { get; set; }
+        /// <summary>
+        /// What seat is assigned for this User. Optional, default set to null
+        /// </summary>
+        public string Seat { get; set; }
         /// <summary>
         /// List of Orders placed by this user. Used for EF. Set to null for serialization to JSON
         /// </summary>

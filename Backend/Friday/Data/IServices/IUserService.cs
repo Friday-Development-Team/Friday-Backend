@@ -1,7 +1,6 @@
 ﻿using Friday.Models;
-using System;
-using System.Collections.Generic;
 using Friday.Models.Out;
+using System.Collections.Generic;
 
 namespace Friday.Data.IServices
 {

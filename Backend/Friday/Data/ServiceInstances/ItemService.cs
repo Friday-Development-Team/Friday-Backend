@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Data.IServices;
+﻿using Friday.Data.IServices;
 using Friday.Models;
 using Friday.Models.Logs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Friday.Data.ServiceInstances
 {/// <inheritdoc cref="IItemService" />

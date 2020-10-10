@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Friday.Models;
+﻿using Friday.Models;
+using System.Collections.Generic;
 
 namespace Friday.Data.IServices
 {

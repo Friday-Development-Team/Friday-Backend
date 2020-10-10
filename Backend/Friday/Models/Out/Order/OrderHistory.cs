@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Friday.Models.Out.Order;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Models.Out.Order;
 
 namespace Friday.Models.Out
 {

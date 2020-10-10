@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Friday.Models
+﻿namespace Friday.Models
 {
     /// <summary>
     /// Wrapper object linking an Order to an Item and an amount. Database and JSON-friendly alternative to a Map/Dictionary.

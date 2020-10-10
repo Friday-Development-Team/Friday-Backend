@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Models;
+﻿using Friday.Models;
 using Friday.Models.Logs;
+using System.Collections.Generic;
 
 namespace Friday.DTOs.Items
 {

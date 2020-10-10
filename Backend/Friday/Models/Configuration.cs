@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Friday.Models
+﻿namespace Friday.Models
 {
     /// <summary>
     /// Contains configuration information
@@ -19,7 +14,10 @@ namespace Friday.Models
         /// </summary>
         public bool CombinedCateringKitchen { get; set; }
         //#TODO Re-implement somewhere in the future
-        // public bool UsersSetSpot { get; set; }
+        /// <summary>
+        /// Whether or not people has a set seating spot
+        /// </summary>
+        public bool UsersSetSpot { get; set; }
         /// <summary>
         /// Whether or not Accepted Orders can be cancelled
         /// </summary>

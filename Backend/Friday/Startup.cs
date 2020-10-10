@@ -1,8 +1,4 @@
-﻿
-
-using System;
-using System.Text;
-using Friday.Data;
+﻿using Friday.Data;
 using Friday.Data.IServices;
 using Friday.Data.ServiceInstances;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
+using System.Collections.Generic;
+using System.Text;
 
 
 namespace Friday
@@ -64,13 +62,19 @@ namespace Friday
                 c.Title = "Friday API";
                 c.Version = "v1";
                 c.Description = "The Friday API documentation. A seeded set of common Items has been provided. These can be changed or deleted according to the requirements.";
-                c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
-                {
-                    Type = SwaggerSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = SwaggerSecurityApiKeyLocation.Header,
-                    Description = "Copy 'Bearer' + valid JWT token into field"
-                }));
+                c.DocumentProcessors.Add(
+                    new SecurityDefinitionAppender(
+                        "JWT Token",
+                        new List<string>(),
+                        new SwaggerSecurityScheme
+                        {
+                            Type = SwaggerSecuritySchemeType.ApiKey,
+                            Name = "Authorization",
+                            In = SwaggerSecurityApiKeyLocation.Header,
+                            Description = "Copy 'Bearer' + valid JWT token into field"
+                        })
+
+                );
                 c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
             });
             //for OpenAPI 3.0 else AddSwaggerDocument();

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Friday.Models.Logs;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Friday.Models.Logs;
 
 namespace Friday.Models
 {

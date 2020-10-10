@@ -1,12 +1,11 @@
 ﻿using Friday.Data.IServices;
+using Friday.DTOs;
 using Friday.Models;
-using Friday.Models.Logs;
 using Friday.Models.Out;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Friday.DTOs;
 
 namespace Friday.Controllers
 {

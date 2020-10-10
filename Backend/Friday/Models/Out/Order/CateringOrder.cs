@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Friday.Models.Out.Order
 {
@@ -26,6 +24,10 @@ namespace Friday.Models.Out.Order
         /// User that placed this Order
         /// </summary>
         public string User { get; set; }
+        /// <summary>
+        /// Where said User is seated
+        /// </summary>
+        public string UserSeat { get; set; }
         /// <summary>
         /// Status of the beverages
         /// </summary>

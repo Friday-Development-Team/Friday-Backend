@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Friday.Data.IServices;
+﻿using Friday.Data.IServices;
 using Friday.DTOs.Items;
 using Friday.Models;
 using Friday.Models.Annotations;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,7 +36,7 @@ namespace Friday.Controllers
         }
         // GET: api/<controller>
         /// <summary>
-        /// Returns a list containing all the Items. Check Schema's for their format. A default set of Items has been provided. These can be modified or deleted if needed.
+        /// Returns a list containing all the Items. Check schemas for their format. A default set of Items has been provided. These can be modified or deleted if needed.
         /// </summary>
         /// <returns>List of Items</returns>
         [HttpGet]

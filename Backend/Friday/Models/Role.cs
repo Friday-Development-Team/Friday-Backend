@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Friday.Models
+﻿namespace Friday.Models
 {
     /// <summary>
     /// Contains the different roles. Couples to String to a fault-free way to reference these.

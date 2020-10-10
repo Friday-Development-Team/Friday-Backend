@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Friday.DTOs;
-using Friday.Models;
+﻿using Friday.DTOs;
 using Friday.Models.Out;
 using Friday.Models.Out.Order;
+using System.Collections.Generic;
 
 namespace Friday.Data.IServices
 {
