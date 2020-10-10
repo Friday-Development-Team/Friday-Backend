@@ -35,7 +35,7 @@ namespace Friday.Data
         {
 
 
-            context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
+            //context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
             if (context.Database.EnsureCreated())
             {
 

@@ -30,7 +30,7 @@
         {
             CancelOnAccepted = con.CancelOnAccepted;
             CombinedCateringKitchen = con.CombinedCateringKitchen;
-            // UsersSetSpot = con.UsersSetSpot;
+            UsersSetSpot = con.UsersSetSpot;
         }
 
     }
