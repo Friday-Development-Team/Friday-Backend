@@ -1,4 +1,5 @@
-﻿using Friday.Data.IServices;
+﻿using System;
+using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models;
 using Friday.Models.Out;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Friday.Controllers
 {
@@ -36,13 +38,9 @@ namespace Friday.Controllers
         /// <returns>List of currency logs</returns>
         [HttpGet("currency/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IList<LogDTO>> GetAllCurrencyLogs()
         {
-            var result = service.GetAllCurrencyLogs();
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            return Ok(service.GetAllCurrencyLogs());
         }
 
         /// <summary>
@@ -51,45 +49,50 @@ namespace Friday.Controllers
         /// <returns>List of item logs</returns>
         [HttpGet("item/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IList<LogDTO>> GetAllItemLogs()
         {
-            var result = service.GetAllItemLogs();
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            return Ok(service.GetAllItemLogs());
         }
 
         /// <summary>
         /// Returns a List of all the currency logs concerning a specific User.
         /// </summary>
-        /// <param name="param">Username of the user</param>
+        /// <param name="id">ID of the user</param>
         /// <returns>List of currency logs</returns>
-        [HttpGet("currency/user")]
+        [HttpGet("currency/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult<IList<LogDTO>> GetByUser([FromQuery] string param)
+        public async Task<ActionResult<IList<LogDTO>>> GetByUser(int id)
         {
-            var result = service.GetByUser(param);
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            try
+            {
+                return Ok(await service.GetByUser(id));
+            }
+            catch (Exception)
+            {
+                return NotFound($"User with ID {id} not found!");
+            }
         }
         /// <summary>
         /// Returns all available logs linked to a given item.
         /// </summary>
-        /// <param name="param">Parameter. ID of the item.</param>
+        /// <param name="id">Parameter. ID of the item.</param>
         /// <returns>List of logs for the given item</returns>
-        [HttpGet("item/id")]
+        [HttpGet("item/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IList<LogDTO>> GetPerItem([FromQuery] int param)
+        public ActionResult<IList<LogDTO>> GetPerItem(int id)
         {
-            var result = service.GetPerItem(param);
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            try
+            {
+                return Ok(service.GetPerItem(id));
+            }
+            catch (Exception)
+            {
+                return NotFound($"Item with ID {id} not found!");
+            }
+
         }
 
         /// <summary>
@@ -98,13 +101,9 @@ namespace Friday.Controllers
         /// <returns>Map-like List containing remaining stock</returns>
         [HttpGet("stock/remaining")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IList<ItemAmountDTO>> GetRemainingStock()
+        public async Task<ActionResult<IList<ItemAmountDTO>>> GetRemainingStock()
         {
-            var result = service.GetRemainingStock();
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            return Ok(await service.GetRemainingStock());
         }
 
         /// <summary>
@@ -113,13 +112,9 @@ namespace Friday.Controllers
         /// <returns>List with amount sold per item, in List format</returns>
         [HttpGet("stock/sold")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IList<ItemAmountDTO>> GetTotalStockSold()
+        public async Task<ActionResult<IList<ItemAmountDTO>>> GetTotalStockSold()
         {
-            var result = service.GetTotalStockSold();
-            if (result != null)
-                return Ok(result);
-            return NotFound();
+            return Ok(await service.GetTotalStockSold());
         }
 
         /// <summary>
@@ -128,9 +123,9 @@ namespace Friday.Controllers
         /// <returns>Total amount of income so far</returns>
         [HttpGet("total")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<double> GetTotalIncome()
+        public async Task<ActionResult<double>> GetTotalIncome()
         {
-            return Ok(service.GetTotalIncome());
+            return Ok(await service.GetTotalIncome());
         }
     }
 }

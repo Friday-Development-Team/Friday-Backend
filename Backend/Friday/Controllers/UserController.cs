@@ -118,7 +118,7 @@ namespace Friday.Controllers
         /// <returns>JWT Token</returns>
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<String>> Register(RegisterDTO model)
+        public async Task<ActionResult<string>> Register(RegisterDTO model)
         {
             IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };

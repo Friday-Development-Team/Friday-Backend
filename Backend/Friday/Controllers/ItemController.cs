@@ -1,4 +1,5 @@
-﻿using Friday.Data.IServices;
+﻿using System;
+using Friday.Data.IServices;
 using Friday.DTOs.Items;
 using Friday.Models;
 using Friday.Models.Annotations;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -41,11 +43,10 @@ namespace Friday.Controllers
         /// <returns>List of Items</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [AllowAnonymous]
-        public ActionResult<IList<Item>> Get()
+        public async Task<ActionResult<IList<Item>>> Get()
         {
-            return Ok(service.GetAll());
+            return Ok(await service.GetAll());
         }
 
         // PUT api/<controller>/5
@@ -59,13 +60,17 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<bool> Put(int id, int amount)
+        public async Task<ActionResult<bool>> Put(int id, int amount)
         {
-            var user = users.GetByUsername(User.Identity.Name);
-            var result = service.ChangeCount(user, id, amount);
-            if (result)
-                return Ok();
-            return BadRequest();
+            try
+            {
+                var user = await users.GetByUsername(User.Identity.Name);
+                return Ok(service.ChangeCount(user, id, amount));
+            }
+            catch (Exception)
+            {
+                return NotFound($"User \'{User.Identity.Name}\' or item with ID {id} could not be found!");
+            }
         }
 
         /// <summary>
@@ -75,15 +80,10 @@ namespace Friday.Controllers
         /// <returns>HTTP Code depending on result.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AuthorizeAdminOrCatering]
         public ActionResult Post(ItemDTO dto)
         {
-            var result = service.AddItem(dto.ToItem(), dto.Details.ToItemDetails());
-            if (result)
-                return Ok();
-            return BadRequest();
-
+            return Ok(service.AddItem(dto.ToItem(), dto.Details.ToItemDetails()));
         }
 
         /// <summary>
@@ -99,10 +99,14 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Delete(int id)
         {
-            var result = service.DeleteItem(id);
-            if (result)
-                return Ok();
-            return NotFound();
+            try
+            {
+                return Ok(service.DeleteItem(id));
+            }
+            catch (Exception)
+            {
+                return NotFound($"Item with id {id} was not found!");
+            }
         }
     }
 }

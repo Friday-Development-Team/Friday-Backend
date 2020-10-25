@@ -14,6 +14,7 @@ using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 
 namespace Friday
@@ -43,7 +44,10 @@ namespace Friday
         /// <param name="services">List of services</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
 
             services.AddScoped<IItemService, ItemService>();

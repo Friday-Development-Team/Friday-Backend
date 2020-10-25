@@ -2,6 +2,7 @@
 using Friday.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -23,17 +24,17 @@ namespace Friday.Data.ServiceInstances
         }
 
         /// <inheritdoc />
-        public Configuration GetConfig()
+        public Task<Configuration> GetConfig()
         {
-            return configSet.SingleOrDefault();
+            return configSet.SingleAsync();
         }
         /// <inheritdoc />
-        public void SetConfig(Configuration con)
+        public async Task<bool> SetConfig(Configuration con)
         {
-            var config = configSet.Single();
+            var config = await configSet.SingleAsync();
             config.Copy(con);
             context.Configuration.Update(config);
-            context.SaveChanges();
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

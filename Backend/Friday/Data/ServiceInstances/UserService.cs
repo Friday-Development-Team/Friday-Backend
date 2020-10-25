@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -59,9 +60,9 @@ namespace Friday.Data.ServiceInstances
             return list;
         }
         /// <inheritdoc/>
-        public ShopUser GetByUsername(string username)
+        public Task<ShopUser> GetByUsername(string username)
         {
-            return users.SingleOrDefault(s => s.Name == username);
+            return users.SingleAsync(s => s.Name == username);
         }
 
         ///// <inheritdoc/>

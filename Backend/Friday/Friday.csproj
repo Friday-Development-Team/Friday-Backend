@@ -21,6 +21,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.3.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tools\" />
+  </ItemGroup>
 
 
 </Project>

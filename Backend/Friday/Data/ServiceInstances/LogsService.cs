@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -29,68 +30,58 @@ namespace Friday.Data.ServiceInstances
         }
 
         /// <inheritdoc />
-        public IList<LogDTO> GetAllCurrencyLogs()
+        public async Task<IList<LogDTO>> GetAllCurrencyLogs()
         {
-            return currencyLogs.Include(s => s.User).AsNoTracking().ToList().Select(s =>
-                {
-                    s.User = RemoveLogsAndOrders(s.User);
-                    return s;
-                }).Select(LogDTO.FromCurrencyLog).ToList();
+            return await currencyLogs.Include(s => s.User).AsNoTracking().Select(s => LogDTO.FromCurrencyLog(s)).ToListAsync();
         }
         /// <inheritdoc />
-        public IList<LogDTO> GetAllItemLogs()
+        public async Task<IList<LogDTO>> GetAllItemLogs()
         {
-            return itemLogs.Include(s => s.Item).AsNoTracking().ToList().Select(s =>
-            {
-                s.Item = RemoveLogsAndOrders(s.Item);
-                return s;
-            }).Select(LogDTO.FromItemLog).ToList();
+            return await itemLogs.Include(s => s.Item).AsNoTracking().Select(s => LogDTO.FromItemLog(s)).ToListAsync();
         }
         /// <inheritdoc />
-        public IList<LogDTO> GetByUser(string name)
+        public async Task<IList<LogDTO>> GetByUser(int id)
         {
-            return currencyLogs.Include(s => s.User).Where(s => s.User.Name == name).OrderBy(s => s.Time).ToList().Select(s =>
-            {
-                s.User = RemoveLogsAndOrders(s.User);
-                return s;
-            }).Select(LogDTO.FromCurrencyLog).ToList();
+            if (await currencyLogs.AllAsync(s => s.UserId != id))
+                throw new ArgumentException();
+
+            return await currencyLogs.Include(s => s.User)
+                .Where(s => s.UserId == id)
+                .OrderBy(s => s.Time)
+                .Select(s => LogDTO.FromCurrencyLog(s)).ToListAsync();
         }
         /// <inheritdoc />
-        public IList<LogDTO> GetPerItem(int id)
+        public async Task<IList<LogDTO>> GetPerItem(int id)
         {
-            return itemLogs.AsNoTracking().Include(s => s.Item).Where(s => s.Item.Id == id).ToList().Select(s =>
-            {
-                s.Item = RemoveLogsAndOrders(s.Item);
-                return s;
-            }).Select(LogDTO.FromItemLog).ToList();
+            if (await items.AllAsync(s => s.Id != id))
+                throw new ArgumentException();
+            return await itemLogs.AsNoTracking().Include(s => s.Item)
+                .Where(s => s.Item.Id == id)
+                .Select(s => LogDTO.FromItemLog(s))
+                .ToListAsync();
         }
         /// <inheritdoc />
-        public IList<ItemAmountDTO> GetRemainingStock()
+        public async Task<IList<ItemAmountDTO>> GetRemainingStock()
         {
-            return items.Select(s => new ItemAmountDTO { Item = s, Amount = s.Count }).ToList();
+            return await items.Select(s => new ItemAmountDTO { Item = s, Amount = s.Count }).ToListAsync();
         }
         /// <inheritdoc />
-        public double GetTotalIncome()
+        public Task<double> GetTotalIncome()
         {
-            return currencyLogs.Where(s => s.Count > 0).Sum(s => s.Count);//Only positive amounts. Those logs mean that money was added, thus income.
+            return currencyLogs.Where(s => s.Count > 0).SumAsync(s => s.Count);//Only positive amounts. Those logs mean that money was added, thus income.
         }
         /// <inheritdoc />
-        public IList<ItemAmountDTO> GetTotalStockSold()
+        public async Task<IList<ItemAmountDTO>> GetTotalStockSold()
         {
             //var result = itemLogs.Where(s => s.Amount < 0).ToList();
             //return result.ToDictionary(s => s.Item, s => result.Where(t => t.Equals(s))).Select(s => new ItemAmountDTO { Item = s.Key, Amount = s.Value.Sum(t => t.Amount) }).ToList();
-            return itemLogs.Where(s => s.Count < 0).GroupBy(s => s.Item).Select(s => new ItemAmountDTO
-            { Item = s.Key, Amount = (int)s.Sum(t => Math.Floor(Math.Abs(t.Count))) }).ToList();
+            return await itemLogs
+                .Where(s => s.Count < 0)
+                .GroupBy(s => s.Item)
+                .Select(s => new ItemAmountDTO
+                { Item = s.Key, Amount = (int)s.Sum(t => Math.Floor(Math.Abs(t.Count))) })
+                .ToListAsync();
         }
 
-
-        private dynamic RemoveLogsAndOrders(dynamic item)
-        {
-            var temp = item;
-            temp.Logs = null;
-            if (temp is ShopUser)
-                temp.Orders = null;
-            return temp;
-        }
     }
 }

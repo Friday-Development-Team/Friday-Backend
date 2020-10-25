@@ -1,6 +1,7 @@
 ﻿using Friday.Models;
 using Friday.Models.Out;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Friday.Data.IServices
 {
@@ -67,7 +68,7 @@ namespace Friday.Data.IServices
         /// Retrieves a ShopUser by their username. Should be only be used for internal purposes.
         /// </summary>
         /// <returns>User</returns>
-        ShopUser GetByUsername(string username);
+        Task<ShopUser> GetByUsername(string username);
 
     }
 }

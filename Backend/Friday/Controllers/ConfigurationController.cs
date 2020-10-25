@@ -1,5 +1,7 @@
-﻿using Friday.Data.IServices;
+﻿using System.Threading.Tasks;
+using Friday.Data.IServices;
 using Friday.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,7 @@ namespace Friday.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [Authorize(Roles = Role.Admin)]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfigurationService service;
@@ -32,19 +35,19 @@ namespace Friday.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public Configuration Get()
+        public async Task<ActionResult<Configuration>> Get()
         {
-            return service.GetConfig();
+            return Ok(await service.GetConfig());
         }
         /// <summary>
         /// Sets the configuration options
         /// </summary>
         /// <param name="config">Configuration option Object</param>
-       // [Authorize(Roles = Role.Admin)]
         [HttpPut]
-        public void Put([FromBody] Configuration config)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> Put([FromBody] Configuration config)
         {
-            service.SetConfig(config);
+            return Ok(await service.SetConfig(config));
         }
 
     }

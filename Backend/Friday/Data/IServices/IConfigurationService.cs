@@ -1,4 +1,5 @@
-﻿using Friday.Models;
+﻿using System.Threading.Tasks;
+using Friday.Models;
 
 namespace Friday.Data.IServices
 {
@@ -11,11 +12,11 @@ namespace Friday.Data.IServices
         /// Returns the configuration object for this API instance.
         /// </summary>
         /// <returns>Configuration</returns>
-        Configuration GetConfig();
+        Task<Configuration> GetConfig();
         /// <summary>
         /// Sets the Configuration options
         /// </summary>
-        void SetConfig(Configuration con);
+        Task<bool> SetConfig(Configuration con);
 
     }
 }
