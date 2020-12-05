@@ -1,5 +1,7 @@
 ﻿using Friday.Models.Logs;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Friday.Models
 {
@@ -23,6 +25,7 @@ namespace Friday.Models
         /// <summary>
         /// What type of Item this is (food, beverage)
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemType Type { get; set; }
         /// <summary>
         /// How many instances of this Item are still in stock

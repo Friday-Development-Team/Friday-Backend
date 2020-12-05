@@ -20,7 +20,7 @@ namespace Friday.Data.IServices
         /// <param name="amount">Amount to add to their balance. Negative to subtract</param>
         /// <param name="log">Whether or not a log should be made for this transaction. Default true.</param>
         /// <returns>True if the change was successful</returns>
-        bool ChangeBalance(int id, double amount, bool log = true);
+        Task<bool> ChangeBalance(int id, double amount, bool log = true);
 
         /// <summary>
         /// Changes the balance of the user
@@ -29,7 +29,7 @@ namespace Friday.Data.IServices
         /// <param name="amount">Amount to add to their balance. Negative to subtract</param>
         /// <param name="log">Whether or not a log should be made for this transaction. Default true.</param>
         /// <returns>True if the change was successful</returns>
-        bool ChangeBalance(string name, double amount, bool log = true);
+        Task<bool> ChangeBalance(string name, double amount, bool log = true);
 
         ///// <summary>
         ///// 
@@ -48,7 +48,7 @@ namespace Friday.Data.IServices
         /// 
         /// </summary>
         /// <returns>Object containing username and balance</returns>
-        ShopUserDTO GetUser(string username);
+        Task<ShopUserDTO> GetUser(string username);
 
         /// <summary>
         /// 
@@ -56,13 +56,13 @@ namespace Friday.Data.IServices
         /// 
         /// </summary>
         /// <param name="user">User to be added</param>
-        bool AddUser(ShopUser user);
+        Task<bool> AddUser(ShopUser user);
 
         /// <summary>
         /// Returns a list of all users
         /// </summary>
         /// <returns>List of all users</returns>
-        IList<ShopUserDTO> GetAll();
+        Task<IList<ShopUserDTO>> GetAll();
 
         /// <summary>
         /// Retrieves a ShopUser by their username. Should be only be used for internal purposes.

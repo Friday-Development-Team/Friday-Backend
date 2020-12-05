@@ -28,6 +28,7 @@ namespace Friday.Data.ServiceInstances
         {
             return configSet.SingleAsync();
         }
+
         /// <inheritdoc />
         public async Task<bool> SetConfig(Configuration con)
         {

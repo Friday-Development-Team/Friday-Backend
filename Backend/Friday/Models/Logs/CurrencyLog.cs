@@ -11,19 +11,13 @@ namespace Friday.Models
         /// <summary>
         /// Used for EF.
         /// </summary>
-        public CurrencyLog() : base()
-        {
-
-        }
+        public CurrencyLog() : base() { }
 
         /// <summary>
-        /// Creates a new instance of CurrencyLog.
+        /// Creates a new instance of CurrencyLog, timestamped to the moment of creation of this Log.
         /// </summary>
         /// <param name="user">User whose balance was changed</param>
         /// <param name="amount">Amount to be added. Negative means subtraction</param>
-        /// <param name="time">Timestamp</param>
-        public CurrencyLog(ShopUser user, double amount, DateTime time) : base(user, amount, time)
-        {
-        }
+        public CurrencyLog(ShopUser user, double amount) : base(user, amount) { }
     }
 }

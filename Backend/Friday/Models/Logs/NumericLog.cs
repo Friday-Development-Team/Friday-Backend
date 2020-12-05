@@ -15,18 +15,14 @@ namespace Friday.Models.Logs
         /// <summary>
         /// Empty ctor for EF purposes
         /// </summary>
-        public NumericLog() : base()
-        {
-
-        }
+        protected NumericLog() : base() { }
 
         /// <summary>
         /// Constructs a new NumericLog. 
         /// </summary>
         /// <param name="user">User that placed this log</param>
         /// <param name="count">Amount</param>
-        /// <param name="time">Tiùestamp</param>
-        public NumericLog(ShopUser user, double count, DateTime time) : base(user, time)
+        protected NumericLog(ShopUser user, double count) : base(user)
         {
             Count = count;
         }

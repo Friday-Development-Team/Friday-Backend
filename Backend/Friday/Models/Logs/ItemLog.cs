@@ -17,21 +17,17 @@ namespace Friday.Models.Logs
         public int ItemId { get; set; }
 
         /// <summary>
-        /// Empty ctor used for EF. Don't use directly.
+        /// Empty ctor used for EF. This shouldn't be used directly.
         /// </summary>
-        public ItemLog() : base()
-        {
-
-        }
+        public ItemLog() : base() { }
 
         /// <summary>
-        /// Creates a new instance of this log
+        /// Creates a new instance of ItemLog, timestamped to the moment of creation of this Log.
         /// </summary>
         /// <param name="user">User that placed this log</param>
         /// <param name="amount">Amount of items in the transaction. Positive for an addition of items, negative for items being sold</param>
-        /// <param name="time">Timestamp</param>
         /// <param name="item">Item a log is made about</param>
-        public ItemLog(ShopUser user, double amount, DateTime time, Item item) : base(user, amount, time)
+        public ItemLog(ShopUser user, double amount, Item item) : base(user, amount)
         {
             Item = item;
             ItemId = Item.Id;

@@ -30,15 +30,6 @@ namespace Friday.Data.ServiceInstances
             return await items.Include(s => s.ItemDetails).AsNoTracking().ToListAsync();
 
         }
-        ///// <summary>
-        ///// Returns the details of a specified Item
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns>ItemDetails, null if not found</returns>
-        //public ItemDetails GetDetails(int id) {
-        //    return details.AsNoTracking().SingleOrDefault(s => s.ItemId == id);
-        //}
-
 
         /// <inheritdoc />
         public async Task<bool> ChangeCount(ShopUser user, int id, int amount)
@@ -59,7 +50,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         private Task LogItem(ShopUser user, Item item, int amount)
         {
-            var log = new ItemLog(user, amount, DateTime.Now, item);
+            var log = new ItemLog(user, amount, item);
             logs.Add(log);
             return context.SaveChangesAsync();
         }

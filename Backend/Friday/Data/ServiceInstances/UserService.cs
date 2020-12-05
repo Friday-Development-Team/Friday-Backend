@@ -25,39 +25,40 @@ namespace Friday.Data.ServiceInstances
             logs = this.context.CurrencyLogs;
         }
         /// <inheritdoc/>
-        public bool AddUser(ShopUser user)
+        public async Task<bool> AddUser(ShopUser user)
         {
             if (user == null)
                 return false;
-            users.Add(user);
-            context.SaveChanges();
+            await users.AddAsync(user);
+            await context.SaveChangesAsync();
             return true;
         }
         /// <inheritdoc/>
-        public bool ChangeBalance(int id, double amount, bool log)
+        public async Task<bool> ChangeBalance(int id, double amount, bool log)
         {
-            var user = users.SingleOrDefault(s => s.Id == id);
+            var user = await users.SingleAsync(s => s.Id == id);
             if (!user.UpdateBalance(amount))
                 return false;
             users.Update(user);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             if (log)
                 LogMoney(user, amount);
             return true;
         }
 
         /// <inheritdoc/>
-        public bool ChangeBalance(string name, double amount, bool log)
+        public async Task<bool> ChangeBalance(string name, double amount, bool log)
         {
-            var user = users.SingleOrDefault(s => s.Name.Equals(name));
-            return user != null && ChangeBalance(user.Id, amount, log);
+            var user = await users.SingleAsync(s => s.Name.Equals(name));
+            return await ChangeBalance(user.Id, amount, log);
         }
 
         /// <inheritdoc/>
-        public IList<ShopUserDTO> GetAll()
+        public async Task<IList<ShopUserDTO>> GetAll()
         {
-            var list = users.AsNoTracking().Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = context.Configuration.Single().UsersSetSpot ? s.Seat : null }).ToList();
-            return list;
+            return await users.AsNoTracking()
+                .Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = context.Configuration.Single().UsersSetSpot ? s.Seat : null })
+                .ToListAsync();
         }
         /// <inheritdoc/>
         public Task<ShopUser> GetByUsername(string username)
@@ -65,22 +66,16 @@ namespace Friday.Data.ServiceInstances
             return users.SingleAsync(s => s.Name == username);
         }
 
-        ///// <inheritdoc/>
-        //public ICollection<Order> GetOrderHistory(int id, DateTime orderTime) {
-        //    var user = users.Single(s => s.Id == id);
-        //    return user.Orders.Where(t => t.OrderTime == orderTime).ToList();
-        //}
         /// <inheritdoc/>
-        public ShopUserDTO GetUser(string username)
+        public async Task<ShopUserDTO> GetUser(string username)
         {
-            var user = users.FirstOrDefault(t => t.Name == username);
-            return user != null ? new ShopUserDTO { Name = user.Name, Balance = user.Balance, Seat = context.Configuration.Single().UsersSetSpot ? user.Seat : null } : null;
+            var user = await users.SingleAsync(t => t.Name == username);
+            return new ShopUserDTO { Name = user.Name, Balance = user.Balance, Seat = context.Configuration.Single().UsersSetSpot ? user.Seat : null };
         }
         private void LogMoney(ShopUser user, double count)
         {
-            var log = new CurrencyLog { User = user, Count = count, Time = DateTime.Now };
-            logs.Add(log);
-            context.SaveChanges();
+            logs.AddAsync(new CurrencyLog(user, count));
+            context.SaveChangesAsync();
         }
     }
 }

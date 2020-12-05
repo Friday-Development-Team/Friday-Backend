@@ -27,21 +27,17 @@ namespace Friday.Models.Logs
         /// <summary>
         /// Empty ctor for EF
         /// </summary>
-        public LogBase()
-        {
-
-        }
+        protected LogBase() { }
 
         /// <summary>
         /// Constructs a new LogBase instance. 
         /// </summary>
         /// <param name="user">User that placed this log</param>
-        /// <param name="time">Timestamp</param>
-        public LogBase(ShopUser user, DateTime time)
+        protected LogBase(ShopUser user)
         {
             User = user;
             UserId = User.Id;
-            Time = time;
+            Time = DateTime.Now;
         }
     }
 }

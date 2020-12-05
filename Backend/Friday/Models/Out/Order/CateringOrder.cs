@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Friday.Models.Out.Order
 {
@@ -31,13 +33,15 @@ namespace Friday.Models.Out.Order
         /// <summary>
         /// Status of the beverages
         /// </summary>
-        public string StatusBeverage { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OrderStatus StatusBeverage { get; set; }
         /// <summary>
         /// Status of the food
         /// </summary>
-        public string StatusFood { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OrderStatus StatusFood { get; set; }
         /// <summary>
-        /// Total amount paid for the Order, precalculated for convenience.
+        /// Total amount paid for the Order, pre-calculated for convenience.
         /// </summary>
         public double TotalPrice { get; set; }
 

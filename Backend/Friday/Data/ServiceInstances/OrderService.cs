@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -36,15 +37,14 @@ namespace Friday.Data.ServiceInstances
             this.userService = userService;
         }
         /// <inheritdoc />
-        public OrderHistory GetHistory(string username)
+        public async Task<OrderHistory> GetHistory(string username)
         {
-            if (users.Single(s => s.Name == username) == null)
-                return null;
+            await users.SingleAsync(s => s.Name == username); //Checks if the user exists
 
             return new OrderHistory
             {
                 UserName = username,
-                Orders = orders.Include(s => s.Items).Include(s => s.User)
+                Orders = await orders.Include(s => s.Items).Include(s => s.User)
                     .Where(s => s.User.Name == username)
                     .Where(s => (s.StatusBeverage == OrderStatus.Completed || s.StatusBeverage == OrderStatus.None) &&
                                 (s.StatusFood == OrderStatus.Completed || s.StatusFood == OrderStatus.None))
@@ -58,16 +58,16 @@ namespace Friday.Data.ServiceInstances
                             TotalPrice = s.Items.Select(t => t.Amount * t.Item.Price).Sum(),
                             Items = s.Items.Select(t => new HistoryOrderItem { ItemName = t.Item.Name, Amount = t.Amount }).ToList()
                         })
-                    .ToList(),
+                    .ToListAsync(),
 
             };
 
         }
         /// <inheritdoc />
-        public bool SetAccepted(int id, bool value, bool toKitchen)
+        public async Task<bool> SetAccepted(int id, bool value, bool toKitchen)
         {
 
-            var needsKitchen = context.Configuration.Single();
+            var needsKitchen = await context.Configuration.SingleAsync();
 
             var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
             var item = orders.SingleOrDefault(s => s.Id == id);
@@ -84,20 +84,18 @@ namespace Friday.Data.ServiceInstances
                 item.StatusBeverage = value ? OrderStatus.Accepted : OrderStatus.Pending;
 
             orders.Update(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return true;
         }
         /// <inheritdoc />
-        public int PlaceOrder(string username, OrderDTO orderdto)
+        public async Task<int> PlaceOrder(string username, OrderDTO orderdto)
         {
             if (orderdto == null || !orderdto.IsValid())
-                return 0;
+                throw new ArgumentException();
 
-            var user = users.SingleOrDefault(s => s.Name == username);
-            if (user == null)
-                return 0;
+            var user = await users.SingleAsync(s => s.Name == username);
 
-            Order order = new Order
+            var order = new Order
             {
                 User = user,
                 UserId = user.Id,
@@ -125,15 +123,13 @@ namespace Friday.Data.ServiceInstances
 
             order.Items = orderitems;
             // IList<Item> rem = new List<Item>();
-            Dictionary<Item, int> log = new Dictionary<Item, int>();
+            var log = new Dictionary<Item, int>();
             foreach (var item in orderdto.Items)
             {
-                var temp = items.SingleOrDefault(s => s.Id == item.Id);
-                if (temp == null)
-                    return 0;
+                var temp = await items.SingleAsync(s => s.Id == item.Id);
 
                 //temp.Amount -= item.Amount;
-                if (itemService.ChangeCount(user, temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
+                if (await itemService.ChangeCount(user, temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
                     log.Add(temp, -item.Amount);
                 else
                     RevertUser(user, temp.Count * temp.Price);//Refunds the failed item. It will not show up in the history.
@@ -142,30 +138,30 @@ namespace Friday.Data.ServiceInstances
                 items.Update(temp);//Updated Item
             }
 
-            var result = orders.Add(order);//Order added
+            var result = await orders.AddAsync(order);//Order added
             //user.UpdateBalance(-totalPrice);
 
             //users.Update(user);//Updated user
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
-            userService.ChangeBalance(user.Name, -totalPrice, true);
+            await userService.ChangeBalance(user.Name, -totalPrice, true);
 
             return result.Entity.Id;
         }
 
 
-        private void RevertUser(ShopUser user, double amount)
+        private async void RevertUser(ShopUser user, double amount)
         {
-            userService.ChangeBalance(user.Id, amount, false);
+            await userService.ChangeBalance(user.Id, amount, false);
             user.UpdateBalance(amount);
         }
 
         /// <inheritdoc />
-        public bool SetCompleted(int id, bool forBeverage)
+        public async Task<bool> SetCompleted(int id, bool forBeverage)
         {
-            var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || (forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed. SentToKitchen has to return them to Catering.
+            var order = await orders.SingleAsync(s => s.Id == id);
+            if ((forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed. SentToKitchen has to return them to Catering.
                 return false;
 
             if (forBeverage)
@@ -180,31 +176,32 @@ namespace Friday.Data.ServiceInstances
             }
 
             orders.Update(order);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return true;
         }
+
         /// <inheritdoc />
-        public bool Cancel(int id)
+        public async Task<bool> Cancel(int id)
         {
-            var order = orders.SingleOrDefault(s => s.Id == id);
-            if (order == null || !order.CanBeCancelled(context.Configuration.Single().CancelOnAccepted))
+            var order =await orders.SingleAsync(s => s.Id == id);
+            if (!order.CanBeCancelled((await context.Configuration.SingleAsync()).CancelOnAccepted))
                 return false;
             order.StatusBeverage = OrderStatus.Cancelled;
             order.StatusFood = OrderStatus.Cancelled;
             orders.Update(order);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return true;
         }
         /// <inheritdoc />
-        public string GetStatus(int id)
+        public async Task<string> GetStatus(int id)
         {
-            var order = orders.SingleOrDefault(s => s.Id == id);
-            return order?.StatusBeverage.ToString() + order?.StatusFood.ToString();
+            var order = await orders.SingleAsync(s => s.Id == id);
+            return order.StatusBeverage + order.StatusFood.ToString();
         }
         /// <inheritdoc />
-        public IList<CateringOrder> GetAll(bool isKitchen)
+        public async Task<IList<CateringOrder>> GetAll(bool isKitchen)
         {
-            var result = orders
+            return await orders
                 .Include(s => s.Items)
                 .ThenInclude(s => s.Item)
                 .ThenInclude(s => s.ItemDetails)
@@ -214,17 +211,15 @@ namespace Friday.Data.ServiceInstances
                 .Select(s => new CateringOrder
                 {
                     Id = s.Id,
-                    StatusBeverage = isKitchen ? null : s.StatusBeverage.ToString(),
-                    StatusFood = s.StatusFood.ToString(),
+                    StatusBeverage = isKitchen ? OrderStatus.None : s.StatusBeverage,
+                    StatusFood = s.StatusFood,
                     User = s.User.Name,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
                         .ToList(),
                     OrderTime = s.OrderTime,
                     TotalPrice = s.Items.Sum(t => t.Amount * t.Item.Price)
                 })
-                .ToList();
-
-            return result;
+                .ToListAsync();
         }
     }
 }

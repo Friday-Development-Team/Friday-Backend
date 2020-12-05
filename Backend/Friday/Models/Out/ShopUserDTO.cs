@@ -10,7 +10,7 @@ namespace Friday.Models.Out
         /// <summary>
         /// Username of the User
         /// </summary>
-        public String Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Balance of said User, currency is arbitrary
         /// </summary>
