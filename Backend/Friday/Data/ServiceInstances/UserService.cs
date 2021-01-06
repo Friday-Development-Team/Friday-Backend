@@ -56,8 +56,9 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc/>
         public async Task<IList<ShopUserDTO>> GetAll()
         {
+            var setseat = (await context.Configuration.SingleAsync()).UsersSetSpot;
             return await users.AsNoTracking()
-                .Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = context.Configuration.Single().UsersSetSpot ? s.Seat : null })
+                .Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = setseat ? s.Seat : null })
                 .ToListAsync();
         }
         /// <inheritdoc/>
@@ -69,8 +70,9 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc/>
         public async Task<ShopUserDTO> GetUser(string username)
         {
-            var user = await users.SingleAsync(t => t.Name == username);
-            return new ShopUserDTO { Name = user.Name, Balance = user.Balance, Seat = context.Configuration.Single().UsersSetSpot ? user.Seat : null };
+            var setseat = (await context.Configuration.SingleAsync()).UsersSetSpot;
+            return await users.Where(t => t.Name == username).Select(user => new ShopUserDTO
+                {Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null}).SingleAsync();
         }
         private void LogMoney(ShopUser user, double count)
         {

@@ -1,4 +1,5 @@
-﻿using Friday.Data.IServices;
+﻿using System;
+using Friday.Data.IServices;
 using Friday.DTOs;
 using Friday.Models.Annotations;
 using Friday.Models.Out;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -48,11 +50,14 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<OrderHistory> Get()
         {
-            var name = User.Identity.Name;
-            var result = service.GetHistory(name);
-            if (result == null)
+            try
+            {
+                return Ok(service.GetHistory(User.Identity.Name));
+            }
+            catch (Exception)
+            {
                 return NotFound();
-            return Ok(result);
+            }
         }
 
 
@@ -67,12 +72,17 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<int> Post([FromBody] OrderDTO order)
+        public async Task<ActionResult<int>> Post([FromBody] OrderDTO order)
         {
-            var result = service.PlaceOrder(User.Identity.Name, order);
-            if (result != 0)
-                return Ok(result);
-            return BadRequest();
+            try
+            {
+                return Ok(await service.PlaceOrder(User.Identity.Name, order));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
         }
 
         // PUT api/<controller>/5
@@ -87,12 +97,17 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AuthorizeNotUser]
-        public ActionResult<bool> Accept(int id, bool isKitchen, [FromBody] bool value)
+        public async Task<ActionResult<bool>> Accept(int id, bool isKitchen, [FromBody] bool value)
         {
-            var result = service.SetAccepted(id, value, isKitchen);
-            if (result)
-                return Ok();
-            return NotFound();
+            try
+            {
+                return Ok(await service.SetAccepted(id, value, isKitchen));
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
         }
         /// <summary>
         /// Cancels an Order. Sets the Status flag to Cancelled. This cannot be undone. A new Order needs to be placed instead.
@@ -104,12 +119,16 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AuthorizeAdminOrCatering]
-        public ActionResult<bool> Cancel(int id)
+        public async Task<ActionResult<bool>> Cancel(int id)
         {
-            var result = service.Cancel(id);
-            if (result)
-                return Ok();
-            return NotFound();
+            try
+            {
+                return Ok(await service.Cancel(id));
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -124,18 +143,28 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AuthorizeAdminOrCatering]
-        public ActionResult<bool> Complete(int id, [FromBody] string type)
+        public async Task<ActionResult<bool>> Complete(int id, [FromBody] string type)
         {
             if (type.ToLower() != "food" && type.ToLower() != "beverage" && type.ToLower() != "both")
                 return BadRequest();
 
-            var result = type.ToLower() == "both"
-                 ? service.SetCompleted(id, true) && service.SetCompleted(id, false)//If both need to set to complete
-                 : service.SetCompleted(id, type.ToLower() == "beverage");//Else either Beverage or Food
+            try
+            {
+                if (type.ToLower() == "both")
+                {
+                    await service.SetCompleted(id, true);
+                    await service.SetCompleted(id, false);
+                }
+                else
+                    await service.SetCompleted(id, type.ToLower() == "beverage");
+                return Ok(true);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
 
-            if (result)
-                return Ok();
-            return NotFound();
+
         }
 
         /// <summary>
@@ -147,12 +176,16 @@ namespace Friday.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<string> GetStatus(int id)
+        public async Task<ActionResult<string>> GetStatus(int id)
         {
-            var result = service.GetStatus(id);
-            if (result == null)
+            try
+            {
+                return Ok(await service.GetStatus(id));
+            }
+            catch (Exception)
+            {
                 return NotFound();
-            return Ok(result);
+            }
         }
         /// <summary>
         /// Returns a List of all the ongoing Orders
@@ -161,9 +194,9 @@ namespace Friday.Controllers
         [HttpGet("catering")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[Authorize(Roles = Role.Admin + "," + Role.Catering + "," + Role.Kitchen)]
-        public ActionResult<IList<CateringOrder>> GetAll(bool isKitchen)
+        public async Task<ActionResult<IList<CateringOrder>>> GetAll(bool isKitchen)
         {
-            return Ok(service.GetAll(isKitchen) ?? new List<CateringOrder>());
+            return Ok(await service.GetAll(isKitchen));
         }
         /// <summary>
         /// Returns a list of all the running orders of a user, sorted by Accepted first, then by date
@@ -172,10 +205,10 @@ namespace Friday.Controllers
         [HttpGet("running")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IList<CateringOrder>> GetRunningOrders()
+        public async Task<ActionResult<IList<CateringOrder>>> GetRunningOrders()
         {
             //Return either running orders or empty list
-            return Ok(service.GetAll(false).Where(s => s.User == User.Identity.Name));
+            return Ok(await service.GetRunningOrders(User.Identity.Name));
         }
 
     }

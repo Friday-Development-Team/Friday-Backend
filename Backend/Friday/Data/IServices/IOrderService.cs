@@ -59,6 +59,12 @@ namespace Friday.Data.IServices
         /// </summary>
         /// <returns>List of all current orders</returns>
         Task<IList<CateringOrder>> GetAll(bool isKitchen);
+        /// <summary>
+        /// Returns a List containing all the Ongoing orders for a single user. Accepted first, then ordered by date asc.
+        /// </summary>
+        /// <param name="username">Username of the User</param>
+        /// <returns>List of ongoing orders for user</returns>
+        Task<IList<CateringOrder>> GetRunningOrders(string username);
 
     }
 }

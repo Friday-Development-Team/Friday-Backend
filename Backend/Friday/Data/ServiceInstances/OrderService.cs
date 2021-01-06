@@ -183,7 +183,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<bool> Cancel(int id)
         {
-            var order =await orders.SingleAsync(s => s.Id == id);
+            var order = await orders.SingleAsync(s => s.Id == id);
             if (!order.CanBeCancelled((await context.Configuration.SingleAsync()).CancelOnAccepted))
                 return false;
             order.StatusBeverage = OrderStatus.Cancelled;
@@ -212,6 +212,26 @@ namespace Friday.Data.ServiceInstances
                 {
                     Id = s.Id,
                     StatusBeverage = isKitchen ? OrderStatus.None : s.StatusBeverage,
+                    StatusFood = s.StatusFood,
+                    User = s.User.Name,
+                    Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
+                        .ToList(),
+                    OrderTime = s.OrderTime,
+                    TotalPrice = s.Items.Sum(t => t.Amount * t.Item.Price)
+                })
+                .ToListAsync();
+        }
+        /// <inheritdoc />
+        public async Task<IList<CateringOrder>> GetRunningOrders(string username)
+        {
+            return await users.Include(s => s.Orders).ThenInclude(s=> s.Items).AsNoTracking()
+                .Where(s => s.Name == username)
+                .SelectMany(s => s.Orders).Where(s => s.IsOngoing())
+                .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)
+                .Select(s => new CateringOrder
+                {
+                    Id = s.Id,
+                    StatusBeverage = s.StatusBeverage,
                     StatusFood = s.StatusFood,
                     User = s.User.Name,
                     Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })

@@ -1,7 +1,7 @@
 ﻿using Friday.Models;
 using Friday.Models.Logs;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Friday.Data
 {

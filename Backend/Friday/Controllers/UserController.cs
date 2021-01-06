@@ -58,9 +58,16 @@ namespace Friday.Controllers
         /// <returns>Information of the User</returns>
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ShopUserDTO Get()
+        public async Task<ActionResult<ShopUserDTO>> Get()
         {
-            return service.GetUser(User.Identity.Name);
+            try
+            {
+                return Ok(await service.GetUser(User.Identity.Name));
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -69,9 +76,9 @@ namespace Friday.Controllers
         /// <returns>List of username and balance for each user</returns>
         [HttpGet("all")]
         [Authorize(Roles = Role.Admin)]
-        public IList<ShopUserDTO> GetAll()
+        public async Task<ActionResult<IList<ShopUserDTO>>> GetAll()
         {
-            return service.GetAll();
+            return Ok(await service.GetAll());
         }
 
         /// <summary>
@@ -123,7 +130,7 @@ namespace Friday.Controllers
             IdentityUser user = new IdentityUser { UserName = model.Username };
             ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
             var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded && service.AddUser(customer))
+            if (result.Succeeded && await service.AddUser(customer))
                 return Created("", await GetToken(user));
             return BadRequest();
         }
@@ -137,10 +144,14 @@ namespace Friday.Controllers
         [Authorize(Roles = Role.Admin)]
         public ActionResult UpdateBalance([FromBody] BalanceUpdateDTO dto, bool log = true)
         {
-            var result = service.ChangeBalance(dto.Name, dto.Amount, log);
-            if (result)
-                return Ok();
-            return NotFound();
+            try
+            {
+                return Ok(service.ChangeBalance(dto.Name, dto.Amount, log));
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>

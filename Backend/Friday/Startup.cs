@@ -5,16 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using NSwag;
-using NSwag.SwaggerGeneration.Processors.Security;
-using System.Collections.Generic;
+using NSwag.Generation.Processors.Security;
 using System.Text;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NSwag;
 
 
 namespace Friday
@@ -44,11 +42,6 @@ namespace Friday
         /// <param name="services">List of services</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
-
 
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IOrderService, OrderService>();
@@ -60,6 +53,12 @@ namespace Friday
             services.AddDbContext<Context>(Options =>
                 Options.UseSqlServer(Configuration.GetConnectionString("Context")));
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                }
+            );
+
             services.AddSwaggerDocument(c =>
             {
                 c.DocumentName = "apidocs";
@@ -69,12 +68,11 @@ namespace Friday
                 c.DocumentProcessors.Add(
                     new SecurityDefinitionAppender(
                         "JWT Token",
-                        new List<string>(),
-                        new SwaggerSecurityScheme
+                        new OpenApiSecurityScheme()
                         {
-                            Type = SwaggerSecuritySchemeType.ApiKey,
+                            Type = OpenApiSecuritySchemeType.ApiKey,
                             Name = "Authorization",
-                            In = SwaggerSecurityApiKeyLocation.Header,
+                            In = OpenApiSecurityApiKeyLocation.Header,
                             Description = "Copy 'Bearer' + valid JWT token into field"
                         })
 
@@ -143,7 +141,7 @@ namespace Friday
         /// <param name="app">Builder</param>
         /// <param name="env">Environment in which the application is hosted</param>
         /// <param name="initializer">Object that initializes data</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer initializer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataInitializer initializer)
         {
             if (env.IsDevelopment())
             {
@@ -154,16 +152,14 @@ namespace Friday
                 app.UseHsts();
             }
 
-            app.UseCors();
+            app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
-            app.UseMvc();
-
             app.UseSwaggerUi3();
-            app.UseSwagger();
+            app.UseOpenApi();
 
 
             initializer.InitializeData().Wait();
