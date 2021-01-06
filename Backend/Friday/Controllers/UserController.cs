@@ -127,8 +127,8 @@ namespace Friday.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<string>> Register(RegisterDTO model)
         {
-            IdentityUser user = new IdentityUser { UserName = model.Username };
-            ShopUser customer = new ShopUser { Name = model.Username, Balance = 200D };
+            var user = new IdentityUser { UserName = model.Username };
+            var customer = new ShopUser { Name = model.Username, Balance = 200D };
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded && await service.AddUser(customer))
                 return Created("", await GetToken(user));

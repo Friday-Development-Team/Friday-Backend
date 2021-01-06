@@ -65,8 +65,7 @@ namespace Friday.Controllers
         {
             try
             {
-                var user = await users.GetByUsername(User.Identity.Name);
-                return Ok(service.ChangeCount(user, id, amount));
+                return Ok(await service.ChangeCount(await users.GetByUsername(User.Identity.Name), id, amount));
             }
             catch (Exception)
             {
@@ -82,9 +81,9 @@ namespace Friday.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AuthorizeAdminOrCatering]
-        public ActionResult Post(ItemDTO dto)
+        public async Task<ActionResult> Post(ItemDTO dto)
         {
-            return Ok(service.AddItem(dto.ToItem(), dto.Details.ToItemDetails()));
+            return Ok(await service.AddItem(dto.ToItem(), dto.Details.ToItemDetails()));
         }
 
         /// <summary>
@@ -98,11 +97,11 @@ namespace Friday.Controllers
         [AuthorizeAdminOrCatering]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                return Ok(service.DeleteItem(id));
+                return Ok(await service.DeleteItem(id));
             }
             catch (Exception)
             {

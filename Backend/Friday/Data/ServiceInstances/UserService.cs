@@ -42,7 +42,7 @@ namespace Friday.Data.ServiceInstances
             users.Update(user);
             await context.SaveChangesAsync();
             if (log)
-                LogMoney(user, amount);
+                await LogMoney(user, amount);
             return true;
         }
 
@@ -74,10 +74,10 @@ namespace Friday.Data.ServiceInstances
             return await users.Where(t => t.Name == username).Select(user => new ShopUserDTO
                 {Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null}).SingleAsync();
         }
-        private void LogMoney(ShopUser user, double count)
+        private async Task LogMoney(ShopUser user, double count)
         {
-            logs.AddAsync(new CurrencyLog(user, count));
-            context.SaveChangesAsync();
+            await logs.AddAsync(new CurrencyLog(user, count));
+            await context.SaveChangesAsync();
         }
     }
 }

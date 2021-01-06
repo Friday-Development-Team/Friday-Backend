@@ -49,10 +49,10 @@ namespace Friday.Data
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Catering", Seat = "Bar" });
                 context.ShopUsers.Add(new ShopUser { Balance = 200D, Name = "Kitchen", Seat = "Kitchen" });
 
-                ShopUser user = new ShopUser { Name = "Test", Balance = 200D, Seat = "A1" };
+                var user = new ShopUser { Name = "Test", Balance = 200D, Seat = "A1" };
                 context.ShopUsers.Add(user);
                 await CreateUser(user.Name, "Test@Test.test", "Testen", Role.User);
-                ShopUser user2 = new ShopUser { Name = "Test2", Balance = 200D, Seat = "A2" };
+                var user2 = new ShopUser { Name = "Test2", Balance = 200D, Seat = "A2" };
                 context.ShopUsers.Add(user2);
                 await CreateUser(user2.Name, "Test2@Test.test", "Testen", Role.User);
 
@@ -71,7 +71,7 @@ namespace Friday.Data
         /// </summary>
         private void SeedItems()
         {
-            Item item = new Item
+            var item = new Item
             {
                 Name = "Water",
                 Price = 1.0,

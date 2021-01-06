@@ -91,7 +91,7 @@ namespace Friday.Data.ServiceInstances
         public async Task<int> PlaceOrder(string username, OrderDTO orderdto)
         {
             if (orderdto == null || !orderdto.IsValid())
-                throw new ArgumentException();
+                throw new ArgumentException("Order could not be found");
 
             var user = await users.SingleAsync(s => s.Name == username);
 

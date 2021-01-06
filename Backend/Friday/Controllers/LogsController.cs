@@ -38,9 +38,9 @@ namespace Friday.Controllers
         /// <returns>List of currency logs</returns>
         [HttpGet("currency/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IList<LogDTO>> GetAllCurrencyLogs()
+        public async Task<ActionResult<IList<LogDTO>>> GetAllCurrencyLogs()
         {
-            return Ok(service.GetAllCurrencyLogs());
+            return Ok(await service.GetAllCurrencyLogs());
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace Friday.Controllers
         /// <returns>List of item logs</returns>
         [HttpGet("item/all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IList<LogDTO>> GetAllItemLogs()
+        public async Task<ActionResult<IList<LogDTO>>> GetAllItemLogs()
         {
-            return Ok(service.GetAllItemLogs());
+            return Ok(await service.GetAllItemLogs());
         }
 
         /// <summary>
@@ -82,11 +82,11 @@ namespace Friday.Controllers
         [HttpGet("item/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IList<LogDTO>> GetPerItem(int id)
+        public async Task<ActionResult<IList<LogDTO>>> GetPerItem(int id)
         {
             try
             {
-                return Ok(service.GetPerItem(id));
+                return Ok(await service.GetPerItem(id));
             }
             catch (Exception)
             {
