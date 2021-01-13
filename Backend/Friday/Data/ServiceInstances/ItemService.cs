@@ -12,6 +12,7 @@ namespace Friday.Data.ServiceInstances
     public class ItemService : ServiceBase, IItemService
     {
         private readonly DbSet<Item> items;
+        private readonly DbSet<ItemDetails> itemDetails;
         private readonly DbSet<ItemLog> logs;
 
         /// <summary>
@@ -21,6 +22,7 @@ namespace Friday.Data.ServiceInstances
         public ItemService(Context context) : base(context)
         {
             items = this.context.Items;
+            itemDetails = this.context.ItemDetails;
             logs = this.context.ItemLogs;
 
         }
@@ -43,27 +45,28 @@ namespace Friday.Data.ServiceInstances
 
             items.Update(item);
 
+            var returnamount= await context.SaveChangesAsync() > 0;
+
             await LogItem(user, item, amount);
 
-            return await context.SaveChangesAsync() > 0;
+            return returnamount;
         }
         /// <inheritdoc />
-        private Task LogItem(ShopUser user, Item item, int amount)
+        private async Task<bool> LogItem(ShopUser user, Item item, int amount)
         {
             var log = new ItemLog(user, amount, item);
-            logs.Add(log);
-            return context.SaveChangesAsync();
+            await logs.AddAsync(log);
+            return await context.SaveChangesAsync() > 0;
         }
         /// <inheritdoc />
         public async Task<bool> AddItem(Item item, ItemDetails details)
         {
+            var result = await itemDetails.AddAsync(details);
+            await context.SaveChangesAsync();
+
+            item.ItemDetails = result.Entity;
             await items.AddAsync(item);//Add Item itself to data
             await context.SaveChangesAsync();//Save to generate the ID
-
-            details.ItemId = item.Id;//Set ItemId with newly generated value from Item
-
-            items.Update(item);//Sets the Item as updated to new Details are saved too
-            await context.SaveChangesAsync();//Save to generated ID
 
             return item.Id != 0 && details.Id != 0 && await items.ContainsAsync(item);//Check if Item was successfully added and all values generated. This ensures proper saving.
         }

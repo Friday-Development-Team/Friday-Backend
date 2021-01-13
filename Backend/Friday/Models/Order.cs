@@ -17,10 +17,6 @@ namespace Friday.Models
         /// <summary>
         /// ID of the User that placed this Order
         /// </summary>
-        public int UserId { get; set; }
-        /// <summary>
-        /// User that placed this Order
-        /// </summary>
         public ShopUser User { get; set; }
         /// <summary>
         /// List of Items in this Order and the amounts, wrapped in an OrderItem

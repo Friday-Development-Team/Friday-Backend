@@ -73,12 +73,11 @@ namespace Friday.Models
         /// <returns>Corresponding ItemType. Default ItemType.Beverage.</returns>
         public static ItemType FromString(string s)
         {
-            switch (s.ToUpper())
+            return s.ToUpper() switch
             {
-                case "FOOD": return ItemType.Food;
-                case "BEVERAGE":
-                default: return ItemType.Beverage;
-            }
+                "FOOD" => ItemType.Food,
+                "BEVERAGE" or _ => ItemType.Beverage
+            };
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Friday.DTOs
         /// <returns>DTO with the data from the log</returns>
         public static LogDTO FromCurrencyLog(CurrencyLog log)
         {
-            return new LogDTO { Name = log.User.Name, Amount = log.Count, Time = log.Time, Type = LogType.Currency.ToString().ToLower() };
+            return new LogDTO { Name = log.ShopUser.Name, Amount = log.Count, Time = log.Time, Type = LogType.Currency.ToString().ToLower() };
         }
 
         /// <summary>

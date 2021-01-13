@@ -48,11 +48,11 @@ namespace Friday.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<OrderHistory> Get()
+        public async Task<ActionResult<OrderHistory>> Get()
         {
             try
             {
-                return Ok(service.GetHistory(User.Identity.Name));
+                return Ok(await service.GetHistory(User.Identity.Name));
             }
             catch (Exception)
             {
@@ -78,7 +78,7 @@ namespace Friday.Controllers
             {
                 return Ok(await service.PlaceOrder(User.Identity.Name, order));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return BadRequest();
             }

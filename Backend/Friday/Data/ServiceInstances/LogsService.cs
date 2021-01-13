@@ -32,7 +32,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<IList<LogDTO>> GetAllCurrencyLogs()
         {
-            return await currencyLogs.Include(s => s.User).AsNoTracking().Select(s => LogDTO.FromCurrencyLog(s)).ToListAsync();
+            return await currencyLogs.Include(s => s.ShopUser).AsNoTracking().Select(s => LogDTO.FromCurrencyLog(s)).ToListAsync();
         }
         /// <inheritdoc />
         public async Task<IList<LogDTO>> GetAllItemLogs()
@@ -42,11 +42,11 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<IList<LogDTO>> GetByUser(int id)
         {
-            if (await currencyLogs.AllAsync(s => s.UserId != id))
+            if (await currencyLogs.AllAsync(s => s.ShopUser.Id != id))
                 throw new ArgumentException();
 
-            return await currencyLogs.Include(s => s.User)
-                .Where(s => s.UserId == id)
+            return await currencyLogs.Include(s => s.ShopUser)
+                .Where(s => s.ShopUser.Id == id)
                 .OrderBy(s => s.Time)
                 .Select(s => LogDTO.FromCurrencyLog(s)).ToListAsync();
         }
@@ -75,11 +75,15 @@ namespace Friday.Data.ServiceInstances
         {
             //var result = itemLogs.Where(s => s.Amount < 0).ToList();
             //return result.ToDictionary(s => s.Item, s => result.Where(t => t.Equals(s))).Select(s => new ItemAmountDTO { Item = s.Key, Amount = s.Value.Sum(t => t.Amount) }).ToList();
-            return await itemLogs
-                .Where(s => s.Count < 0)
+            return await itemLogs.AsNoTracking()
+                .Where(s => s.Count < 0)// Subtractions only
                 .GroupBy(s => s.Item)
-                .Select(s => new ItemAmountDTO
-                { Item = s.Key, Amount = (int)s.Sum(t => Math.Floor(Math.Abs(t.Count))) })
+                .Select(s =>
+                    new ItemAmountDTO
+                    {
+                        Item = s.Key, 
+                        Amount = Math.Abs(Convert.ToInt32(s.Sum(t => t.Count)))
+                    })
                 .ToListAsync();
         }
 

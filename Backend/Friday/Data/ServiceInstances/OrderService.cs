@@ -41,7 +41,7 @@ namespace Friday.Data.ServiceInstances
         {
             await users.SingleAsync(s => s.Name == username); //Checks if the user exists
 
-            return new OrderHistory
+            var history = new OrderHistory
             {
                 UserName = username,
                 Orders = await orders.Include(s => s.Items).Include(s => s.User)
@@ -61,6 +61,8 @@ namespace Friday.Data.ServiceInstances
                     .ToListAsync(),
 
             };
+
+            return history;
 
         }
         /// <inheritdoc />
@@ -98,7 +100,6 @@ namespace Friday.Data.ServiceInstances
             var order = new Order
             {
                 User = user,
-                UserId = user.Id,
                 OrderTime = DateTime.Now
             };
 
@@ -126,16 +127,22 @@ namespace Friday.Data.ServiceInstances
             var log = new Dictionary<Item, int>();
             foreach (var item in orderdto.Items)
             {
-                var temp = await items.SingleAsync(s => s.Id == item.Id);
+                var dbItem = await items.SingleAsync(s => s.Id == item.Id);
 
-                //temp.Amount -= item.Amount;
-                if (await itemService.ChangeCount(user, temp.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
-                    log.Add(temp, -item.Amount);
-                else
-                    RevertUser(user, temp.Count * temp.Price);//Refunds the failed item. It will not show up in the history.
+                try
+                {
+                    //temp.Amount -= item.Amount;
+                    if (await itemService.ChangeCount(user, dbItem.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
+                        log.Add(dbItem, -item.Amount);
+                    else
+                        RevertUser(user, dbItem.Count * dbItem.Price);//Refunds the failed item. It will not show up in the history.
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
 
-
-                items.Update(temp);//Updated Item
+                items.Update(dbItem);//Updated Item
             }
 
             var result = await orders.AddAsync(order);//Order added
@@ -224,7 +231,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<IList<CateringOrder>> GetRunningOrders(string username)
         {
-            return await users.Include(s => s.Orders).ThenInclude(s=> s.Items).AsNoTracking()
+            return await users.Include(s => s.Orders).ThenInclude(s => s.Items).AsNoTracking()
                 .Where(s => s.Name == username)
                 .SelectMany(s => s.Orders).Where(s => s.IsOngoing())
                 .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)

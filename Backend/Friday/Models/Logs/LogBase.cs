@@ -14,11 +14,7 @@ namespace Friday.Models.Logs
         /// <summary>
         /// User that causes this log to be placed
         /// </summary>
-        public ShopUser User { get; set; }
-        /// <summary>
-        /// ID of the User
-        /// </summary>
-        public int UserId { get; set; }
+        public ShopUser ShopUser { get; set; }
         /// <summary>
         /// Timestamp for this log
         /// </summary>
@@ -35,8 +31,7 @@ namespace Friday.Models.Logs
         /// <param name="user">User that placed this log</param>
         protected LogBase(ShopUser user)
         {
-            User = user;
-            UserId = User.Id;
+            ShopUser = user;
             Time = DateTime.Now;
         }
     }

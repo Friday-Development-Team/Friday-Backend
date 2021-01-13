@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 
 namespace Friday
@@ -51,7 +52,8 @@ namespace Friday
             services.AddScoped<DataInitializer>();
 
             services.AddDbContext<Context>(Options =>
-                Options.UseSqlServer(Configuration.GetConnectionString("Context")));
+                Options.UseSqlServer(Configuration.GetConnectionString("Context"))
+            );
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 {
@@ -128,8 +130,8 @@ namespace Friday
             services.AddAuthorization(c =>
             {
                 c.AddPolicy("AdminOnly", pol => pol.RequireRole("Admin"));
-                c.AddPolicy("Personnel", pol => pol.RequireRole(new[] { "Admin", "Catering", "Kitchen" }));
-                c.AddPolicy("Catering", pol => pol.RequireRole(new[] { "Admin", "Catering" }));
+                c.AddPolicy("Personnel", pol => pol.RequireRole("Admin", "Catering", "Kitchen"));
+                c.AddPolicy("Catering", pol => pol.RequireRole("Admin", "Catering"));
             });
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
@@ -147,19 +149,24 @@ namespace Friday
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
-
-            app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
+            app.UseRouting();
+
             app.UseAuthentication();
 
-            app.UseSwaggerUi3();
-            app.UseOpenApi();
+            app.UseCors("AllowAllOrigins");
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
 
             initializer.InitializeData().Wait();

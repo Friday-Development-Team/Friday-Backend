@@ -66,6 +66,8 @@ namespace Friday.Data
 
             builder.Entity<CurrencyLog>();
 
+            builder.Entity<ItemLog>();
+
         }
     }
 }

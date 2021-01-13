@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Friday.Models.Logs;
 
 namespace Friday.Models
 {
@@ -28,10 +29,14 @@ namespace Friday.Models
         /// List of Orders placed by this user. Used for EF. Set to null for serialization to JSON
         /// </summary>
         public ICollection<Order> Orders { get; set; }
-        /// <summary>
-        /// List of CurrencyLogs concerning this user. Used for EF. Set to null for serialization to JSON
-        /// </summary>
-        public ICollection<CurrencyLog> Logs { get; set; }
+        ///// <summary>
+        ///// List of CurrencyLogs concerning this user.
+        ///// </summary>
+        //public ICollection<CurrencyLog> CurrencyLogs { get; set; }
+        ///// <summary>
+        ///// List of ItemLogs concerning this user.
+        ///// </summary>
+        //public ICollection<ItemLog> ItemLogs { get; set; }
 
 
         /// <summary>

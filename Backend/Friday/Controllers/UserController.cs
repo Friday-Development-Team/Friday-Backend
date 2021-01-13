@@ -110,11 +110,11 @@ namespace Friday.Controllers
         /// <returns>JWT token</returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<string>> CreateToken([FromBody] LoginDTO model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginDTO model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && (await signInManager.CheckPasswordSignInAsync(user, model.Password, false)).Succeeded)
-                return Created("", await GetToken(user)); //returns only the token
+                return Ok(await GetToken(user)); //returns only the token
             return BadRequest();
         }
 

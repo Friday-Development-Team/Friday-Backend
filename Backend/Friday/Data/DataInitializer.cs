@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
+using Friday.Models.Logs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Friday.Data
 {
@@ -34,9 +36,9 @@ namespace Friday.Data
         public async Task InitializeData()
         {
 
-
-            //context.Database.EnsureDeleted();//Comment out to avoid renewal of all data.
-            if (context.Database.EnsureCreated())
+            //await context.Database.EnsureDeletedAsync();//Comment out to avoid renewal of all data.
+           
+            if (await context.Database.EnsureCreatedAsync())
             {
 
                 await CreateRoles();
@@ -62,6 +64,11 @@ namespace Friday.Data
 
                 context.SaveChanges();
 
+                var log = new ItemLog(context.ShopUsers.First(), -2, context.Items.First());
+
+                context.ItemLogs.Add(log);
+
+                context.SaveChanges();
             }
 
         }
@@ -221,8 +228,6 @@ namespace Friday.Data
 
             context.Items.Add(item);
 
-
-
         }
 
         /// <summary>
@@ -243,7 +248,7 @@ namespace Friday.Data
                 if (name != "Admin")
                     await userManager.AddToRoleAsync(createdUser, role);
                 else
-                    await userManager.AddToRolesAsync(createdUser, roleManager.Roles.Select(s => s.Name));
+                    await userManager.AddToRolesAsync(createdUser, roleManager.Roles.Select(s => s.Name).ToList());
             }
 
         }
