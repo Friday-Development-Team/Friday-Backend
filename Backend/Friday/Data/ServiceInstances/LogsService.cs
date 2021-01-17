@@ -75,16 +75,16 @@ namespace Friday.Data.ServiceInstances
         {
             //var result = itemLogs.Where(s => s.Amount < 0).ToList();
             //return result.ToDictionary(s => s.Item, s => result.Where(t => t.Equals(s))).Select(s => new ItemAmountDTO { Item = s.Key, Amount = s.Value.Sum(t => t.Amount) }).ToList();
-            return await itemLogs.AsNoTracking()
-                .Where(s => s.Count < 0)// Subtractions only
+            return (await itemLogs.AsNoTracking()
+                .Where(s => s.Count < 0) // Subtractions only
                 .GroupBy(s => s.Item)
                 .Select(s =>
                     new ItemAmountDTO
                     {
-                        Item = s.Key, 
-                        Amount = Math.Abs(Convert.ToInt32(s.Sum(t => t.Count)))
+                        Item = s.Key,
+                        Amount = Convert.ToInt32(s.Sum(t => t.Count) * -1)//Sum of all logs, *-1 to convert to positive value
                     })
-                .ToListAsync();
+                .ToListAsync());
         }
 
     }
