@@ -33,6 +33,8 @@ import { AdditemComponent } from './tools/toolcomponents/catering/additem/addite
 import { ManagestockComponent } from './tools/toolcomponents/catering/managestock/managestock.component';
 import { TotalhistoryComponent } from './tools/toolcomponents/catering/totalhistory/totalhistory.component';
 import { CateringComponent } from './catering/catering.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from '../app-routing.module';
 
 const routes: Routes = [
   {
@@ -102,7 +104,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [
     UserService,
@@ -110,7 +113,8 @@ const routes: Routes = [
     RoleGuard,
     PricefilterPipe,
     SearchPipe,
-    OrderPipe
+    OrderPipe,
+    HttpClientModule
   ],
   exports: [RouterModule]
 })
