@@ -10,6 +10,7 @@ import { AuthService } from './services/auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from './store/store.module';
 import { MaterialModule } from './material/material.module';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -20,10 +21,12 @@ import { MaterialModule } from './material/material.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     AuthModule,
-    StoreModule
+    StoreModule,
+    NgbModule
   ],
   providers: [
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   bootstrap: [AppComponent]
 })
