@@ -11,17 +11,20 @@ import { AuthModule } from './auth/auth.module';
 import { StoreModule } from './store/store.module';
 import { MaterialModule } from './material/material.module';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { MainModule } from './main/main.module';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
+    // Submodules
+    MainModule,
+    AuthModule,
+    StoreModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AuthModule,
-    StoreModule,
     NgbModule
   ],
   providers: [
