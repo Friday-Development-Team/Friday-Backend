@@ -4,22 +4,17 @@
     flex: 1 1 auto;
 }
 
-.nav-items-container{
-    display: flex;
-    .nav-col{
-        flex-direction: column;
-    }
-    .nav-row{
-        flex-direction: row;
-    }
-}
-
 .nav-item{
     color: white;
     text-decoration: none;
     font-size: large;
-    padding-left: 2vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 .nav-item:hover{
     color: lightgray;
+}
+
+mat-sidenav{
+    background-color: $primary;
 }

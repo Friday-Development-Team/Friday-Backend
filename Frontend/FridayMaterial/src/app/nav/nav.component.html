@@ -9,25 +9,50 @@
       <span class="spacer"></span>
       <div fxShow="true" fxHide.lt-md>
         <span>
-            <a mat-button *ngFor="let item of navs" id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
-              routerLinkActive="router-link-active">{{item.display}}</a>
+          <a mat-button *ngFor="let item of navs" id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
+            routerLinkActive="router-link-active">{{item.display}}</a>
+          <a mat-button href="#" (click)="logout()">
+            <mat-icon color="warn">exit_to_app</mat-icon>
+          </a>
         </span>
       </div>
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <mat-sidenav-container fxFlexFill autosize>
-    <mat-sidenav #sidenav mode="push" [fixedInViewport]="true"  color="primary">
+  <!-- <mat-sidenav-container >
+    <mat-sidenav #sidenav color="primary">
       <mat-nav-list>
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
         <a *ngFor="let item of navs" id="item.id" mat-list-item href="#" class="nav-item" [routerLink]="[item.url]"
           routerLinkActive="router-link-active">{{item.display}}</a>
-        </mat-nav-list>
+      </mat-nav-list>
     </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container> -->
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav>
+      <mat-nav-list>
+
+        <a mat-list-item *ngFor="let item of navs" id="{item.url}" href="#" class="nav-item" [routerLink]="[item.url]"
+          routerLinkActive="router-link-active">{{item.display}}</a>
+
+          <a mat-list-item href="#" (click)="logout()">
+            <mat-icon color="warn">exit_to_app</mat-icon>
+          </a>
+
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div style="height: 88vh;">
+
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
   </mat-sidenav-container>
 
 </nav>
-
-<router-outlet></router-outlet>

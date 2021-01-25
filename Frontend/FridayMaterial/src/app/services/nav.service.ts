@@ -13,8 +13,9 @@ export class NavService {
     
     this.router.events.subscribe(s=> {
       if(s instanceof NavigationEnd){
-        let url = s.urlAfterRedirects.toLowerCase()
+        let url = s.url.toLowerCase()
         if(!url.includes("/main/")) return;
+        console.log(url.split('/'));
         let last = url.split('/').pop()
         console.log(last);
         this.current.next(last)

@@ -9,10 +9,11 @@ import { StoreBaseComponent } from './store-base/store-base.component';
 
 const routes: Routes = [
   {
-    path: 'store', component: StoreBaseComponent, canActivate: [AuthGuard], children: [
+    path: '' , canActivate: [AuthGuard], children: [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopComponent},
-      { path: 'history', component: null}
+      //{ path: 'history', component: null},
+      { path: '**', redirectTo: 'shop'}
     ]
   }
 ];

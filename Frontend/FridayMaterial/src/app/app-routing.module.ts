@@ -11,7 +11,7 @@ const routes: Routes = [
   {path: "", redirectTo: "main", pathMatch: "full"},
   { path: "main", component: NavComponent, canActivate: [AuthGuard], children: [
     { path: "manage", loadChildren: () => import('./management/management.module').then(s=> s.ManagementModule)},
-    { path: "store", component: StoreBaseComponent,loadChildren: () => import('./store/store.module').then(s=> s.StoreModule)},
+    { path: "store", component: StoreBaseComponent, loadChildren: () => import('./store/store.module').then(s=> s.StoreModule)},
     { path: "", redirectTo: 'store', pathMatch: 'full'}
     ]
   },
