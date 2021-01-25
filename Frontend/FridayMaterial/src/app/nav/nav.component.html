@@ -9,8 +9,10 @@
       <span class="spacer"></span>
       <div fxShow="true" fxHide.lt-md>
         <span>
-          <a mat-button *ngFor="let item of navs" id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
-            routerLinkActive="router-link-active">{{item.display}}</a>
+          <a href="#" mat-button *ngFor="let item of navs">
+            <a id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
+              routerLinkActive="router-link-active" *ngIf="currentPage !== item.id">{{item.display}}</a>
+          </a>
           <a mat-button href="#" (click)="logout()">
             <mat-icon color="warn">exit_to_app</mat-icon>
           </a>
@@ -41,9 +43,9 @@
         <a mat-list-item *ngFor="let item of navs" id="{item.url}" href="#" class="nav-item" [routerLink]="[item.url]"
           routerLinkActive="router-link-active">{{item.display}}</a>
 
-          <a mat-list-item href="#" (click)="logout()">
-            <mat-icon color="warn">exit_to_app</mat-icon>
-          </a>
+        <a mat-list-item href="#" (click)="logout()">
+          <mat-icon color="warn">exit_to_app</mat-icon>
+        </a>
 
       </mat-nav-list>
     </mat-sidenav>

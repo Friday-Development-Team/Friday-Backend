@@ -16,7 +16,7 @@ export class NavComponent implements OnInit {
   readonly navs: NavElement[]= [
     { id: 'shop', url: this.urlBase + 'store/shop/', display: 'Shop' },
     { id: 'history', url: this.urlBase + 'store/history/', display: 'Order history' },
-    { id: 'running', url: this.urlBase + 'store/current/', display: 'Running orders' },
+    { id: 'running', url: this.urlBase + 'store/running/', display: 'Running orders' },
     { id: 'management', url: this.urlBase + 'management/', display: 'Management' },
   ]
 
@@ -38,5 +38,5 @@ class NavElement{
   /**
    *
    */
-  constructor(public id: string, public url: string, public display: string ) { }
+  constructor(public id: string, public url: string, public display: string) { }
 }
