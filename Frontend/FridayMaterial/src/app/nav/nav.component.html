@@ -1,0 +1,33 @@
+<nav>
+
+  <mat-toolbar color="primary" class="flex">
+    <mat-toolbar-row>
+      <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Friday</span>
+      <span class="spacer"></span>
+      <div fxShow="true" fxHide.lt-md>
+        <span>
+            <a mat-button *ngFor="let item of navs" id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
+              routerLinkActive="router-link-active">{{item.display}}</a>
+        </span>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-sidenav-container fxFlexFill autosize>
+    <mat-sidenav #sidenav mode="push" [fixedInViewport]="true"  color="primary">
+      <mat-nav-list>
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a *ngFor="let item of navs" id="item.id" mat-list-item href="#" class="nav-item" [routerLink]="[item.url]"
+          routerLinkActive="router-link-active">{{item.display}}</a>
+        </mat-nav-list>
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+</nav>
+
+<router-outlet></router-outlet>

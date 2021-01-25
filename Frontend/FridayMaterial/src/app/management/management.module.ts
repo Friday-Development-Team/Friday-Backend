@@ -4,8 +4,8 @@ import { ManagementBaseComponent } from './management-base/management-base.compo
 import { Routes } from '@angular/router';
 
 const routes: Routes=[
-  { path: "manage", component: ManagementBaseComponent, children: [
-
+  { path: "", component: ManagementBaseComponent, children: [
+    { path: '', redirectTo: '', pathMatch: 'full'},// TODO Add redirect
     ] 
   }
 ]

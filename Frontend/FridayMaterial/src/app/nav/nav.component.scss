@@ -1,0 +1,25 @@
+@import "../shared/colors.scss";
+
+.spacer{
+    flex: 1 1 auto;
+}
+
+.nav-items-container{
+    display: flex;
+    .nav-col{
+        flex-direction: column;
+    }
+    .nav-row{
+        flex-direction: row;
+    }
+}
+
+.nav-item{
+    color: white;
+    text-decoration: none;
+    font-size: large;
+    padding-left: 2vw;
+}
+.nav-item:hover{
+    color: lightgray;
+}

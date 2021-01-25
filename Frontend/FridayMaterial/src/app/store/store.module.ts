@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth/auth.service';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { ShopComponent } from './shop/shop.component';
-import { AppRoutingModule } from '../app-routing.module';
 import { StoreBaseComponent } from './store-base/store-base.component';
 
 const routes: Routes = [
   {
     path: 'store', component: StoreBaseComponent, canActivate: [AuthGuard], children: [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
-      { path: 'shop', component: ShopComponent}
+      { path: 'shop', component: ShopComponent},
+      { path: 'history', component: null}
     ]
   }
 ];
@@ -22,7 +22,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    AppRoutingModule
   ],
   providers:[
     AuthGuard,
