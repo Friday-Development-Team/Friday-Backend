@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { ShopComponent } from './shop/shop.component';
 import { StoreBaseComponent } from './store-base/store-base.component';
+import { MaterialModule } from '../material/material.module';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
   declarations: [StoreBaseComponent, ShopComponent],
   imports: [
     CommonModule,
+    MaterialModule,
     RouterModule.forChild(routes),
   ],
   providers:[
