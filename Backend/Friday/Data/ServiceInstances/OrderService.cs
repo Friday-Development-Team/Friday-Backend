@@ -137,7 +137,7 @@ namespace Friday.Data.ServiceInstances
                     else
                         RevertUser(user, dbItem.Count * dbItem.Price);//Refunds the failed item. It will not show up in the history.
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw;
                 }

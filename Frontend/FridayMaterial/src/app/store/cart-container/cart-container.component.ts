@@ -10,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
  */
 export class CartContainerComponent implements OnInit {
 
+
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  sendOrder(){
+    console.log("Sending ...")
+  }
+
+  clear(){
+    console.log("Clearing ...")
   }
 
 }

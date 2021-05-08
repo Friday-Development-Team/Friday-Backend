@@ -26,13 +26,12 @@ import { NavComponent } from './nav/nav.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgbModule,
+    
     MaterialModule
   ],
   providers: [
     HttpClientModule,
-    NgbModule
-  ],
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+import { OrderItem } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-cart',
@@ -9,10 +11,17 @@ import { Component, OnInit } from '@angular/core';
  * Display of Items in cart
  */
 export class CartComponent implements OnInit {
+  @Input() items: OrderItem[]
+
+  @Output() onDelete: EventEmitter<number>
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  delete(id: number) {
+    this.onDelete.emit(id)
   }
 
 }
