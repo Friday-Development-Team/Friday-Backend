@@ -5,6 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss']
 })
+/**
+ * Contains all Shop elements, such as Cart or Showcase
+ */
 export class ShopComponent implements OnInit {
 
   constructor() { }
