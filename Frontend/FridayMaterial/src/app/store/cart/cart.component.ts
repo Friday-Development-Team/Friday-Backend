@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { OrderItem } from 'src/app/models/models';
+import { Cart, OrderItem } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-cart',
@@ -11,8 +12,8 @@ import { OrderItem } from 'src/app/models/models';
  * Display of Items in cart
  */
 export class CartComponent implements OnInit {
-  @Input() items: OrderItem[]
-
+  @Input() cart: Observable<Cart>
+  displayedColumns: string[] = ['name', 'amount', 'cost'];
   @Output() onDelete: EventEmitter<number>
 
   constructor() { }

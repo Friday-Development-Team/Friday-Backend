@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart, Item, OrderItem } from "../models/models";
 
 @Injectable({
@@ -8,11 +8,12 @@ import { Cart, Item, OrderItem } from "../models/models";
 export class CartService {
 
   cart: Cart
-  cartChanges: BehaviorSubject<Cart>
+  private cartChanges: BehaviorSubject<Cart>
 
   constructor() {
     this.cart = new Cart()
-    this.cartChanges = new BehaviorSubject(this.cart)
+    this.cart.add(new OrderItem(new Item(1, "Test", 2, "Food", 50, null, null, ""), 3))
+    this.cartChanges = new BehaviorSubject<Cart>(this.cart)
   }
 
   addItem(item: Item, amount: number) {
@@ -23,5 +24,9 @@ export class CartService {
 
   update() {
     this.cartChanges.next(this.cart)
+  }
+
+  onCartChange(): Observable<Cart>{
+    return this.cartChanges
   }
 }

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Cart } from 'src/app/models/models';
+import { CartService } from 'src/app/services/cart.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -11,9 +14,11 @@ import { DataService } from 'src/app/services/data.service';
  */
 export class CartContainerComponent implements OnInit {
 
-  
+  cart: Observable<Cart>
 
-  constructor(private data: DataService) { }
+  constructor(private data: DataService, private cartService: CartService) {
+    this.cart=this.cartService.onCartChange()
+    }
 
   ngOnInit(): void {
   }

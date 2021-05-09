@@ -39,4 +39,8 @@ export class OrderItem {
         this.amount += amount
         return true
     }
+
+    getCost(){
+        return this.item.price * this.amount
+    }
 }
