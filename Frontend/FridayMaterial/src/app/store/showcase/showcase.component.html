@@ -1,1 +1,10 @@
-<p>showcase works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-4 col-sm-6 col" *ngFor="let item of (items | slice:lowVal:highVal)">
+      <friday-itemcard [item]="item"></friday-itemcard>
+    </div>
+  </div>
+</div>
+
+<mat-paginator [length]="items.length" pageSize=10 [pageSizeOptions]="[5, 10, 20]"
+  (page)="getPaginatorData($event)" showFirstLastButtons="true"></mat-paginator>

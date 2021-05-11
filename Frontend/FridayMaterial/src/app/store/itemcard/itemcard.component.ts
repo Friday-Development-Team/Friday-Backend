@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Item } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-itemcard',
@@ -10,9 +12,25 @@ import { Component, OnInit } from '@angular/core';
  */
 export class ItemcardComponent implements OnInit {
 
-  constructor() { }
+  @Input() item: Item
+  form: FormGroup
+
+  constructor(builder: FormBuilder) {
+    this.form = builder.group({
+      amount: builder.control('1', Validators.pattern("[1-9]\\d*")) // Non zero leading int
+    })
+
+  }
 
   ngOnInit(): void {
+  }
+
+  getUrl(){
+    return `assets/${this.item.normalizedImageName}.jpg`
+  }
+
+  AddToCart(){
+    console.log("Submitting");
   }
 
 }

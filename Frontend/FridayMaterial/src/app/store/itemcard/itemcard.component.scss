@@ -1,0 +1,39 @@
+.img-wrapper {
+  height: 50%;
+
+  .itembox-img {
+    width: 100%;
+    object-fit: scale-down;
+    height: 15vh;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  border: 1px solid red;
+  box-shadow: red;
+}
+
+mat-card-content {
+  padding: 1vw;
+}
+
+.padded {
+  padding-top: 1.5vh;
+}
+
+.input .submit{
+  border: 1px solid gray
+}
+
+.input {
+  border-radius: 5px 5px 0 0
+}
+
+.submit {
+  border-radius: 0 0 5px 5px
+}

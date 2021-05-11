@@ -11,6 +11,7 @@ import { ShowcaseComponent } from './showcase/showcase.component';
 import { CartContainerComponent } from './cart-container/cart-container.component';
 import { CartComponent } from './cart/cart.component';
 import { ItemcardComponent } from './itemcard/itemcard.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -36,6 +37,8 @@ const routes: Routes = [
     CommonModule,
     MaterialModule,
     RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     AuthGuard,
