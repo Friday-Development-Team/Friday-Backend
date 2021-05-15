@@ -4,13 +4,9 @@
     <mat-card-title>Cart</mat-card-title>
   </mat-card-header>
 
-  <mat-divider [inset]="true"></mat-divider>
-
   <mat-card-content>
     <friday-cart [cart]="cart"></friday-cart>
   </mat-card-content>
-
-  <mat-divider [inset]="true"></mat-divider>
 
   <mat-card-actions>
     <button mat-raised-button color="primary" (click)="sendOrder()">Order</button>

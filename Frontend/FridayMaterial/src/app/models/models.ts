@@ -16,7 +16,7 @@ export class Cart {
 
 
     updateTotal() {
-        this.total = this.items.map(s => { return s.item.price * s.amount }).reduce((acc, cur) => acc + cur)
+        this.total = this.items.map(s => { return +s.item.price * +s.amount }).reduce((acc, cur) => acc + cur)
     }
 
     has(id: number): boolean {
@@ -34,14 +34,14 @@ export class Cart {
 export class OrderItem {
     constructor(public item: Item, public amount: number) { }
 
-    addAmount(amount: number) {
-        if (amount < 0 && amount > this.amount) return false
-        this.amount += amount
+    addAmount(additional: number) {
+        if (additional < 0 && additional > this.amount) return false
+        this.amount = +this.amount + +additional
         return true
     }
 
     getCost(){
-        return this.item.price * this.amount
+        return +this.item.price * +this.amount
     }
 }
 

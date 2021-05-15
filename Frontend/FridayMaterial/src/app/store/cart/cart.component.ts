@@ -13,12 +13,14 @@ import { Cart, OrderItem } from 'src/app/models/models';
  */
 export class CartComponent implements OnInit {
   @Input() cart: Observable<Cart>
+  items : OrderItem[]
   displayedColumns: string[] = ['name', 'amount', 'cost'];
   @Output() onDelete: EventEmitter<number>
 
   constructor() { }
 
   ngOnInit(): void {
+    this.cart.subscribe(s=> this.items=s.items)
   }
 
   delete(id: number) {
