@@ -18,13 +18,14 @@ export class CartContainerComponent implements OnInit {
 
   constructor(private data: DataService, private cartService: CartService) {
     this.cart = this.cartService.onCartChange()
+    this.cart.subscribe(s=> console.log(s))
   }
 
   ngOnInit(): void {
   }
 
   sendOrder() {
-    console.log("Sending ...")
+    this.cartService.placeOrder()
   }
 
   clear() {

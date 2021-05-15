@@ -12,6 +12,7 @@ import { StoreModule } from './store/store.module';
 import { MaterialModule } from './material/material.module';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavComponent } from './nav/nav.component';
+import { httpInterceptorProviders } from './auth/interceptors';
 
 
 
@@ -31,6 +32,7 @@ import { NavComponent } from './nav/nav.component';
   ],
   providers: [
     HttpClientModule,
+    httpInterceptorProviders
     ],
   bootstrap: [AppComponent]
 })

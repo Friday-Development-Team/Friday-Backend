@@ -44,3 +44,11 @@ export class OrderItem {
         return this.item.price * this.amount
     }
 }
+
+export class OrderDTO {
+    constructor(public items: OrderItemDTO[]) { }
+  }
+  
+  export class OrderItemDTO {
+    constructor(public id: number, public amount: number) { }
+  }

@@ -31,7 +31,10 @@ export class ItemcardComponent implements OnInit {
   }
 
   AddToCart() {
-    const amount = this.form
+    if(this.form.invalid) return;
+    const amount = this.form.get('amount').value
+    if(amount <= 0) return;
+    this.onAdd.emit(new OrderItem(this.item, amount))
   }
 
 }

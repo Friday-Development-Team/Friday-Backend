@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Item } from 'src/app/models/models';
+import { Item, OrderItem } from 'src/app/models/models';
+import { CartService } from 'src/app/services/cart.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class ShowcaseComponent implements OnInit {
   lowVal: number = 0
   highVal: number = 10
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService, private cart: CartService) {
     this.data.getAllItems().subscribe(s=> this.items=s)
    }
 
@@ -28,6 +29,10 @@ export class ShowcaseComponent implements OnInit {
     this.lowVal=event.pageIndex * event.pageSize
     this.highVal=Math.min(this.lowVal + event.pageSize, this.items.length)
     return event
+  }
+
+  addToCart(orderItem: OrderItem){
+    this.cart.addItem(orderItem)
   }
 
 }

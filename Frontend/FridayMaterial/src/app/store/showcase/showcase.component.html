@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12 col-md-4 col-sm-6 col" *ngFor="let item of (items | slice:lowVal:highVal)">
-      <friday-itemcard [item]="item"></friday-itemcard>
+      <friday-itemcard [item]="item" (onAdd)="addToCart($event)"></friday-itemcard>
     </div>
   </div>
 </div>
