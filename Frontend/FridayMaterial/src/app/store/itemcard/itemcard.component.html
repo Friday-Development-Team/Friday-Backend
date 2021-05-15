@@ -17,18 +17,10 @@
                   value="{{form.get('amount').value}}">
               </div> -->
 
-          <div class="row padded d-lg-none">
-            <input class="col-12 col-lg-4 input" formControlName="amount" [ngClass]="{'error': !!form.get('amount').errors}" type="number" value="0">
+          <div class="row padded">
+            <input class="col-12 input" formControlName="amount" [ngClass]="{'error': !!form.get('amount').errors}" type="number" value="0">
 
-            <button class="btn btn-block btn-primary offset-lg-1 col-12 col-lg-7 submit" style="width: 100%;" type="submit">
-              <mat-icon>shopping_cart</mat-icon>
-            </button>
-          </div>
-
-          <div class="row padded d-none d-lg-block">
-            <input class="col-12 col-lg-4" formControlName="amount" [ngClass]="{'error': !!form.get('amount').errors}" type="number" value="0">
-
-            <button class="btn btn-block btn-primary offset-lg-1 col-12 col-lg-7" style="width: 100%;" type="submit">
+            <button class="btn btn-block btn-primary col-12 submit" style="width: 100%;" type="submit">
               <mat-icon>shopping_cart</mat-icon>
             </button>
           </div>

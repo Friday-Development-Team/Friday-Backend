@@ -36,7 +36,7 @@ namespace Friday.Data
         public async Task InitializeData()
         {
 
-            //await context.Database.EnsureDeletedAsync();//Comment out to avoid renewal of all data.
+            await context.Database.EnsureDeletedAsync();//Comment out to avoid renewal of all data.
            
             if (await context.Database.EnsureCreatedAsync())
             {

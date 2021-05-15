@@ -17,17 +17,17 @@ export class CartContainerComponent implements OnInit {
   cart: Observable<Cart>
 
   constructor(private data: DataService, private cartService: CartService) {
-    this.cart=this.cartService.onCartChange()
-    }
+    this.cart = this.cartService.onCartChange()
+  }
 
   ngOnInit(): void {
   }
 
-  sendOrder(){
+  sendOrder() {
     console.log("Sending ...")
   }
 
-  clear(){
+  clear() {
     console.log("Clearing ...")
   }
 

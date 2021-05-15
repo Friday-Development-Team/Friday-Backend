@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Item } from 'src/app/models/models';
+import { Item, OrderItem } from 'src/app/models/models';
 
 @Component({
   selector: 'friday-itemcard',
@@ -13,6 +13,7 @@ import { Item } from 'src/app/models/models';
 export class ItemcardComponent implements OnInit {
 
   @Input() item: Item
+  @Output() onAdd: EventEmitter<OrderItem> = new EventEmitter()
   form: FormGroup
 
   constructor(builder: FormBuilder) {
@@ -25,12 +26,12 @@ export class ItemcardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getUrl(){
+  getUrl() {
     return `assets/${this.item.normalizedImageName}.jpg`
   }
 
-  AddToCart(){
-    console.log("Submitting");
+  AddToCart() {
+    const amount = this.form
   }
 
 }

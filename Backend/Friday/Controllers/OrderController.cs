@@ -78,7 +78,7 @@ namespace Friday.Controllers
             {
                 return Ok(await service.PlaceOrder(User.Identity.Name, order));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
