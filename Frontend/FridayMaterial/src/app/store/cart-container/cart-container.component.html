@@ -1,16 +1,18 @@
-<mat-card class="cart-card">
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <div class="title-wrapper">
+      <h2 class="fronted">Cart ({{totalItems}})</h2>
+    </div>
+  </mat-expansion-panel-header>
 
-  <mat-card-header>
+  <friday-cart [cart]="cart" (onDelete)="lowerCount($event)"></friday-cart>
+
+  <button mat-raised-button color="primary" (click)="sendOrder()">Order</button>
+  <button mat-raised-button color="warn" (click)="clear()">Clear</button>
+
+</mat-expansion-panel>
+
+
+<!-- <mat-card-header>
     <mat-card-title>Cart</mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content>
-    <friday-cart [cart]="cart"></friday-cart>
-  </mat-card-content>
-
-  <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="sendOrder()">Order</button>
-    <button mat-raised-button color="warn" (click)="clear()">Clear</button>
-  </mat-card-actions>
-
-</mat-card>
+  </mat-card-header> -->

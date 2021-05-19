@@ -19,19 +19,29 @@ export class CartService {
 
   addItem(orderItem: OrderItem) {
     this.cart.add(orderItem)
-    this.update()
+    this._update()
   }
 
-  update() {
+  _update() {
     this.cartChanges.next(this.cart)
   }
 
-  onCartChange(): Observable<Cart>{
+  onCartChange(): Observable<Cart> {
     return this.cartChanges
   }
 
-  placeOrder(){
-    let dto= new OrderDTO(this.cart.items.map(s=> new OrderItemDTO(s.item.id, s.amount)))
-    this.data.addOrder(dto).subscribe(s=> console.log(s))
+  placeOrder() {
+    let dto = new OrderDTO(this.cart.items.map(s => new OrderItemDTO(s.item.id, s.amount)))
+    this.data.addOrder(dto).subscribe(s => console.log(s))
+  }
+
+  clearCart() {
+    this.cart.clear()
+    this._update()
+  }
+
+  lowerCount(id: number) {
+    this.cart.remove(id, 1)
+    this._update()
   }
 }

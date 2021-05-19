@@ -12,12 +12,14 @@ import { CartContainerComponent } from './cart-container/cart-container.componen
 import { CartComponent } from './cart/cart.component';
 import { ItemcardComponent } from './itemcard/itemcard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RunningComponent } from './running/running.component';
 
 const routes: Routes = [
   {
     path: '', canActivate: [AuthGuard], children: [
       { path: '', redirectTo: 'shop', pathMatch: 'full' },
       { path: 'shop', component: ShopComponent },
+      { path: 'running', component: RunningComponent },
       //{ path: 'history', component: null},
       { path: '**', redirectTo: 'shop' }
     ]
@@ -32,6 +34,7 @@ const routes: Routes = [
     CartContainerComponent,
     CartComponent,
     ItemcardComponent,
+    RunningComponent,
   ],
   imports: [
     CommonModule,

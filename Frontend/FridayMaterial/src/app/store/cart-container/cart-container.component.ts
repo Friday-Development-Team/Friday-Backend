@@ -15,10 +15,11 @@ import { DataService } from 'src/app/services/data.service';
 export class CartContainerComponent implements OnInit {
 
   cart: Observable<Cart>
+  totalItems: number = 0
 
   constructor(private data: DataService, private cartService: CartService) {
     this.cart = this.cartService.onCartChange()
-    this.cart.subscribe(s=> console.log(s))
+    this.cart.subscribe(s => this.totalItems = s.items.map(t => t.amount).reduce((acc, curr) => +acc + +curr, 0))
   }
 
   ngOnInit(): void {
@@ -29,7 +30,11 @@ export class CartContainerComponent implements OnInit {
   }
 
   clear() {
-    console.log("Clearing ...")
+    this.cartService.clearCart()
+  }
+
+  lowerCount(id: number) {
+    this.cartService.lowerCount(id)
   }
 
 }

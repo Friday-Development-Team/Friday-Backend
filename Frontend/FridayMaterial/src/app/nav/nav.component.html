@@ -10,8 +10,8 @@
       <div fxShow="true" fxHide.lt-md>
         <span>
           <a href="#" mat-button *ngFor="let item of navs">
-            <a id="item.id" href="#" class="nav-item" [routerLink]="[item.url]"
-              routerLinkActive="router-link-active" *ngIf="currentPage !== item.id">{{item.display}}</a>
+            <a id="item.id" href="#" class="nav-item" [routerLink]="[item.url]" routerLinkActive="router-link-active"
+              [ngClass]="{'disabled': currentPage === item.id}">{{item.display}}</a>
           </a>
           <a mat-button href="#" (click)="logout()">
             <mat-icon color="warn">exit_to_app</mat-icon>

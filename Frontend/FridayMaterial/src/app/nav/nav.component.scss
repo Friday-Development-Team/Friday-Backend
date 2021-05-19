@@ -1,20 +1,24 @@
 @import "../shared/colors.scss";
 
-.spacer{
+.spacer {
     flex: 1 1 auto;
 }
 
-.nav-item{
+.nav-item {
     color: white;
     text-decoration: none;
     font-size: large;
     padding-left: 1vw;
     padding-right: 1vw;
 }
-.nav-item:hover{
+.nav-item:hover {
     color: lightgray;
 }
 
-mat-sidenav{
+mat-sidenav {
     background-color: $primary;
+}
+
+.disabled {
+    display: none;
 }

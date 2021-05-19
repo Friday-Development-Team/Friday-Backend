@@ -16,7 +16,7 @@ export class Cart {
 
 
     updateTotal() {
-        this.total = this.items.map(s => { return +s.item.price * +s.amount }).reduce((acc, cur) => acc + cur)
+        this.total = this.items.map(s => { return +s.item.price * +s.amount }).reduce((acc, cur) => acc + cur, 0)
     }
 
     has(id: number): boolean {
@@ -27,6 +27,20 @@ export class Cart {
         if (!this.has(item.item.id)) this.items.push(item)
         else
             this.items.find(s => s.item.id === item.item.id).addAmount(item.amount)
+        this.updateTotal()
+    }
+
+    remove(id: number, count: number) {
+        if (!this.has(id)) return false;
+        let item = this.items.find(s => s.item.id === id)
+        item.amount--
+        if (!!!item.amount)
+            this.items = this.items.filter(s => s !== item)
+        return true;
+    }
+
+    clear() {
+        this.items = []
         this.updateTotal()
     }
 }
@@ -40,15 +54,72 @@ export class OrderItem {
         return true
     }
 
-    getCost(){
+    getCost() {
         return +this.item.price * +this.amount
     }
 }
 
 export class OrderDTO {
     constructor(public items: OrderItemDTO[]) { }
-  }
-  
-  export class OrderItemDTO {
+}
+
+export class OrderItemDTO {
     constructor(public id: number, public amount: number) { }
-  }
+}
+
+export class CateringOrder {
+    constructor(
+        public id: number,
+        public items: HistoryOrderItem[], public user: string,
+        public statusFood: string,
+        public statusBeverage: string,
+        public orderTime: Date,
+        public totalPrice: number) { }
+
+    isActive(): boolean {
+        const bool = this.statusBeverage === 'Accepted' || this.statusBeverage === 'Accepted' || this.statusFood === 'SentToKitchen'
+        console.log(bool)
+        return bool
+    }
+}
+
+export class OrderHistory {
+    constructor(public orders?: HistoryOrder[], public username?: string) { }
+
+    fromJson(json: any) {
+        if (!json)
+            return
+        this.username = json.userName
+        this.orders = json.orders.map(s => {
+            let temp = new HistoryOrder()
+            temp.fromJson(s)
+            return s
+        })
+
+    }
+}
+
+export class HistoryOrder {
+
+    constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date,
+        public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
+
+    fromJson(json: any) {
+        this.totalPrice = json.totalPrice
+        this.orderTime = json.orderTime
+        this.completionTimeFood = json.completionTimeFood
+        this.completionTimeBeverage = json.completionTimeBeverage
+        this.items = json.items.map(s => {
+            let item = new HistoryOrderItem()
+            item.fromJson(s)
+            return item
+        })
+    }
+}
+export class HistoryOrderItem {
+    fromJson(json: any) {
+        this.itemName = json.itemName
+        this.amount = json.amount
+    }
+    constructor(public itemName?: string, public amount?: number) { }
+}
