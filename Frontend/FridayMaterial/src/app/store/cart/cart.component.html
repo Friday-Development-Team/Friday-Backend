@@ -4,14 +4,18 @@
       <!-- <caption>List of ordered items</caption> -->
 
       <tbody class="border">
-        <tr *ngFor="let item of items" (click)="delete(item)" class="clickable" matRipple [matRippleUnbounded]="false" >
+        <tr *ngFor="let item of items" (click)="delete(item)" class="clickable" matRipple [matRippleUnbounded]="false">
           <td>{{item.item.name}} X{{item.amount}}</td>
           <td>{{(item.item.price * item.amount) | currency }}</td>
+          <td><span class="material-icons">
+              delete_outline
+            </span></td>
         </tr>
 
         <tr>
           <th>Total:</th>
           <th>{{ (cart |async).total | currency }}</th>
+          <th></th>
         </tr>
 
       </tbody>

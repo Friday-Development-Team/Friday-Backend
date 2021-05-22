@@ -3,11 +3,11 @@ table {
   margin-top: 10px;
 }
 
-td{
+td {
   overflow-wrap: normal;
 }
 
-.noMargin{
-  margin: 0;
-  padding: 0;
+.hidden {
+  content: ".";
+  visibility: hidden;
 }

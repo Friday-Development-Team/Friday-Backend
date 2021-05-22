@@ -10,10 +10,11 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class RunningComponent implements OnInit {
 
-  private orders: Observable<CateringOrder[]>
+  orders: CateringOrder[]
 
   constructor(private data: DataService) {
-    
+    this.data.getOrderObservable().subscribe(s => this.orders = s)
+    this.data.startOrderPolling()
   }
 
   ngOnInit(): void {
