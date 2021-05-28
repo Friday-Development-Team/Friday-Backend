@@ -13,6 +13,7 @@ import { CartComponent } from './cart/cart.component';
 import { ItemcardComponent } from './itemcard/itemcard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RunningComponent } from './running/running.component';
+import { DialogComponent } from './dialog/dialog.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     CartComponent,
     ItemcardComponent,
     RunningComponent,
+    DialogComponent,
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart, Item, OrderDTO, OrderItem, OrderItemDTO } from "../models/models";
 import { DataService } from './data.service';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +13,8 @@ export class CartService {
   cart: Cart
   private cartChanges: BehaviorSubject<Cart>
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService, private spinner: SpinnerService) {
     this.cart = new Cart()
-    // this.cart.add(new OrderItem(new Item(1, "Test", 2, "Food", 50, null, null, ""), 3))
     this.cartChanges = new BehaviorSubject<Cart>(this.cart)
   }
 
@@ -31,8 +32,20 @@ export class CartService {
   }
 
   placeOrder() {
+    this.startSpinner()
     let dto = new OrderDTO(this.cart.items.map(s => new OrderItemDTO(s.item.id, s.amount)))
-    this.data.addOrder(dto).subscribe(s => console.log(s))
+    this.data.addOrder(dto).subscribe(s => {
+      this.clearCart()
+      this.stopSpinner()
+    })
+  }
+
+  startSpinner() {
+    this.spinner.startSpinner()
+  }
+
+  stopSpinner() {
+    this.spinner.stopSpinner(3000)
   }
 
   clearCart() {

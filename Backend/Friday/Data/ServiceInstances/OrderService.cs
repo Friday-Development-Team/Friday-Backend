@@ -233,7 +233,9 @@ namespace Friday.Data.ServiceInstances
         {
             return await users.Include(s => s.Orders).ThenInclude(s => s.Items).AsNoTracking()
                 .Where(s => s.Name == username)
-                .SelectMany(s => s.Orders).Where(s => s.IsOngoing())
+                .SelectMany(s => s.Orders).Where(s => s.StatusBeverage == OrderStatus.Pending || s.StatusBeverage == OrderStatus.Accepted ||
+                                                      s.StatusFood == OrderStatus.SentToKitchen || s.StatusFood == OrderStatus.Pending ||
+                                                      s.StatusFood == OrderStatus.Accepted)
                 .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)
                 .Select(s => new CateringOrder
                 {

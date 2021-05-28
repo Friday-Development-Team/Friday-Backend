@@ -1,38 +1,41 @@
 <ng-container *ngIf="!!orders.length; then thenTemplate; else elseTemplate"></ng-container>
 
 <ng-template #thenTemplate>
-    <div class="wrapper table-responsive-md">
-        <table class="table table-striped">
-            <tr class="for" *ngFor="let item of orders">
-                <div >
+    <div class="wrapper">
+        <div class="table-responsive-mid">
 
-                    <div class="row fitted">
+            <table class="table table-striped">
+                <tbody>
 
-                        <div class="fitted col-sm-6 col-12">
+                    <!-- 1 row per order -->
+                    <tr *ngFor="let order of orders">
+                        <div class="orderRow row">
 
-                            <div>
-                                <div>Ordered: {{order.orderTime | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+                            <!-- Status & Date -->
+                            <div class="col-12 col-md 6">
+                                <div>Ordered: {{order.orderTime | date : 'dd/MM/yyyy hh:mm'}}</div>
                                 <div class="status" *ngIf="order.statusBeverage !=='None'">Status drinks:
                                     {{order.statusBeverage}}</div>
                                 <div class="status" *ngIf="order.statusFood !=='None'">Status food: {{order.statusFood}}
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="fitted col-sm-4 offset-sm-1 col-12">
+                            <!-- Items & Total -->
+                            <div class="col-12 col-md 6">
+                                <div class="row" *ngFor="let item of order.items">
+                                    <div class="col-sm-8 col-4">{{item.itemName}} </div>
+                                    <div class="col-2">X{{item.amount}}</div>
+                                </div>
 
-                            <div class="row" *ngFor="let item of order.items">
-                                <div class="col-sm-8 col-4">{{item.itemName}} </div>
-                                <div class="col-2">X{{item.amount}}</div>
+                                <mat-divider [inset]="true">
+                                </mat-divider>
+                                <div class="priceTotal">Total: {{order.totalPrice | currency: 'EUR'}}</div>
                             </div>
-
-                            <div class="priceTotal">Total: {{order.totalPrice | currency: 'EUR'}}</div>
                         </div>
-
-                    </div>
-                </div>
-            </tr>
-        </table>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </ng-template>
 
