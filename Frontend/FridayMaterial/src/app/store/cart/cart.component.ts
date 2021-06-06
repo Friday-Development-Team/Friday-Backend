@@ -26,7 +26,6 @@ export class CartComponent implements OnInit {
 
   delete(item: OrderItem) {
     this.onDelete.emit(item.item.id)
-    console.log("Sending up from comp")
   }
 
 }

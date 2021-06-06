@@ -14,6 +14,7 @@ import { ItemcardComponent } from './itemcard/itemcard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RunningComponent } from './running/running.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { ErrordialogComponent } from './errordialog/errordialog.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     ItemcardComponent,
     RunningComponent,
     DialogComponent,
+    ErrordialogComponent,
   ],
   imports: [
     CommonModule,

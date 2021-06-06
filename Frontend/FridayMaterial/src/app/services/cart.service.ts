@@ -31,13 +31,15 @@ export class CartService {
     return this.cartChanges
   }
 
-  placeOrder() {
+  placeOrder(): Observable<number> {
     this.startSpinner()
     let dto = new OrderDTO(this.cart.items.map(s => new OrderItemDTO(s.item.id, s.amount)))
-    this.data.addOrder(dto).subscribe(s => {
-      this.clearCart()
-      this.stopSpinner()
-    })
+    return this.data.addOrder(dto).pipe(
+      s => {
+        this.clearCart()
+        this.stopSpinner()
+        return s
+      })
   }
 
   startSpinner() {
