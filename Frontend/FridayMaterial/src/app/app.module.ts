@@ -27,13 +27,12 @@ import { httpInterceptorProviders } from './auth/interceptors';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    
-    MaterialModule
+    MaterialModule,
   ],
   providers: [
     HttpClientModule,
     httpInterceptorProviders
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

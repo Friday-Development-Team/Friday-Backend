@@ -17,7 +17,7 @@ export class NavComponent implements OnInit {
     { id: 'shop', url: this.urlBase + 'store/shop/', display: 'Shop' },
     { id: 'history', url: this.urlBase + 'store/history/', display: 'Order history' },
     { id: 'running', url: this.urlBase + 'store/running/', display: 'Running orders' },
-    { id: 'management', url: this.urlBase + 'management/', display: 'Management' },
+    { id: 'management', url: this.urlBase + 'manage/', display: 'Management' },
   ]
 
   constructor(private navService: NavService, private auth: AuthService) { 

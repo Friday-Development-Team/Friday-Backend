@@ -85,28 +85,28 @@ export class AuthService {
     )
   }
   /**
-   * Checks if the user has a certain role or at least one of the required roels (only used for UI, always in conjunction with backend auth)
+   * Checks if the user has a certain role or at least one of the required roles (only used for UI, always in conjunction with backend auth)
    * @param role Roles to be checked
    */
-  // hasRole(role: string[]): Observable<boolean> {
-  //   let response =
-  //     ((!!this.roles)
-  //       ? of(this.roles)
-  //       : this.getRoles())
+  hasRole(role: string[]): Observable<boolean> {
+    let response =
+      ((!!this.roles)
+        ? of(this.roles)
+        : this.getRoles())
 
-  //   return response.pipe(map(s => {
-  //     this.roles = s
-  //     return s.map(t => t.toLowerCase())
-  //   }), map(t => <boolean>
-  //     (role.length === 1
-  //       ? t.includes(role[0].toLowerCase())//if only 1 role
-  //       : role.some(u => t.includes(u)))
-  //   ))
-  // }
+    return response.pipe(map(s => {
+      this.roles = s
+      return s.map(t => t.toLowerCase())
+    }), map(t => <boolean>
+      (role.length === 1
+        ? t.includes(role[0].toLowerCase())//if only 1 role
+        : role.some(u => t.includes(u)))
+    ))
+  }
 
-  // getRoles(): Observable<string[]> {
-  //   return this.http.get<string[]>(`${environment.apiUrl}/user/roles`)
-  // }
+  getRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/user/roles`)
+  }
 
 }
 

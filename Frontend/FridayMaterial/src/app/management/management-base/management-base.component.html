@@ -1,1 +1,30 @@
-<p>management-base works!</p>
+<div class="wrapper">
+
+    <mat-tab-group>
+
+        <!-- Home screen -->
+        <mat-tab label="Home">
+            <div class="wrapper">
+                <h2>Welkom bij de managementmodule. Selecteer een tabblad bovenaan om verder te gaan.</h2>
+                <p>Indien er geen tabbladen zichtbaar zijn, heb je geen rechten om hier te zijn. Begone
+                    <em><strong>thot</strong></em>.
+                </p>
+            </div>
+        </mat-tab>
+
+        <!-- Admin module -->
+        <mat-tab label="Admin" *ngIf="hasRole('admin')">
+            <div class="wrapper">
+                <friday-admin></friday-admin>
+            </div>
+        </mat-tab>
+
+        <!-- Catering module -->
+        <mat-tab label="Catering" *ngIf="hasRole('catering')">
+            <div class="wrapper">
+                <friday-catering-management></friday-catering-management>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>
