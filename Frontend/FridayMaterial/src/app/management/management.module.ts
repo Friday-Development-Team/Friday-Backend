@@ -4,7 +4,6 @@ import { ManagementBaseComponent } from './management-base/management-base.compo
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { CateringManagementComponent } from './catering/catering.component';
-import { KitchenManagementComponent } from './kitchen/kitchen.component';
 import { RoleGuard } from './role.guard';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,7 +26,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [ManagementBaseComponent, AdminComponent, CateringManagementComponent, KitchenManagementComponent],
+  declarations: [ManagementBaseComponent, AdminComponent, CateringManagementComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
