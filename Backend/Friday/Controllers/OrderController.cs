@@ -145,11 +145,13 @@ namespace Friday.Controllers
         [AuthorizeAdminOrCatering]
         public async Task<ActionResult<bool>> Complete(int id, [FromBody] string type)
         {
-            if (type.ToLower() != "food" && type.ToLower() != "beverage" && type.ToLower() != "both")
+            string[] types = { "food", "beverage", "both" };// All possible types
+
+            if (!types.Contains(type.ToLower()))// Filter bad types
                 return BadRequest();
 
             try
-            {
+            {//TODO Refactor to single service call
                 if (type.ToLower() == "both")
                 {
                     await service.SetCompleted(id, true);
@@ -187,6 +189,7 @@ namespace Friday.Controllers
                 return NotFound();
             }
         }
+
         /// <summary>
         /// Returns a List of all the ongoing Orders
         /// </summary>
@@ -198,6 +201,7 @@ namespace Friday.Controllers
         {
             return Ok(await service.GetAll(isKitchen));
         }
+
         /// <summary>
         /// Returns a list of all the running orders of a user, sorted by Accepted first, then by date
         /// </summary>

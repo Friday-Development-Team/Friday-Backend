@@ -69,12 +69,15 @@ namespace Friday.Data.ServiceInstances
         public async Task<bool> SetAccepted(int id, bool value, bool toKitchen)
         {
 
-            var needsKitchen = await context.Configuration.SingleAsync();
+            var needsKitchen = await context.Configuration.SingleAsync();// Get config options first
 
+            // Sets the new value based on the config
             var changed = value ? (toKitchen && !needsKitchen.CombinedCateringKitchen ? OrderStatus.SentToKitchen : OrderStatus.Accepted) : OrderStatus.Pending;
-            var item = orders.SingleOrDefault(s => s.Id == id);
 
-            if (item == null || item.StatusBeverage == OrderStatus.Completed || item.StatusFood == OrderStatus.Completed || !item.IsOngoing() ||
+            var item = await orders.SingleAsync(s => s.Id == id);
+
+            // Throw out if invalid status
+            if (item.StatusBeverage == OrderStatus.Completed || item.StatusFood == OrderStatus.Completed || !item.IsOngoing() ||
                 (item.StatusFood == OrderStatus.None && toKitchen))
                 return false;
 
@@ -89,20 +92,24 @@ namespace Friday.Data.ServiceInstances
             await context.SaveChangesAsync();
             return true;
         }
+
         /// <inheritdoc />
         public async Task<int> PlaceOrder(string username, OrderDTO orderdto)
         {
+            // Throw out invalid data first
             if (orderdto == null || !orderdto.IsValid())
                 throw new ArgumentException("Order could not be found");
 
             var user = await users.SingleAsync(s => s.Name == username);
 
+            // Create new order object
             var order = new Order
             {
                 User = user,
                 OrderTime = DateTime.Now
             };
 
+            // Create list of order items from dto 
             var orderitems = orderdto.Items.Select(s =>
                     new OrderItem
                     {
@@ -111,20 +118,27 @@ namespace Friday.Data.ServiceInstances
                         Amount = s.Amount
                     })
                 .ToList();
+
+            // And get total price
             var totalPrice = orderitems.Select(s => (s.Amount * s.Item.Price)).Sum();
 
+            // Balance check
             if (!user.HasBalance(totalPrice))
                 return 0;
+
 
             var hasBev = orderitems.Any(s => s.Item.Type == ItemType.Beverage);
             var hasFood = orderitems.Any(s => s.Item.Type == ItemType.Food);
 
+            // Set status to none if none are present
             order.StatusBeverage = (hasBev ? OrderStatus.Pending : OrderStatus.None);
             order.StatusFood = (hasFood ? OrderStatus.Pending : OrderStatus.None);
 
+
             order.Items = orderitems;
-            // IList<Item> rem = new List<Item>();
             var log = new Dictionary<Item, int>();
+
+            // Go over all items and change their count
             foreach (var item in orderdto.Items)
             {
                 var dbItem = await items.SingleAsync(s => s.Id == item.Id);
@@ -146,9 +160,6 @@ namespace Friday.Data.ServiceInstances
             }
 
             var result = await orders.AddAsync(order);//Order added
-            //user.UpdateBalance(-totalPrice);
-
-            //users.Update(user);//Updated user
 
             await context.SaveChangesAsync();
 
@@ -160,15 +171,18 @@ namespace Friday.Data.ServiceInstances
 
         private async void RevertUser(ShopUser user, double amount)
         {
-            await userService.ChangeBalance(user.Id, amount, false);
+            await userService.ChangeBalance(user.Id, amount, false);// Change it back
             user.UpdateBalance(amount);
         }
 
         /// <inheritdoc />
         public async Task<bool> SetCompleted(int id, bool forBeverage)
         {
+
             var order = await orders.SingleAsync(s => s.Id == id);
-            if ((forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))//Only accepted orders can be completed. SentToKitchen has to return them to Catering.
+
+            //Only accepted orders can be completed. SentToKitchen has to return them to Catering.
+            if ((forBeverage ? order.StatusBeverage != OrderStatus.Accepted : order.StatusFood != OrderStatus.Accepted))
                 return false;
 
             if (forBeverage)
@@ -191,10 +205,14 @@ namespace Friday.Data.ServiceInstances
         public async Task<bool> Cancel(int id)
         {
             var order = await orders.SingleAsync(s => s.Id == id);
+
+            // Check config first
             if (!order.CanBeCancelled((await context.Configuration.SingleAsync()).CancelOnAccepted))
                 return false;
+
             order.StatusBeverage = OrderStatus.Cancelled;
             order.StatusFood = OrderStatus.Cancelled;
+
             orders.Update(order);
             await context.SaveChangesAsync();
             return true;
@@ -213,9 +231,10 @@ namespace Friday.Data.ServiceInstances
                 .ThenInclude(s => s.Item)
                 .ThenInclude(s => s.ItemDetails)
                 .Include(s => s.User)
-                .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.IsOngoing()))
-                .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime).AsNoTracking()
-                .Select(s => new CateringOrder
+                .AsNoTracking()
+                .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.IsOngoing()))// TODO Refactor to not use object method
+                .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)
+                .Select(s => new CateringOrder // Put into DTO output object
                 {
                     Id = s.Id,
                     StatusBeverage = isKitchen ? OrderStatus.None : s.StatusBeverage,
@@ -233,7 +252,9 @@ namespace Friday.Data.ServiceInstances
         {
             return await users.Include(s => s.Orders).ThenInclude(s => s.Items).AsNoTracking()
                 .Where(s => s.Name == username)
-                .SelectMany(s => s.Orders).Where(s => s.StatusBeverage == OrderStatus.Pending || s.StatusBeverage == OrderStatus.Accepted ||
+                .SelectMany(s => s.Orders)
+                // Check status for running only
+                .Where(s => s.StatusBeverage == OrderStatus.Pending || s.StatusBeverage == OrderStatus.Accepted ||
                                                       s.StatusFood == OrderStatus.SentToKitchen || s.StatusFood == OrderStatus.Pending ||
                                                       s.StatusFood == OrderStatus.Accepted)
                 .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)

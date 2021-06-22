@@ -72,7 +72,7 @@ namespace Friday.Data.ServiceInstances
         {
             var setseat = (await context.Configuration.SingleAsync()).UsersSetSpot;
             return await users.Where(t => t.Name == username).Select(user => new ShopUserDTO
-                {Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null}).SingleAsync();
+            { Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null }).SingleAsync();
         }
         private async Task LogMoney(ShopUser user, double count)
         {

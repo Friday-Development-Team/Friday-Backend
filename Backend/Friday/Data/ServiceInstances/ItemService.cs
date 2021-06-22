@@ -38,9 +38,12 @@ namespace Friday.Data.ServiceInstances
         {
             if (user == null)
                 throw new Exception();
+
             var item = await items.SingleAsync(s => s.Id == id);
+
             if ((amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
                 throw new ArgumentException("You can't change an Item's count below zero!");
+
             item.Count += amount;
 
             items.Update(item);

@@ -33,7 +33,7 @@ export class Cart {
     remove(id: number, count: number) {
         if (!this.has(id)) return false;
         let item = this.items.find(s => s.item.id === id)
-        item.amount--
+        item.amount-=count
         if (!!!item.amount)
             this.items = this.items.filter(s => s !== item)
         return true;
