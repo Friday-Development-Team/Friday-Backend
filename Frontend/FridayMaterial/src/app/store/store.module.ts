@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from '../services/auth/auth.service';
+import { AuthService } from '../services/auth.service';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { ShopComponent } from './shop/shop.component';
@@ -14,7 +14,6 @@ import { ItemcardComponent } from './itemcard/itemcard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RunningComponent } from './running/running.component';
 import { DialogComponent } from './dialog/dialog.component';
-import { ErrordialogComponent } from './errordialog/errordialog.component';
 
 const routes: Routes = [
   {
@@ -38,7 +37,6 @@ const routes: Routes = [
     ItemcardComponent,
     RunningComponent,
     DialogComponent,
-    ErrordialogComponent,
   ],
   imports: [
     CommonModule,

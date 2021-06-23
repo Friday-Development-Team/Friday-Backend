@@ -8,8 +8,6 @@ import { Form } from '@angular/forms';
 })
 export class AdminComponent implements OnInit {
 
-  form: Form
-
   constructor() { }
 
   ngOnInit(): void {

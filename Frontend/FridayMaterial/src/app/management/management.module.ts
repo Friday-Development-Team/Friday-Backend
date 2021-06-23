@@ -7,6 +7,13 @@ import { CateringManagementComponent } from './catering/catering.component';
 import { RoleGuard } from './role.guard';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdduserComponent } from './tools/admin/adduser/adduser.component';
+import { AdjustuserComponent } from './tools/admin/adjustuser/adjustuser.component';
+import { ConfigComponent } from './tools/admin/config/config.component';
+import { LogsComponent } from './tools/admin/logs/logs.component';
+import { AdditemComponent } from './tools/catering/additem/additem.component';
+import { ManagestockComponent } from './tools/catering/managestock/managestock.component';
+import { TotalhistoryComponent } from './tools/catering/totalhistory/totalhistory.component';
 
 const routes: Routes = [
   {
@@ -26,7 +33,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [ManagementBaseComponent, AdminComponent, CateringManagementComponent],
+  declarations: [ManagementBaseComponent, AdminComponent, CateringManagementComponent, AdduserComponent, AdjustuserComponent, ConfigComponent, LogsComponent, AdditemComponent, ManagestockComponent, TotalhistoryComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

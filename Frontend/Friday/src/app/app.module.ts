@@ -10,7 +10,6 @@ import { StoreModule } from './store/store.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { httpInterceptorProviders } from './interceptors';
-import { registerLocaleData } from '@angular/common';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -26,7 +25,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     StoreModule,
     NgbModule
   ],
-  providers:[
+  providers: [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Cart } from 'src/app/models/models';
 import { CartService } from 'src/app/services/cart.service';
 import { DataService } from 'src/app/services/data.service';
-import { ErrordialogComponent } from '../errordialog/errordialog.component';
+import { MessageDialogComponent } from 'src/app/shared/messagedialog/messagedialog.component';
 
 @Component({
   selector: 'friday-cart-container',
@@ -32,7 +32,7 @@ export class CartContainerComponent implements OnInit {
     this.cartService.placeOrder().subscribe(
       s => this.router.navigate(["main/store/running"]),
       err => {
-        this.dialog.open(ErrordialogComponent, {
+        this.dialog.open(MessageDialogComponent, {
           data: "Er is iets misgegaan met het plaatsen van je order. Probeer het opnieuw of vraag hulp aan de verantwoordelijke."
         })
       }

@@ -33,7 +33,7 @@ export class Cart {
     remove(id: number, count: number) {
         if (!this.has(id)) return false;
         let item = this.items.find(s => s.item.id === id)
-        item.amount-=count
+        item.amount -= count
         if (!!!item.amount)
             this.items = this.items.filter(s => s !== item)
         return true;
@@ -122,4 +122,8 @@ export class HistoryOrderItem {
         this.amount = json.amount
     }
     constructor(public itemName?: string, public amount?: number) { }
+}
+
+export class ShopUser {
+    constructor(public name: string, public balance: number) { }
 }
