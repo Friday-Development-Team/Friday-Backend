@@ -15,21 +15,26 @@ export class AdjustuserComponent implements OnInit {
   selectedUser: ShopUser
   users: Observable<ShopUser[]>
   form: FormGroup
+  newVal: number = 0
 
   constructor(private tool: ToolService, private dialog: DialogService, fb: FormBuilder) {
     this.form = fb.group({
       users: fb.control("", Validators.required),
       amount: fb.control(""),
       passwords: fb.group({
-        password: fb.control("", [Validators.required]),
-        passwordConfirm: fb.control("", [Validators.required])
+        password: fb.control(""),
+        passwordConfirm: fb.control("")
       }, { validator: this.passwordConfirming })
     })
 
     this.form.get("users").valueChanges.subscribe(s => {
-      this.selectedUser = this.form.get("users").value
+      this.selectedUser = s
       this.form.get("amount").setValue(this.selectedUser.balance)
       this.form.updateValueAndValidity()
+    })
+
+    this.form.get("amount").valueChanges.subscribe(s => {
+      this.newVal = +this.selectedUser.balance + +s
     })
   }
 
@@ -52,8 +57,14 @@ export class AdjustuserComponent implements OnInit {
     const balance = this.form.get("amount").value
     const pass = this.form.get("passwords.password").value
 
+    // Check if balance is changed
     if (balance !== this.selectedUser.balance) {
       this.tool.adjustUserBalance(balance).subscribe()
+    }
+
+    // Check if pass is changed
+    if (!!pass) {
+      this.tool.changePass(pass).subscribe()
     }
   }
 

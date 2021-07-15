@@ -17,4 +17,8 @@ export class ToolService {
     throw new Error('Method not implemented.');
   }
 
+  changePass(pass: string): Observable<any> {
+    throw new Error('Method not implemented.');
+  }
+
 }

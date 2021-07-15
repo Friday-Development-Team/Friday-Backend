@@ -1,1 +1,44 @@
-<p>adjustuser works!</p>
+<div class="wrapper">
+    <form class="" [formGroup]="form" (ngSubmit)="submit()">
+
+        <fieldset>
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Current balance</mat-label>
+                    <input matInput type="number" readonly="true">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Amount to add</mat-label>
+                    <input formControlName="amount" type="number" matInput placeholder="Amount to add">
+                    <mat-hint align="end">Negative number to subtract</mat-hint>
+                </mat-form-field>
+            </div>
+        </fieldset>
+
+        <div formGroupName="passwords">
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Password</mat-label>
+                    <input formControlName="password" type="password" matInput placeholder="Password">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Confirm password</mat-label>
+                    <input formControlName="passwordConfirm" type="password" matInput placeholder="Confirm password">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <button type="submit" [disabled]="!form.valid" class="btn btn-primary">
+                Add User
+            </button>
+        </div>
+
+    </form>
+</div>
