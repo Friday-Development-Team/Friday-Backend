@@ -32,7 +32,7 @@ export class ConfigComponent implements OnInit {
       this._updateForm(s)
     })
 
-    // Test
+    // Test u dikke moeder
 
   }
 
