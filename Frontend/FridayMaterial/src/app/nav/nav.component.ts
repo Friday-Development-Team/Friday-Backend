@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { NavService } from '../services/nav.service';
+import { Component, OnInit } from '@angular/core'
+import { AuthService } from '../services/auth.service'
+import { NavService } from '../services/nav.service'
 
 @Component({
   selector: 'friday-nav',
@@ -9,32 +9,32 @@ import { NavService } from '../services/nav.service';
 })
 export class NavComponent implements OnInit {
 
-  currentPage: string = ""
-  readonly urlBase: string = "/main/"
+  currentPage = ''
+  readonly urlBase: string = '/main/'
 
-  
-  readonly navs: NavElement[]= [
+
+  readonly navs: NavElement[] = [
     { id: 'shop', url: this.urlBase + 'store/shop/', display: 'Shop' },
     { id: 'history', url: this.urlBase + 'store/history/', display: 'Order history' },
     { id: 'running', url: this.urlBase + 'store/running/', display: 'Running orders' },
-    { id: 'management', url: this.urlBase + 'manage/', display: 'Management' },
+    { id: 'manage', url: this.urlBase + 'manage', display: 'Management' },
   ]
 
-  constructor(private navService: NavService, private auth: AuthService) { 
-    this.navService.getCurrentNavPage().subscribe(s=> this.currentPage=s)
+  constructor(private navService: NavService, private auth: AuthService) {
+    this.navService.getCurrentNavPage().subscribe(s => this.currentPage = s)
   }
 
   ngOnInit(): void {
   }
 
-  logout(){
+  logout(): void {
     this.auth.logout()
   }
 
 }
 
 
-class NavElement{
+class NavElement {
   /**
    *
    */

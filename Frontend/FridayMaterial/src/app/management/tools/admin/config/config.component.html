@@ -1,1 +1,41 @@
-<p>config works!</p>
+<div class="wrapper">
+    <form (ngSubmit)="submit()" [formGroup]="form">
+        <fieldset>
+            <div class="checkboxwrapper">
+                <mat-checkbox
+                    color="primary"
+                    formControlName="combinedCateringKitchen"
+                    type="checkbox"
+                >
+                    Combine catering & kitchen
+                </mat-checkbox>
+
+                <mat-checkbox
+                    formControlName="usersSetSpot"
+                    type="checkbox"
+                    color="primary"
+                >
+                    Users have a set spot
+                </mat-checkbox>
+
+                <mat-checkbox
+                    formControlName="cancelOnAccepted"
+                    type="checkbox"
+                    color="primary"
+                >
+                    Cancel accepted orders
+                </mat-checkbox>
+            </div>
+        </fieldset>
+
+        <div class="wrapper">
+            <button
+                type="submit"
+                [disabled]="!form.valid"
+                class="btn btn-primary"
+            >
+                Add User
+            </button>
+        </div>
+    </form>
+</div>

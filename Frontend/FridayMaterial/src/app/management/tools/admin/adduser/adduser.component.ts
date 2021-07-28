@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog.service';
-import { SpinnerService } from 'src/app/services/spinner.service';
-import { ToolService } from 'src/app/services/tool.service';
-import { MessageDialogComponent } from 'src/app/shared/messagedialog/messagedialog.component';
+import { Component, OnInit } from '@angular/core'
+import { AbstractControl, Form, FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogService } from 'src/app/services/dialog.service'
+import { SpinnerService } from 'src/app/services/spinner.service'
+import { ToolService } from 'src/app/services/tool.service'
+import { MessageDialogComponent } from 'src/app/shared/messagedialog/messagedialog.component'
 
 @Component({
   selector: 'friday-adduser',
@@ -17,24 +17,23 @@ export class AdduserComponent implements OnInit {
 
   constructor(private tool: ToolService, private dialog: DialogService, private spinner: SpinnerService, fb: FormBuilder) {
     this.form = fb.group({
-      username: fb.control("", [Validators.required, Validators.email]),
+      username: fb.control('', [Validators.required, Validators.email]),
       passwords: fb.group({
-        password: fb.control("", [Validators.required]),
-        passwordConfirm: fb.control("", [Validators.required])
+        password: fb.control('', [Validators.required]),
+        passwordConfirm: fb.control('', [Validators.required])
       }, { validator: this.passwordConfirming })
     })
-
   }
 
   ngOnInit(): void {
   }
 
-  addUser() {
-    if (this.form.invalid || this.form.get("password").invalid)
+  addUser(): void {
+    if (this.form.invalid || this.form.get('password').invalid)
       return
 
-    const username = this.form.get("username").value
-    const pass = this.form.get("passwords").get("password").value
+    const username = this.form.get('username').value
+    const pass = this.form.get('passwords').get('password').value
 
     this.spinner.startSpinner()
 
@@ -53,8 +52,8 @@ export class AdduserComponent implements OnInit {
     if (group.invalid)
       return { invalid: true }
 
-    if (group.get("password").value !== group.get("passwordConfirm").value) {
-      return { invalid: true };
+    if (group.get('password').value !== group.get('passwordConfirm').value) {
+      return { invalid: true }
     }
   }
 

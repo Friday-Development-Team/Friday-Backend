@@ -3,20 +3,22 @@
  */
 
 export class Item {
-    constructor(public id: number, public name: string, public price: number, public type: string, public count: number, public itemDetails: ItemDetails, public logs: null, public normalizedImageName: string) { }
+    constructor(public id: number, public name: string, public price: number, public type: string,
+                public count: number, public itemDetails: ItemDetails, public logs: null, public normalizedImageName: string) { }
 }
 
 export class ItemDetails {
-    constructor(public id: number, public itemId: number, public size: string, public calories: number, public sugarContent: number, public saltContent: number, public allergens: number) { }
+    constructor(public id: number, public itemId: number, public size: string, public calories: number,
+                public sugarContent: number, public saltContent: number, public allergens: number) { }
 }
 
 export class Cart {
-    total: number = 0
+    total = 0
     items: OrderItem[] = []
 
 
     updateTotal() {
-        this.total = this.items.map(s => { return +s.item.price * +s.amount }).reduce((acc, cur) => acc + cur, 0)
+        this.total = this.items.map(s => +s.item.price * +s.amount).reduce((acc, cur) => acc + cur, 0)
     }
 
     has(id: number): boolean {
@@ -31,12 +33,12 @@ export class Cart {
     }
 
     remove(id: number, count: number) {
-        if (!this.has(id)) return false;
-        let item = this.items.find(s => s.item.id === id)
+        if (!this.has(id)) return false
+        const item = this.items.find(s => s.item.id === id)
         item.amount -= count
         if (!!!item.amount)
             this.items = this.items.filter(s => s !== item)
-        return true;
+        return true
     }
 
     clear() {
@@ -91,7 +93,7 @@ export class OrderHistory {
             return
         this.username = json.userName
         this.orders = json.orders.map(s => {
-            let temp = new HistoryOrder()
+            const temp = new HistoryOrder()
             temp.fromJson(s)
             return s
         })
@@ -102,7 +104,7 @@ export class OrderHistory {
 export class HistoryOrder {
 
     constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date,
-        public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
+                public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
 
     fromJson(json: any) {
         this.totalPrice = json.totalPrice
@@ -110,7 +112,7 @@ export class HistoryOrder {
         this.completionTimeFood = json.completionTimeFood
         this.completionTimeBeverage = json.completionTimeBeverage
         this.items = json.items.map(s => {
-            let item = new HistoryOrderItem()
+            const item = new HistoryOrderItem()
             item.fromJson(s)
             return item
         })
@@ -126,4 +128,8 @@ export class HistoryOrderItem {
 
 export class ShopUser {
     constructor(public name: string, public balance: number) { }
+}
+
+export class Configuration {
+    constructor(public combinedCateringKitchen: boolean, public usersSetSpot: boolean, public cancelOnAccepted: boolean) { }
 }

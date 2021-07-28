@@ -14,17 +14,17 @@ export class DialogService {
    * @param timeout Time in milliseconds after which the dialog will autoclose. Set to -1 to not close automatically.
    * @param data Text to display
    */
-  openTimedDialog(timeout: number, data?: string) {
-    if (timeout < 0 && timeout != -1)
+  openTimedDialog(timeout: number, data?: string): void {
+    if (timeout < 0 && timeout !== -1)
       return
 
     this.dialog.open(MessageDialogComponent, { data })
 
-    if (timeout != -1)
+    if (timeout !== -1)
       setTimeout(() => this.dialog.closeAll(), timeout)
   }
 
-  displayErrorMessage(err: string) {
+  displayErrorMessage(err: string): void {
     this.openTimedDialog(-1, err)
   }
 }
