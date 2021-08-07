@@ -63,7 +63,7 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<IList<ItemAmountDTO>> GetRemainingStock()
         {
-            return await items.Select(s => new ItemAmountDTO { Item = s, Amount = s.Count }).ToListAsync();
+            return await items.Select(s => new ItemAmountDTO { Item = s.Name, Amount = s.Count }).ToListAsync();
         }
         /// <inheritdoc />
         public Task<double> GetTotalIncome()
@@ -73,18 +73,17 @@ namespace Friday.Data.ServiceInstances
         /// <inheritdoc />
         public async Task<IList<ItemAmountDTO>> GetTotalStockSold()
         {
-            //var result = itemLogs.Where(s => s.Amount < 0).ToList();
-            //return result.ToDictionary(s => s.Item, s => result.Where(t => t.Equals(s))).Select(s => new ItemAmountDTO { Item = s.Key, Amount = s.Value.Sum(t => t.Amount) }).ToList();
-            return (await itemLogs.AsNoTracking()
+            var temp = await itemLogs.Include(s => s.Item).AsNoTracking()
                 .Where(s => s.Count < 0) // Subtractions only
-                .GroupBy(s => s.Item)
+                .GroupBy(s => s.Item.Name)
                 .Select(s =>
-                    new ItemAmountDTO
+                    new
                     {
                         Item = s.Key,
-                        Amount = Convert.ToInt32(s.Sum(t => t.Count) * -1)//Sum of all logs, *-1 to convert to positive value
+                        Amount = s.Sum(t => t.Count) * -1 //Sum of all logs, *-1 to convert to positive value
                     })
-                .ToListAsync());
+                .ToListAsync();
+            return temp.Select(s => new ItemAmountDTO { Item = s.Item, Amount = Convert.ToInt32(s.Amount) }).ToList();
         }
 
     }

@@ -72,7 +72,7 @@ namespace Friday.Models
     public enum OrderStatus
     {
         /// <summary>
-        /// Order has been Accepted and is being handlead
+        /// Order has been Accepted and is being handled
         /// </summary>
         Accepted,//Should be first to be able to order all orders
         /// <summary>

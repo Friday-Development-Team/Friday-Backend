@@ -7,7 +7,7 @@
         /// <summary>
         /// Item
         /// </summary>
-        public Item Item { get; set; }
+        public string Item { get; set; }
         /// <summary>
         /// Amount of said Item
         /// </summary>

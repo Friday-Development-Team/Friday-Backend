@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Cart, Item, OrderDTO, OrderItem, OrderItemDTO } from "../models/models";
-import { DataService } from './data.service';
-import { SpinnerService } from './spinner.service';
+import { Injectable } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { Cart, Item, OrderDTO, OrderItem, OrderItemDTO } from '../models/models'
+import { DataService } from './data.service'
+import { SpinnerService } from './spinner.service'
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,12 @@ export class CartService {
     this.cartChanges = new BehaviorSubject<Cart>(this.cart)
   }
 
-  addItem(orderItem: OrderItem) {
+  addItem(orderItem: OrderItem): void {
     this.cart.add(orderItem)
     this._update()
   }
 
-  _update() {
+  _update(): void {
     this.cartChanges.next(this.cart)
   }
 
@@ -33,7 +33,7 @@ export class CartService {
 
   placeOrder(): Observable<number> {
     this.startSpinner()
-    let dto = new OrderDTO(this.cart.items.map(s => new OrderItemDTO(s.item.id, s.amount)))
+    const dto = new OrderDTO(this.cart.items.map(s => new OrderItemDTO(s.item.id, s.amount)))
     return this.data.addOrder(dto).pipe(
       s => {
         this.clearCart()
@@ -42,20 +42,20 @@ export class CartService {
       })
   }
 
-  startSpinner() {
+  startSpinner(): void {
     this.spinner.startSpinner()
   }
 
-  stopSpinner() {
+  stopSpinner(): void {
     this.spinner.stopSpinner(3000)
   }
 
-  clearCart() {
+  clearCart(): void {
     this.cart.clear()
     this._update()
   }
 
-  lowerCount(id: number) {
+  lowerCount(id: number): void {
     this.cart.remove(id, 1)
     this._update()
   }
