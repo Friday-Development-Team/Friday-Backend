@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from '../shared/messagedialog/messagedialog.component';
+import { Injectable } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
+import { MessageDialogComponent } from '../shared/messagedialog/messagedialog.component'
 
 @Injectable({
   providedIn: 'root'

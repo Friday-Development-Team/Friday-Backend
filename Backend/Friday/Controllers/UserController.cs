@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Friday.DTOs.Auth;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -101,6 +102,21 @@ namespace Friday.Controllers
         public async Task<ActionResult<bool>> CheckAvailableUserName(string name)
         {
             return await userManager.FindByNameAsync(name) == null;
+        }
+
+        /// <summary>
+        /// UpdatePassword method. Checks the provided credentials and updates the password
+        /// </summary>
+        /// <param name="model">Model containing information</param>
+        /// <returns>JWT token</returns>
+        [Authorize(Roles = Role.Admin)]
+        [HttpPut("password")]
+        public async Task<ActionResult<string>> ChangePassword([FromBody] PasswordChangeDTO model)
+        {
+            var user = await userManager.FindByNameAsync(model.Username);
+            if (user != null && (await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword)).Succeeded)
+                return Ok();
+            return BadRequest();
         }
 
         /// <summary>

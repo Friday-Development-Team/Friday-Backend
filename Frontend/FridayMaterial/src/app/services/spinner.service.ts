@@ -9,11 +9,11 @@ export class SpinnerService {
 
   constructor(private dialog: MatDialog) { }
 
-  startSpinner() {
+  startSpinner(): void {
     this.dialog.open(DialogComponent)
   }
 
-  stopSpinner(delay: number) {
+  stopSpinner(delay: number): void {
     setTimeout(() => this.dialog.closeAll(), delay)
   }
 }

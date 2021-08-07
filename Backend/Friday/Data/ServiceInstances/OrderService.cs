@@ -232,7 +232,9 @@ namespace Friday.Data.ServiceInstances
                 .ThenInclude(s => s.ItemDetails)
                 .Include(s => s.User)
                 .AsNoTracking()
-                .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.IsOngoing()))// TODO Refactor to not use object method
+                .Where(s => (isKitchen ? s.StatusFood == OrderStatus.SentToKitchen : s.StatusBeverage == OrderStatus.Pending || s.StatusBeverage == OrderStatus.Accepted ||
+                    s.StatusFood == OrderStatus.SentToKitchen || s.StatusFood == OrderStatus.Pending ||
+                    s.StatusFood == OrderStatus.Accepted))// 
                 .OrderBy(s => (int)s.StatusBeverage).ThenBy(s => (int)s.StatusFood).ThenBy(s => s.OrderTime)
                 .Select(s => new CateringOrder // Put into DTO output object
                 {

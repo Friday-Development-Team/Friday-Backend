@@ -1,7 +1,9 @@
+import { CurrencyPipe } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { ShopUser } from 'src/app/models/models'
+import { DataService } from 'src/app/services/data.service'
 import { DialogService } from 'src/app/services/dialog.service'
 import { SpinnerService } from 'src/app/services/spinner.service'
 import { ToolService } from 'src/app/services/tool.service'
@@ -18,13 +20,17 @@ export class AdjustuserComponent implements OnInit {
   newVal = 0
 
   constructor(
+    private data: DataService,
     private tool: ToolService,
     private spinner: SpinnerService,
     private dialog: DialogService,
-    fb: FormBuilder
+    private currencyPipe: CurrencyPipe,
+    fb: FormBuilder,
   ) {
+    this.users = this.data.getUsers()
     this.form = fb.group({
       users: fb.control('', Validators.required),
+      currentbalance: fb.control(null),
       amount: fb.control(''),
       passwords: fb.group(
         {
@@ -37,7 +43,7 @@ export class AdjustuserComponent implements OnInit {
 
     this.form.get('users').valueChanges.subscribe((s) => {
       this.selectedUser = s
-      this.form.get('amount').setValue(this.selectedUser.balance)
+      this.form.get('currentbalance').setValue(this.currencyPipe.transform(this.selectedUser.balance, 'EUR'))
       this.form.updateValueAndValidity()
     })
 
@@ -61,6 +67,7 @@ export class AdjustuserComponent implements OnInit {
 
     const balance = this.form.get('amount').value
     const pass = this.form.get('passwords.password').value
+    const name = this.selectedUser.name
 
     const balanceChanged = balance !== this.selectedUser.balance
     const passChanged = !!pass
@@ -75,7 +82,7 @@ export class AdjustuserComponent implements OnInit {
       // Check if balance is changed
       if (balanceChanged) {
         balanceChangeDone = false
-        this.tool.adjustUserBalance(balance).subscribe(() => {
+        this.tool.adjustUserBalance(name, balance).subscribe(() => {
           balanceChangeDone = true
           if (balanceChangeDone && passChangeDone) this.spinner.stopSpinner(0)
         })
@@ -84,7 +91,7 @@ export class AdjustuserComponent implements OnInit {
       // Check if pass is changed
       if (passChanged) {
         passChangeDone = false
-        this.tool.changePass(pass).subscribe(() => {
+        this.tool.changePass(name, pass).subscribe(() => {
           passChangeDone = true
           if (balanceChangeDone && passChangeDone) this.spinner.stopSpinner(0)
         })
@@ -92,4 +99,9 @@ export class AdjustuserComponent implements OnInit {
 
     }
   }
+
+  canSubmit(): boolean {
+    return this.form.get('amount').dirty || this.form.get('passwords.password').dirty && this.form.valid
+  }
+
 }

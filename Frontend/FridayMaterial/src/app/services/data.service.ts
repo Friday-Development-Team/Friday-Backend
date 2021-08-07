@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { error } from '@angular/compiler/src/util';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { CateringOrder, Configuration, Item, OrderDTO } from '../models/models';
+import { HttpClient } from '@angular/common/http'
+import { error } from '@angular/compiler/src/util'
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, interval, Observable, Subject } from 'rxjs'
+import { environment } from 'src/environments/environment'
+import { CateringOrder, Configuration, Item, OrderDTO, ShopUser } from '../models/models'
+import { HttpService } from './http.service'
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class DataService {
 
   private config: BehaviorSubject<Configuration> = new BehaviorSubject<Configuration>(new Configuration(false, false, false))
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpService) {
     this.loadConfig()
     this.configPolling.subscribe(s => this.loadConfig())
   }
@@ -31,16 +32,15 @@ export class DataService {
   }
 
   getAllItems(): Observable<Item[]> {
-    return this.http.get<Item[]>(`${environment.apiUrl}/item/`)
+    return this.http.get<Item[]>('item')
   }
 
   addOrder(dto: OrderDTO): Observable<number> {
-    console.log(dto)
-    return this.http.post<number>(`${environment.apiUrl}/order/`, dto)
+    return this.http.post<number>('order', dto)
   }
 
   getRunningOrdersUser(): Observable<CateringOrder[]> {
-    return this.http.get<CateringOrder[]>(`${environment.apiUrl}/order/running`)
+    return this.http.get<CateringOrder[]>('order/running')
   }
 
   startOrderPolling(): void {
@@ -57,11 +57,15 @@ export class DataService {
   }
 
   _getConfig(): Observable<Configuration> {
-    return this.http.get<Configuration>(`${environment.apiUrl}/configuration`)
+    return this.http.get<Configuration>('configuration')
   }
 
   setConfig(config: Configuration): Observable<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/configuration`, config)
+    return this.http.put<boolean>('configuration', config)
+  }
+
+  getUsers(): Observable<ShopUser[]> {
+    return this.http.get<ShopUser[]>('user/all')
   }
 
 }

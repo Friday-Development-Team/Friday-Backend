@@ -1,31 +1,35 @@
 <div class="wrapper">
     <form (ngSubmit)="submit()" [formGroup]="form">
         <fieldset>
-            <div class="checkboxwrapper">
-                <mat-checkbox
-                    color="primary"
-                    formControlName="combinedCateringKitchen"
-                    type="checkbox"
-                >
-                    Combine catering & kitchen
-                </mat-checkbox>
-
-                <mat-checkbox
-                    formControlName="usersSetSpot"
-                    type="checkbox"
-                    color="primary"
-                >
-                    Users have a set spot
-                </mat-checkbox>
-
-                <mat-checkbox
-                    formControlName="cancelOnAccepted"
-                    type="checkbox"
-                    color="primary"
-                >
-                    Cancel accepted orders
-                </mat-checkbox>
-            </div>
+            <table>
+                <tr>
+                    <mat-checkbox
+                        color="primary"
+                        formControlName="combinedCateringKitchen"
+                        type="checkbox"
+                    >
+                        Combine catering & kitchen
+                    </mat-checkbox>
+                </tr>
+                <tr>
+                    <mat-checkbox
+                        formControlName="usersSetSpot"
+                        type="checkbox"
+                        color="primary"
+                    >
+                        Users have a set spot
+                    </mat-checkbox>
+                </tr>
+                <tr>
+                    <mat-checkbox
+                        formControlName="cancelOnAccepted"
+                        type="checkbox"
+                        color="primary"
+                    >
+                        Cancel accepted orders
+                    </mat-checkbox>
+                </tr>
+            </table>
         </fieldset>
 
         <div class="wrapper">
