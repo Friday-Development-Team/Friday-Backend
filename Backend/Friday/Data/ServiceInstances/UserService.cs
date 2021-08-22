@@ -58,7 +58,7 @@ namespace Friday.Data.ServiceInstances
         {
             var setseat = (await context.Configuration.SingleAsync()).UsersSetSpot;
             return await users.AsNoTracking()
-                .Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = setseat ? s.Seat : null })
+                .Select(s => new ShopUserDTO { Name = s.Name, Balance = s.Balance, Seat = setseat ? s.Seat : null, Id  = s.Id})
                 .ToListAsync();
         }
         /// <inheritdoc/>
@@ -72,7 +72,7 @@ namespace Friday.Data.ServiceInstances
         {
             var setseat = (await context.Configuration.SingleAsync()).UsersSetSpot;
             return await users.Where(t => t.Name == username).Select(user => new ShopUserDTO
-            { Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null }).SingleAsync();
+            { Name = user.Name, Balance = user.Balance, Seat = setseat ? user.Seat : null, Id = user.Id }).SingleAsync();
         }
         private async Task LogMoney(ShopUser user, double count)
         {

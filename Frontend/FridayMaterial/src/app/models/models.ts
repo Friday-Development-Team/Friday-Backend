@@ -127,7 +127,7 @@ export class HistoryOrderItem {
 }
 
 export class ShopUser {
-    constructor(public name: string, public balance: number) { }
+    constructor(public name: string, public balance: number, public id: number) { }
 }
 
 export class Configuration {

@@ -7,6 +7,7 @@ namespace Friday.Models.Out
     /// </summary>
     public class ShopUserDTO
     {
+        public int Id { get; set; }
         /// <summary>
         /// Username of the User
         /// </summary>

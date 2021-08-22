@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { Observable, of } from 'rxjs'
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs'
 import { ShopUser, Item, Log, ItemAmount } from 'src/app/models/models'
 import { DataService } from 'src/app/services/data.service'
 import { ToolService } from 'src/app/services/tool.service'
@@ -22,21 +22,22 @@ export class LogsComponent implements OnInit {
 
   users: ShopUser[]
   items: Item[]
-  displayList: string[]
+  displayList: { display: string, value: any }[]
 
   selectedLogType: string
   selectedDisplayType: string
+  // selectedDisplayTypeSubject: Subject<string> = new BehaviorSubject<string>('')
 
   hasSelectedLog = false// set to true when in subscribe method to avoid null errors in html
 
   data: Observable<Log[] | ItemAmount[] | number>
 
-
-
   constructor(public tool: ToolService, public dataService: DataService, public fb: FormBuilder) {
+    // Get data
     this.dataService.getAllItems().subscribe(s => this.items = s)
     this.dataService.getUsers().subscribe(s => this.users = s)
 
+    // Init form and logs
     this.logtypes = this.initLogs()
     this.selected = this.logtypes[0]
     this.form = fb.group({
@@ -44,19 +45,21 @@ export class LogsComponent implements OnInit {
       input: fb.control('')
     })
 
+    // Selection config
     this.form.get('selection').valueChanges.subscribe(s => {
       this.selected = s
       this.selectedLogType = s.type
-      this.selectedDisplayType = s.displaytype
+      // this.selectedDisplayTypeSubject.next(s.displayType)
+      this.selectedDisplayType = s.displayType
       this.needsInput = s.needInput
 
       if (s.needInput && s.inputDisplayName) {
         switch (s.inputDisplayName.toLowerCase()) {
           case 'username':
-            this.displayList = this.users.map(t => t.name)
+            this.displayList = this.users.map(t => ({ display: t.name, value: t.id }))
             break
           case 'item':
-            this.displayList = this.items.map(t => t.name)
+            this.displayList = this.items.map(t => ({ display: t.name, value: t.id }))
             break
           default:
             this.displayList = []
@@ -64,10 +67,11 @@ export class LogsComponent implements OnInit {
 
         }
       }
-
       this.form.get('input').setValidators((this.selected.needInput ? [Validators.required] : null))
     }
     )
+
+    // this.selectedDisplayTypeSubject.subscribe(s => console.log(s))
   }
 
   ngOnInit(): void {
@@ -77,31 +81,25 @@ export class LogsComponent implements OnInit {
     return [
       new LogType('All Currency Logs', 'list', false, 'log', 'currency/all'),
       new LogType('All Item Logs', 'list', false, 'log', 'item/all'),
-      new LogType('Currency Logs By User', 'list', true, 'log', 'currency/user', 'Username'),
-      new LogType('Item Logs By Item', 'list', true, 'log', 'item/id', 'Item'),
+      new LogType('Currency Logs By User', 'list', true, 'log', 'currency', 'Username'),
+      new LogType('Item Logs By Item', 'list', true, 'log', 'item', 'Item'),
       new LogType('Remaining Stock', 'list', false, 'itemamount', 'stock/remaining', null, false),
       new LogType('Sold Items', 'list', false, 'itemamount', 'stock/sold', null, true),
       new LogType('Total Income', 'single', false, 'amount', 'total')
     ]
   }
 
-  print(){
-    console.log(this.form);
-  }
-
   submit(): void {
     if (!!!this.selected)
       return
     const param = this.inputToParam()
-
+    console.log(`param: ${param}`)
     this.hasSelectedLog = true
-
-
 
     switch (this.selected.type.toLowerCase()) {
       case 'log':
 
-        this.data = this.tool.getLogs(this.selected.route, param)
+        this.data = this.tool.getLogs(this.selected.route + `/${param}`)
         break
       case 'itemamount':
         this.data = this.tool.getItemAmounts(this.selected.route.includes('/sold'))
@@ -115,29 +113,20 @@ export class LogsComponent implements OnInit {
       default:
         break
     }
-
-
   }
 
-  private inputToParam(): string | number {
-    if (this.selected.needInput) {
-      let temp
-      temp = this.form.get('input').value
-      if (!!!temp)
-        return
+  private inputToParam(): number {
+    if (!this.selected.needInput)
+      return null
+    return this.form.get('input')?.value || -1
+  }
 
-      switch (this.selected.inputDisplayName.toLowerCase()) {
-        case 'username':
-          return temp
-        case 'item':
-          const tempitem = this.items.find(s => s.name === temp)
-          return tempitem.id
-        default:
-          return null
-      }
-
-    }
-    return null
+  /**
+   * Checks if the form is dirty, valid and if the necessary added input is filled in and valid
+   * @returns If form can be submitted
+   */
+  canSubmit(): boolean {
+    return this.form.dirty && this.form.valid && (!this.needsInput || (this.form.get('input')?.dirty && this.form.get('input')?.valid))
   }
 
 }
