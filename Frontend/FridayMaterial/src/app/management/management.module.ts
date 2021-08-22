@@ -14,7 +14,7 @@ import { LogsComponent } from './tools/admin/logs/logs.component'
 import { AdditemComponent } from './tools/catering/additem/additem.component'
 import { ManagestockComponent } from './tools/catering/managestock/managestock.component'
 import { TotalhistoryComponent } from './tools/catering/totalhistory/totalhistory.component';
-import { LogdisplayComponent } from './tools/admin/logs/logdisplay/logdisplay.component'
+import { LogListDisplayComponent } from './tools/admin/logs/loglistdisplay/loglistdisplay.component'
 
 const routes: Routes = [
   {
@@ -44,7 +44,7 @@ const routes: Routes = [
     AdditemComponent,
     ManagestockComponent,
     TotalhistoryComponent,
-    LogdisplayComponent],
+    LogListDisplayComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

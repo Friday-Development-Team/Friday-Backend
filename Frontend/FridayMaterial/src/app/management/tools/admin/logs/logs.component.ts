@@ -24,8 +24,8 @@ export class LogsComponent implements OnInit {
   items: Item[]
   displayList: { display: string, value: any }[]
 
-  selectedLogType: string
-  selectedDisplayType: string
+  selectedLogType: 'log' | 'itemamount' | 'amount'
+  selectedDisplayType: 'single' | 'list'
   // selectedDisplayTypeSubject: Subject<string> = new BehaviorSubject<string>('')
 
   hasSelectedLog = false// set to true when in subscribe method to avoid null errors in html
@@ -47,6 +47,7 @@ export class LogsComponent implements OnInit {
 
     // Selection config
     this.form.get('selection').valueChanges.subscribe(s => {
+      console.log(this.form);
       this.selected = s
       this.selectedLogType = s.type
       // this.selectedDisplayTypeSubject.next(s.displayType)
@@ -67,7 +68,12 @@ export class LogsComponent implements OnInit {
 
         }
       }
-      this.form.get('input').setValidators((this.selected.needInput ? [Validators.required] : null))
+      if (this.selected.needInput)
+        this.form.get('input').setValidators(([Validators.required]))
+      else
+        this.form.get('input').clearValidators()
+      this.form.get('input').reset()
+
     }
     )
 
@@ -99,7 +105,7 @@ export class LogsComponent implements OnInit {
     switch (this.selected.type.toLowerCase()) {
       case 'log':
 
-        this.data = this.tool.getLogs(this.selected.route + `/${param}`)
+        this.data = this.tool.getLogs(`${this.selected.route}/${this.needsInput ? param : ''}`)
         break
       case 'itemamount':
         this.data = this.tool.getItemAmounts(this.selected.route.includes('/sold'))
@@ -129,7 +135,16 @@ export class LogsComponent implements OnInit {
     return this.form.dirty && this.form.valid && (!this.needsInput || (this.form.get('input')?.dirty && this.form.get('input')?.valid))
   }
 
+  getDisplayColumns(): string[] {
+    switch (this.selectedLogType.toLowerCase()) {
+      case 'log':
+        return ['name', 'time', 'amount']
+      case 'itemamount':
+        return ['item', 'amount']
+    }
+  }
 }
+
 
 class LogType {
   constructor(public display: string, public displayType: string,

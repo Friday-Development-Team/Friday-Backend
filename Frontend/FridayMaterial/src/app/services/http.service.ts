@@ -10,8 +10,10 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  get<type>(path: string, params?: {}): Observable<type> {
-    return this.http.get<type>(`${environment.apiUrl}/${path}`, { params })
+  get<type>(path: string, params?): Observable<type> {
+    if (!!params)
+      return this.http.get<type>(`${environment.apiUrl}/${path}`, { params })
+    return this.http.get<type>(`${environment.apiUrl}/${path}`)
   }
 
   post<type>(path: string, data: {}): Observable<type> {
