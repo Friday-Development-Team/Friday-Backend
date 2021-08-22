@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Form } from '@angular/forms';
+import { Component, OnInit } from '@angular/core'
+
 
 @Component({
   selector: 'friday-admin',

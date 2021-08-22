@@ -133,3 +133,11 @@ export class ShopUser {
 export class Configuration {
     constructor(public combinedCateringKitchen: boolean, public usersSetSpot: boolean, public cancelOnAccepted: boolean) { }
 }
+
+export class Log {
+    constructor(public name: string, public amount: number, public time: Date, public type: string) { }
+}
+
+export class ItemAmount {
+    constructor(public item: Item, public amount: number) { }
+}

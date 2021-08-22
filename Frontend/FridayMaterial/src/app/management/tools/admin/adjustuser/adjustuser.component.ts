@@ -32,13 +32,13 @@ export class AdjustuserComponent implements OnInit {
       users: fb.control('', Validators.required),
       currentbalance: fb.control(null),
       amount: fb.control(''),
-      passwords: fb.group(
-        {
-          password: fb.control(''),
-          passwordConfirm: fb.control(''),
-        },
-        { validator: this.passwordConfirming }
-      ),
+      // passwords: fb.group(
+      //   {
+      //     password: fb.control(''),
+      //     passwordConfirm: fb.control(''),
+      //   },
+      //   { validator: this.passwordConfirming }
+      // ),
     })
 
     this.form.get('users').valueChanges.subscribe((s) => {
@@ -54,28 +54,25 @@ export class AdjustuserComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  passwordConfirming(group: FormGroup): { invalid: boolean } {
-    if (group.invalid) return { invalid: true }
+  // passwordConfirming(group: FormGroup): { invalid: boolean } {
+  //   if (group.invalid) return { invalid: true }
 
-    if (group.get('password').value !== group.get('passwordConfirm').value) {
-      return { invalid: true }
-    }
-  }
+  //   if (group.get('password').value !== group.get('passwordConfirm').value) {
+  //     return { invalid: true }
+  //   }
+  // }
 
   submit(): void {
     if (this.form.invalid) return
 
     const balance = this.form.get('amount').value
-    const pass = this.form.get('passwords.password').value
     const name = this.selectedUser.name
 
     const balanceChanged = balance !== this.selectedUser.balance
-    const passChanged = !!pass
 
     let balanceChangeDone = true
-    let passChangeDone = true
 
-    if (balanceChanged || passChanged) {
+    if (balanceChanged) {
 
       this.spinner.startSpinner()
 
@@ -84,16 +81,7 @@ export class AdjustuserComponent implements OnInit {
         balanceChangeDone = false
         this.tool.adjustUserBalance(name, balance).subscribe(() => {
           balanceChangeDone = true
-          if (balanceChangeDone && passChangeDone) this.spinner.stopSpinner(0)
-        })
-      }
-
-      // Check if pass is changed
-      if (passChanged) {
-        passChangeDone = false
-        this.tool.changePass(name, pass).subscribe(() => {
-          passChangeDone = true
-          if (balanceChangeDone && passChangeDone) this.spinner.stopSpinner(0)
+          if (balanceChangeDone) this.spinner.stopSpinner(0)
         })
       }
 
@@ -101,7 +89,7 @@ export class AdjustuserComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.form.get('amount').dirty || this.form.get('passwords.password').dirty && this.form.valid
+    return this.form.get('amount').dirty && this.form.valid
   }
 
 }
