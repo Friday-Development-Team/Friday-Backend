@@ -26,6 +26,7 @@ export class LogsComponent implements OnInit {
 
   selectedLogType: 'log' | 'itemamount' | 'amount'
   selectedDisplayType: 'single' | 'list'
+  selectedSingleDataType: 'currency' | 'non-labeled' | undefined
   // selectedDisplayTypeSubject: Subject<string> = new BehaviorSubject<string>('')
 
   hasSelectedLog = false// set to true when in subscribe method to avoid null errors in html
@@ -47,7 +48,6 @@ export class LogsComponent implements OnInit {
 
     // Selection config
     this.form.get('selection').valueChanges.subscribe(s => {
-      console.log(this.form);
       this.selected = s
       this.selectedLogType = s.type
       // this.selectedDisplayTypeSubject.next(s.displayType)
@@ -99,7 +99,6 @@ export class LogsComponent implements OnInit {
     if (!!!this.selected)
       return
     const param = this.inputToParam()
-    console.log(`param: ${param}`)
     this.hasSelectedLog = true
 
     switch (this.selected.type.toLowerCase()) {
@@ -114,6 +113,7 @@ export class LogsComponent implements OnInit {
       case 'amount':
         this.data = of(-1)
         this.data = this.tool.getTotalIncome()
+        this.selectedSingleDataType = 'currency'
         // this.data.subscribe(s=> console.log(s))
         break
       default:
@@ -140,7 +140,7 @@ export class LogsComponent implements OnInit {
       case 'log':
         return ['name', 'time', 'amount']
       case 'itemamount':
-        return ['item', 'amount']
+        return ['name', 'amount']
     }
   }
 }
@@ -148,6 +148,6 @@ export class LogsComponent implements OnInit {
 
 class LogType {
   constructor(public display: string, public displayType: string,
-    public needInput: boolean, public type: string, public route: string,
-    public inputDisplayName?: string, public extraParam?: boolean) { }
+              public needInput: boolean, public type: string, public route: string,
+              public inputDisplayName?: string, public extraParam?: boolean) { }
 }

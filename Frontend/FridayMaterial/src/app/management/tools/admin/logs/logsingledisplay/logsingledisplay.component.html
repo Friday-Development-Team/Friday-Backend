@@ -1,0 +1,9 @@
+<ng-container *ngIf="data !== null; then hasData; else noData"></ng-container>
+
+<ng-template #hasData>
+    <h3>Amount: {{ datatype === 'currency' ? (data | currency) : data }}</h3>
+</ng-template>
+
+<ng-template #noData>
+    <h2>No data found!</h2>
+</ng-template>

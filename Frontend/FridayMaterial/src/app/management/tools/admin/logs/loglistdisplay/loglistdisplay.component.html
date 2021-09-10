@@ -1,3 +1,7 @@
+<ng-container
+  *ngIf="!!data && !!data.length; then hasData; else noData">
+</ng-container>
+<ng-template #hasData>
 <div class="centered">
     <div [ngSwitch]="logtype">
         <!-- Log list -->
@@ -17,7 +21,7 @@
                 <ng-container matColumnDef="time">
                     <th mat-header-cell *matHeaderCellDef>Timestamp</th>
                     <td mat-cell *matCellDef="let item">
-                        {{ item.time | date: 'medium' }}
+                        {{ item.time | date: 'short' }}
                     </td>
                 </ng-container>
 
@@ -38,6 +42,40 @@
             </table>
         </div>
 
-        <div *ngSwitchCase="'itemamount'"></div>
+        <div *ngSwitchCase="'itemamount'">
+            <table
+                mat-table
+                [dataSource]="data"
+                class="mat-elevation-z8"
+            >
+                <!-- Name column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let item">{{ item.item }}</td>
+                </ng-container>
+
+                <!-- Amount column -->
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef>Amount</th>
+                    <td mat-cell *matCellDef="let item">
+                        {{
+                            item.type === 'currency'
+                                ? (item.amount | currency)
+                                : item.amount
+                        }}
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                <tr mat-row *matRowDef="let row; columns: columns"></tr>
+            </table>
+        </div>
     </div>
 </div>
+</ng-template>
+
+<ng-template #noData>
+    <h2 class="centered">
+        No logs found!
+    </h2>
+</ng-template>

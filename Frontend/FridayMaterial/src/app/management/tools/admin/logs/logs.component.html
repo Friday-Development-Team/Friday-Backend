@@ -38,10 +38,23 @@
     </form>
 
     <div *ngIf="data && hasSelectedLog">
-        <friday-loglistdisplay
-            [columns]="getDisplayColumns()"
-            [logtype]="selectedLogType"
-            [data]="data | async"
-        ></friday-loglistdisplay>
+        <ng-container
+            *ngIf="selectedDisplayType === 'list'; then list; else single"
+        ></ng-container>
+        <ng-template #list>
+            <friday-loglistdisplay
+                [columns]="getDisplayColumns()"
+                [logtype]="selectedLogType"
+                [data]="data | async"
+            ></friday-loglistdisplay>
+        </ng-template>
+
+        <ng-template #single>
+            <friday-logsingledisplay
+                [data]="data | async"
+                [datatype]="selectedSingleDataType"
+            >
+            </friday-logsingledisplay>
+        </ng-template>
     </div>
 </div>

@@ -139,5 +139,5 @@ export class Log {
 }
 
 export class ItemAmount {
-    constructor(public item: Item, public amount: number) { }
+    constructor(public item: string, public amount: number) { }
 }
