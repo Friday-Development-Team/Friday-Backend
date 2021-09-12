@@ -48,10 +48,6 @@ export class LogsComponent implements OnInit {
 
     // Selection config
     this.form.get('selection').valueChanges.subscribe(s => {
-      this.selected = s
-      this.selectedLogType = s.type
-      // this.selectedDisplayTypeSubject.next(s.displayType)
-      this.selectedDisplayType = s.displayType
       this.needsInput = s.needInput
 
       if (s.needInput && s.inputDisplayName) {
@@ -96,6 +92,10 @@ export class LogsComponent implements OnInit {
   }
 
   submit(): void {
+    const s = this.form.get('selection').value
+    this.selected = s
+    this.selectedLogType = s.type
+    this.selectedDisplayType = s.displayType
     if (!!!this.selected)
       return
     const param = this.inputToParam()
@@ -148,6 +148,6 @@ export class LogsComponent implements OnInit {
 
 class LogType {
   constructor(public display: string, public displayType: string,
-              public needInput: boolean, public type: string, public route: string,
-              public inputDisplayName?: string, public extraParam?: boolean) { }
+    public needInput: boolean, public type: string, public route: string,
+    public inputDisplayName?: string, public extraParam?: boolean) { }
 }
