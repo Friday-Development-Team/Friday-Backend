@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { ItemAmount, Log } from '../models/models'
+import { ItemAmount, ItemDTO, Log } from '../models/models'
 import { HttpService } from './http.service'
 
 @Injectable({
@@ -40,6 +40,10 @@ export class ToolService {
 
   getTotalIncome(): Observable<number> {
     return this.http.get<number>(`logs/total`)
+  }
+
+  addItem(item: ItemDTO): Observable<any>{
+    return this.http.post<any>('item', item)
   }
 
 }

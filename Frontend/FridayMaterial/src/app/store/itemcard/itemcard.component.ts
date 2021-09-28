@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Item, OrderItem } from 'src/app/models/models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Item, OrderItem } from 'src/app/models/models'
 
 @Component({
   selector: 'friday-itemcard',
@@ -18,7 +18,7 @@ export class ItemcardComponent implements OnInit {
 
   constructor(builder: FormBuilder) {
     this.form = builder.group({
-      amount: builder.control('1', Validators.pattern("[1-9]\\d*")) // Non zero leading int
+      amount: builder.control('1', Validators.pattern('[1-9]\\d*')) // Non zero leading int
     })
 
   }
@@ -26,14 +26,10 @@ export class ItemcardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getUrl() {
-    return `assets/${this.item.normalizedImageName}.jpg`
-  }
-
-  AddToCart() {
-    if(this.form.invalid) return;
+  AddToCart(): void {
+    if (this.form.invalid) return
     const amount = this.form.get('amount').value
-    if(amount <= 0) return;
+    if (amount <= 0) return
     this.onAdd.emit(new OrderItem(this.item, amount))
   }
 

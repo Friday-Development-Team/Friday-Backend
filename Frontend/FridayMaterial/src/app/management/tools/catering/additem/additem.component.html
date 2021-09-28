@@ -1,1 +1,159 @@
-<p>additem works!</p>
+<div class="wrapper">
+    <form [formGroup]="form" (ngSubmit)="addItem()">
+        <!-- Name -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input
+                    name="name"
+                    formControlName="name"
+                    type="text"
+                    matInput
+                    placeholder="Name"
+                    
+                />
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+        <!-- Price -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Price</mat-label>
+                <input
+                    name="price"
+                    formControlName="price"
+                    type="number"
+                    step="0.01"
+                    matInput
+                    placeholder="0.00"
+                    
+                />
+                <mat-hint align="end">In your local currency</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select name="type" formControlName="type">
+                    <mat-option *ngFor="let type of types" [value]="type">{{
+                        type
+                    }}</mat-option>
+                </mat-select>
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+        <!-- Amount -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Amount</mat-label>
+                <input
+                    name="count"
+                    formControlName="count"
+                    type="number"
+                    matInput
+                    placeholder="0"
+                    step="1"
+                    
+                />
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+
+        <!-- Image name -->
+        <div class="form-group">
+            <mat-form-field class="form-bar" appearance="fill">
+                <mat-label>Image URL</mat-label>
+                <input
+                    name="imageURL"
+                    formControlName="url"
+                    type="text"
+                    matInput
+                    placeholder="Image url"
+                    
+                />
+                <mat-hint align="end"></mat-hint>
+                <!-- <mat-error *ngIf="form.get('url').invalid">{{}}</mat-error> -->
+            </mat-form-field>
+        </div>
+        <!-- Portion size -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Portion size</mat-label>
+                <input
+                    name="portionSize"
+                    formControlName="size"
+                    type="text"
+                    matInput
+                    placeholder="Portion size"
+                />
+                <mat-hint align="end">Amount and unit (e.g. 200mL)</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <!-- Calories -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Calories</mat-label>
+                <input
+                    name="calories"
+                    formControlName="calories"
+                    type="number"
+                    step="1"
+                    matInput
+                    placeholder="0"
+                />
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+        <!-- Sugar content -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Sugar content</mat-label>
+                <input
+                    name="sugarContent"
+                    formControlName="sugarContent"
+                    type="text"
+                    matInput
+                    placeholder="Sugar content"
+                />
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+
+        <!-- Salt content -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Salt content</mat-label>
+                <input
+                    name="saltContent"
+                    formControlName="saltContent"
+                    type="text"
+                    matInput
+                    placeholder="Salt content"
+                />
+                <mat-hint align="end"></mat-hint>
+            </mat-form-field>
+        </div>
+        <!-- Allergens -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Allergens</mat-label>
+                <textarea
+                    name="allergens"
+                    formControlName="allergens"
+                    matInput
+                    placeholder="Allergens"
+                ></textarea>
+                <mat-hint align="end"
+                    >Separate by a period or a comma.</mat-hint
+                >
+            </mat-form-field>
+        </div>
+
+        <div class="wrapper">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Add User</button>
+        </div>
+    </form>
+</div>

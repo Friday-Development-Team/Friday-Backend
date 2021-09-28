@@ -1,4 +1,5 @@
-﻿using Friday.DTOs;
+﻿using System.Collections;
+using Friday.DTOs;
 using Friday.Models.Out;
 using Friday.Models.Out.Order;
 using System.Collections.Generic;
@@ -65,6 +66,12 @@ namespace Friday.Data.IServices
         /// <param name="username">Username of the User</param>
         /// <returns>List of ongoing orders for user</returns>
         Task<IList<CateringOrder>> GetRunningOrders(string username);
+
+        /// <summary>
+        /// Returns a history of Orders for all Users.
+        /// </summary>
+        /// <returns>List of completed orders for all users</returns>
+        Task<IList<HistoryOrder>> GetTotalHistory();
 
     }
 }

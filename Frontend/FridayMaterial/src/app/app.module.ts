@@ -11,8 +11,6 @@ import { NavComponent } from './nav/nav.component';
 import { httpInterceptorProviders } from './auth/interceptors';
 import { MessageDialogComponent } from './shared/messagedialog/messagedialog.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

@@ -4,12 +4,12 @@
 
 export class Item {
     constructor(public id: number, public name: string, public price: number, public type: string,
-                public count: number, public itemDetails: ItemDetails, public logs: null, public normalizedImageName: string) { }
+        public count: number, public itemDetails: ItemDetails, public logs: null, public normalizedImageName: string) { }
 }
 
 export class ItemDetails {
     constructor(public id: number, public itemId: number, public size: string, public calories: number,
-                public sugarContent: number, public saltContent: number, public allergens: number) { }
+        public sugarContent: number, public saltContent: number, public allergens: number) { }
 }
 
 export class Cart {
@@ -104,7 +104,7 @@ export class OrderHistory {
 export class HistoryOrder {
 
     constructor(public totalPrice?: number, public orderTime?: Date, public completionTimeFood?: Date,
-                public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
+        public completionTimeBeverage?: Date, public items?: HistoryOrderItem[]) { }
 
     fromJson(json: any) {
         this.totalPrice = json.totalPrice
@@ -140,4 +140,25 @@ export class Log {
 
 export class ItemAmount {
     constructor(public item: string, public amount: number) { }
+}
+
+export class ItemModel {
+    constructor(public name?: string, public price?: number, public type?: string, public count?: number,
+        public url?: string, public size?: string, public calories?: number,
+        public sugarContent?: number, public saltContent?: number, public allergens?: string) { }
+
+    toDTO(): ItemDTO {
+        return new ItemDTO(this.name, this.price, this.type, this.count, this.url,
+            new ItemDetailsDTO(this.size, this.calories, this.sugarContent, this.saltContent, this.allergens))
+    }
+}
+
+export class ItemDTO {
+    constructor(public name?: string, public price?: number, public type?: string, public count?: number,
+        public imageName?: string, public details?: ItemDetailsDTO) { }
+}
+
+export class ItemDetailsDTO {
+    constructor(public size?: string, public calories?: number,
+        public sugarContent?: number, public saltContent?: number, public allergens?: string) { }
 }

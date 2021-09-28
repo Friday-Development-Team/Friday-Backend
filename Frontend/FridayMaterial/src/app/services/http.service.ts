@@ -10,7 +10,8 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  get<type>(path: string, params?): Observable<type> {
+  get<type>(path: string, params?, toApi = true): Observable<type> {
+    if (!toApi) return this.getExternal(path, params)
     if (!!params)
       return this.http.get<type>(`${environment.apiUrl}/${path}`, { params })
     return this.http.get<type>(`${environment.apiUrl}/${path}`)
@@ -22,5 +23,11 @@ export class HttpService {
 
   put<type>(path: string, data: {}): Observable<type> {
     return this.http.put<type>(`${environment.apiUrl}/${path}`, data)
+  }
+
+  getExternal<type>(path: string, params?): Observable<type> {
+    if (!!params)
+      return this.http.get<type>(`${path}`, { params })
+    return this.http.get<type>(`${path}`)
   }
 }

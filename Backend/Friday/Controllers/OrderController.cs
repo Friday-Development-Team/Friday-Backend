@@ -215,5 +215,19 @@ namespace Friday.Controllers
             return Ok(await service.GetRunningOrders(User.Identity.Name));
         }
 
+        /// <summary>
+        /// Returns a list of all the running orders of a user, sorted by Accepted first, then by date
+        /// </summary>
+        /// <returns>List of running orders of user</returns>
+        [HttpGet("totalhistory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AuthorizeNotUser]
+        public async Task<ActionResult<IList<CateringOrder>>> GetTotalHistory()
+        {
+            //Return either running orders or empty list
+            return Ok(await service.GetTotalHistory());
+        }
+
+
     }
 }

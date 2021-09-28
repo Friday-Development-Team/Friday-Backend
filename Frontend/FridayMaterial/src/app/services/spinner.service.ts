@@ -13,7 +13,7 @@ export class SpinnerService {
     this.dialog.open(DialogComponent)
   }
 
-  stopSpinner(delay: number): void {
+  stopSpinner(delay: number = 0): void {
     setTimeout(() => this.dialog.closeAll(), delay)
   }
 }

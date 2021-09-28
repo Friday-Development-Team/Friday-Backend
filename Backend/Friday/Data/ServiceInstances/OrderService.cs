@@ -273,5 +273,23 @@ namespace Friday.Data.ServiceInstances
                 })
                 .ToListAsync();
         }
+
+        public async Task<IList<HistoryOrder>> GetTotalHistory()
+        {
+            return await orders.Include(s => s.Items).ThenInclude(s => s.Item).Include(s => s.User).AsNoTracking()
+                .Where(s => (s.StatusBeverage == OrderStatus.Completed || s.StatusBeverage == OrderStatus.None) &&
+                            (s.StatusFood == OrderStatus.Completed || s.StatusFood == OrderStatus.None))
+                .OrderByDescending(s => s.Id)
+                .Select(s => new HistoryOrder
+                {
+                    CompletionTimeFood = s.CompletionTimeFood,
+                    CompletionTimeBeverage = s.CompletionTimeBeverage,
+                    OrderTime = s.OrderTime,
+                    TotalPrice = s.Items.Select(t => (t.Item.Price * t.Amount)).Sum(),
+                    Items = s.Items.Select(t => new HistoryOrderItem {Amount = t.Amount, ItemName = t.Item.Name})
+                        .ToList()
+                }).ToListAsync();
+
+        }
     }
 }
