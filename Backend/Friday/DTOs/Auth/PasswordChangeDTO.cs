@@ -6,24 +6,17 @@ using System.Threading.Tasks;
 
 namespace Friday.DTOs.Auth
 {
-    public class PasswordChangeDTO
+    /// <summary>
+    /// DTO for a User changing their own password
+    /// </summary>
+    public class PasswordChangeDTO : PasswordChangeDTOBase
     {
         /// <summary>
-        /// Username
-        /// </summary>
-        [Required]
-        public string Username { get; set; }
-        /// <summary>
         /// Password
         /// </summary>
         [Required]
         [MinLength(6)]
+        [DataType(DataType.Password)]
         public string OldPassword { get; set; }
-        /// <summary>
-        /// Password
-        /// </summary>
-        [Required]
-        [MinLength(6)]
-        public string NewPassword { get; set; }
     }
 }

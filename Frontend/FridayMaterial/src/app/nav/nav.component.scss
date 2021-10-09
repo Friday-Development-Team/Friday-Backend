@@ -4,6 +4,14 @@
     flex: 1 1 auto;
 }
 
+nav {
+    height: 100%;
+
+    .mat-sidenav-container {
+        height: 100%;
+    }
+}
+
 .nav-item {
     color: white;
     text-decoration: none;

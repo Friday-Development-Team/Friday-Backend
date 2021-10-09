@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { ItemAmount, ItemDTO, Log } from '../models/models'
+import { ItemAmount, ItemAmountChange, ItemAmountChangeRequest, ItemDTO, Log } from '../models/models'
+import { DataService } from './data.service'
 import { HttpService } from './http.service'
 
 @Injectable({
@@ -10,7 +11,7 @@ import { HttpService } from './http.service'
 })
 export class ToolService {
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService, private data: DataService) { }
 
   addUser(username: string, password: string): Observable<any> {
     return this.http.post('user/register', { username, password })
@@ -42,8 +43,17 @@ export class ToolService {
     return this.http.get<number>(`logs/total`)
   }
 
-  addItem(item: ItemDTO): Observable<any>{
+  addItem(item: ItemDTO): Observable<any> {
     return this.http.post<any>('item', item)
+  }
+
+  getCurrentStock(): Observable<ItemAmountChange[]> {
+    console.log('Getting stock');
+    return this.data.getAllItems().pipe(map(s => s.map<ItemAmountChange>(t => ({ id: t.id, item: t.name, amount: t.count }))))
+  }
+
+  adjustStock(request: ItemAmountChangeRequest): Observable<boolean> {
+    return this.http.put<boolean>('item', request)
   }
 
 }

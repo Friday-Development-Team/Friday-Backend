@@ -162,3 +162,13 @@ export class ItemDetailsDTO {
     constructor(public size?: string, public calories?: number,
         public sugarContent?: number, public saltContent?: number, public allergens?: string) { }
 }
+
+export class ItemAmountChange extends ItemAmount {
+    constructor(public id: number, public item: string, public amount: number) {
+        super(item, amount)
+    }
+}
+
+export class ItemAmountChangeRequest {
+    constructor(public id: number, public amount: number) { }
+}

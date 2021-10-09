@@ -26,7 +26,7 @@ export class AdditemComponent implements OnInit {
       price: fb.control('', [Validators.required]),
       type: fb.control('', Validators.required),
       count: fb.control('', Validators.required),
-      url: fb.control('', { validators: [Validators.required, this.imageUrlValidator()], updateOn: 'blur' }),
+      url: fb.control('', [Validators.required]),
       size: fb.control(''),
       calories: fb.control(''),
       sugarContent: fb.control(''),
@@ -56,17 +56,17 @@ export class AdditemComponent implements OnInit {
       )
   }
 
-  imageUrlValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return new Promise(resolve => {
-        const image = new Image()
-        image.addEventListener('load', () => { resolve(image) })
-        image.src = control.value
-      }).then(() => null).catch((err) => {
-        console.log(err)
-        return { invalid: true }
-      })
-    }
-  }
+  // imageUrlValidator(): ValidatorFn {
+  //   return (control: AbstractControl): ValidationErrors | null => {
+  //     return new Promise(resolve => {
+  //       const image = new Image()
+  //       image.addEventListener('load', () => { resolve(image) })
+  //       image.src = control.value
+  //     }).then(() => null).catch((err) => {
+  //       console.log(err)
+  //       return { invalid: true }
+  //     })
+  //   }
+  // }
 
 }

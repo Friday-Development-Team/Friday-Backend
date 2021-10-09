@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Friday.DTOs.Items;
 
 namespace Friday.Data.ServiceInstances
 {/// <inheritdoc cref="IItemService" />
@@ -34,23 +35,23 @@ namespace Friday.Data.ServiceInstances
         }
 
         /// <inheritdoc />
-        public async Task<bool> ChangeCount(ShopUser user, int id, int amount)
+        public async Task<bool> ChangeCount(ShopUser user, ItemAmountChangeRequest request)
         {
             if (user == null)
                 throw new Exception();
 
-            var item = await items.SingleAsync(s => s.Id == id);
+            var item = await items.SingleAsync(s => s.Id == request.Id);
 
-            if ((amount < 0 && Math.Abs(amount) > item.Count))//Avoid negative numbers
+            if ((request.Amount < 0 && Math.Abs(request.Amount) > item.Count))//Avoid negative numbers
                 throw new ArgumentException("You can't change an Item's count below zero!");
 
-            item.Count += amount;
+            item.Count += request.Amount;
 
             items.Update(item);
 
             var returnamount= await context.SaveChangesAsync() > 0;
 
-            await LogItem(user, item, amount);
+            await LogItem(user, item, request.Amount);
 
             return returnamount;
         }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Friday.DTOs.Items;
 
 namespace Friday.Data.ServiceInstances
 {
@@ -146,7 +147,7 @@ namespace Friday.Data.ServiceInstances
                 try
                 {
                     //temp.Amount -= item.Amount;
-                    if (await itemService.ChangeCount(user, dbItem.Id, -item.Amount)) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
+                    if (await itemService.ChangeCount(user, new ItemAmountChangeRequest { Id = dbItem.Id, Amount = -item.Amount })) //Should it fail, the item is rejected. This will be notified to the catering. This will not affect the Users balance.
                         log.Add(dbItem, -item.Amount);
                     else
                         RevertUser(user, dbItem.Count * dbItem.Price);//Refunds the failed item. It will not show up in the history.
@@ -274,6 +275,7 @@ namespace Friday.Data.ServiceInstances
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IList<HistoryOrder>> GetTotalHistory()
         {
             return await orders.Include(s => s.Items).ThenInclude(s => s.Item).Include(s => s.User).AsNoTracking()
@@ -286,7 +288,7 @@ namespace Friday.Data.ServiceInstances
                     CompletionTimeBeverage = s.CompletionTimeBeverage,
                     OrderTime = s.OrderTime,
                     TotalPrice = s.Items.Select(t => (t.Item.Price * t.Amount)).Sum(),
-                    Items = s.Items.Select(t => new HistoryOrderItem {Amount = t.Amount, ItemName = t.Item.Name})
+                    Items = s.Items.Select(t => new HistoryOrderItem { Amount = t.Amount, ItemName = t.Item.Name })
                         .ToList()
                 }).ToListAsync();
 

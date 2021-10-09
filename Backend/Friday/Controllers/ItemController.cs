@@ -54,22 +54,22 @@ namespace Friday.Controllers
         /// <summary>
         /// Changes the Amount of an Item, or how many items of a certain Item are still in stock. Use a negative number to subtract. 
         /// </summary>
-        /// <param name="id">Id of the Item</param>
-        /// <param name="amount">Amount to be added. Negative to subtract</param>
+        /// <param name="request">Request object for the change</param>
+
         /// <returns>True if it was successful. You can't get a negative amount, at best the count can be reduced to 0</returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<bool>> Put(int id, int amount)
+        public async Task<ActionResult<bool>> Put(ItemAmountChangeRequest request)
         {
             try
             {
-                return Ok(await service.ChangeCount(await users.GetByUsername(User.Identity.Name), id, amount));
+                return Ok(await service.ChangeCount(await users.GetByUsername(User.Identity.Name), request));
             }
             catch (Exception)
             {
-                return NotFound($"User \'{User.Identity.Name}\' or item with ID {id} could not be found!");
+                return NotFound($"User \'{User.Identity.Name}\' or item with ID {request.Id} could not be found!");
             }
         }
 

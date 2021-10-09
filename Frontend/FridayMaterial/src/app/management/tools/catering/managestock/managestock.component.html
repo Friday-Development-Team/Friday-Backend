@@ -1,1 +1,74 @@
-<p>managestock works!</p>
+<div class="wrapper">
+    <form class="" [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+        <fieldset>
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Item</mat-label>
+                    <mat-select formControlName="items">
+                        <mat-option
+                            *ngFor="let item of items | async"
+                            [value]="item"
+                            >{{ item.item }}</mat-option
+                        >
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="outline">
+                    <mat-label>Current amount</mat-label>
+                    <input
+                        name="fuckyouautocomplete"
+                        type="number"
+                        matInput
+                        readonly="true"
+                        formControlName="currentAmount"
+                    />
+                    <mat-hint align="end"
+                        >Might not be the actual value anymore</mat-hint
+                    >
+                </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="fill">
+                    <mat-label>Amount to add</mat-label>
+                    <input
+                        formControlName="amount"
+                        type="number"
+                        matInput
+                        placeholder="Amount to add"
+                    />
+                    <mat-hint align="end">Negative number to subtract</mat-hint>
+                    <mat-error *ngIf="form.get('amount').invalid"
+                        >Please enter a non-zero value</mat-error
+                    >
+                </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="outline" [ngClass]="{error: giveErrorStyle()}">
+                    <mat-label>Projected new value</mat-label>
+                    <input
+                        matInput
+                        readonly="true"
+                        formControlName="projected"
+                    />
+                    <mat-hint align="end"
+                        >Might not be the actual new value anymore</mat-hint
+                    >
+                </mat-form-field>
+            </div>
+        </fieldset>
+
+        <div class="wrapper">
+            <button
+                type="submit"
+                [disabled]="!form.valid"
+                class="btn btn-primary"
+            >
+                Add User
+            </button>
+        </div>
+    </form>
+</div>

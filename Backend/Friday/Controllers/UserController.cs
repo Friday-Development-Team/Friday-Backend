@@ -107,16 +107,45 @@ namespace Friday.Controllers
         /// <summary>
         /// UpdatePassword method. Checks the provided credentials and updates the password
         /// </summary>
-        /// <param name="model">Model containing information</param>
+        /// <param name="request">Model containing information</param>
+        /// <returns>JWT token</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("password/user")]
+        public async Task<ActionResult<string>> ChangePassword([FromBody] PasswordChangeDTO request)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(request.Username);
+                await userManager.ChangePasswordAsync(user, request.OldPassword, request.Password);
+                return Ok();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound($"User '{request.Username}' could not be found!");
+            }
+        }
+
+        /// <summary>
+        /// UpdatePassword method. Checks the provided credentials and updates the password
+        /// </summary>
+        /// <param name="request">Model containing information</param>
         /// <returns>JWT token</returns>
         [Authorize(Roles = Role.Admin)]
-        [HttpPut("password")]
-        public async Task<ActionResult<string>> ChangePassword([FromBody] PasswordChangeDTO model)
+        [HttpPut("password/admin")]
+        public async Task<ActionResult> ChangePasswordAdmin([FromBody] PasswordChangeDTOBase request)
         {
-            var user = await userManager.FindByNameAsync(model.Username);
-            if (user != null && (await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword)).Succeeded)
+            try
+            {
+                var user = await userManager.FindByNameAsync(request.Username);
+                var token = await userManager.GeneratePasswordResetTokenAsync(user); // Generate password reset token
+                var result = await userManager.ResetPasswordAsync(user, token, request.Password);
+                if (!result.Succeeded) throw new Exception();
                 return Ok();
-            return BadRequest();
+            }
+            catch (Exception)
+            {
+                return BadRequest($"Password could not be reset for user '{request.Username}'");
+            }
         }
 
         /// <summary>

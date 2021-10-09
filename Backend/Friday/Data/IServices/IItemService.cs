@@ -1,6 +1,7 @@
 ﻿using Friday.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Friday.DTOs.Items;
 
 namespace Friday.Data.IServices
 {
@@ -27,10 +28,10 @@ namespace Friday.Data.IServices
         /// Changes the count of a single Item. Works additively. Use a negative int to subtract. Used for convenience.
         /// </summary>
         /// <param name="user">User that caused the change</param>
-        /// <param name="id">ID of the Item</param>
-        /// <param name="amount">Amount to add. Negative to subtract.</param>
+        /// <param name="request">Request object for the item change</param>
+
         /// <returns>True if the change was successful</returns>
-        Task<bool> ChangeCount(ShopUser user, int id, int amount);
+        Task<bool> ChangeCount(ShopUser user, ItemAmountChangeRequest request);
         /// <summary>
         /// Changes an Item.
         /// </summary>
